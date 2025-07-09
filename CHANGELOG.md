@@ -8,60 +8,79 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Comprehensive mock data system with realistic business scenarios
-- Complete HTML structure with semantic markup
-- Project folder organization (css/, js/, assets/, data/)
-- GitHub repository integration
+- StoreHub-style dark sidebar navigation with proper color scheme
+- Clean white header with StoreHub branding and user menu
+- Mobile-responsive hamburger menu functionality
+- Enhanced navigation states and transitions
+- Authentic StoreHub design system implementation
 
 ### Changed
-- N/A
+- **MERCHANT UPDATE**: Changed merchant from "Kafe Siti Maimunah" to "Mama Kopitiam" 
+- **OWNER UPDATE**: Updated owner name to "Alia" in welcome message
+- Complete CSS redesign with StoreHub color palette (#1F2937 sidebar, #1E3A8A primary)
+- Opportunity cards styled to match StoreHub aesthetics
+- JavaScript enhanced with mobile menu and navigation functionality
 
-### Fixed
-- N/A
+### Technical
+- Updated CSS variables to match StoreHub design system
+- Improved responsive design for mobile devices
+- Enhanced JavaScript class structure for better maintainability
+- Fixed variable references and method implementations
 
-## [0.1.0] - 2024-01-15
+## [0.2.0] - 2024-01-15
 
 ### Added
-- Initial project structure and setup
-- Base HTML file with navigation and layout containers
-- Modal framework for opportunity analysis
-- Integration with Chart.js for data visualizations
-- Font Awesome icons for enhanced UI
-- Comprehensive .gitignore file
-- Task tracker and phase breakdown documentation
-- Mock data covering all business pillars:
-  - Customer Lifecycle opportunities
-  - Product Profitability analysis
-  - Basket Analysis insights
-  - Inventory Aging scenarios
-- Historical opportunity data for Growth History page
-- Campaign performance tracking data
-- Utility functions for data formatting and manipulation
+- Complete Phase 1A foundation with project structure
+- Comprehensive mock data system with Malaysian localization
+- Base HTML structure with semantic layout
+- Core CSS styling with responsive design
+- JavaScript dashboard manager with async loading
+- Phase 1B dashboard development with opportunity cards
+- Interactive card components with hover effects
+- Loading states and error handling
+- Campaign launch workflow simulation
 
-### Technical Details
-- **Technology Stack:** Vanilla JavaScript (ES6+), HTML5, CSS3
-- **Data Visualization:** Chart.js integration
-- **Icons:** Font Awesome 6.0.0
-- **Repository:** Connected to https://github.com/SharleneChewStorehub/SHackathon.git
-- **Development Approach:** Mobile-first responsive design
+### Changed
+- Localized all content for Malaysian market (RM currency, local products)
+- Updated merchant to Malaysian context with local food items
+- Enhanced user experience with realistic loading delays
 
-### Phase 1A Completion Status
-- ✅ Project initialization and folder structure
-- ✅ Base HTML file with semantic structure
-- ✅ Git repository setup and GitHub integration
-- ✅ Comprehensive mock data creation
-- ✅ CHANGELOG.md establishment
+### Technical
+- Implemented class-based JavaScript architecture
+- Added proper error handling and loading states
+- Created utility functions for data formatting
+- Established Git workflow with conventional commits
 
-### Next Steps
-- Phase 1B: Core dashboard development
-- Dashboard layout and styling
-- Today's Opportunities widget implementation
-- Opportunity card components
+## [0.1.0] - 2024-01-14
+
+### Added
+- Initial project setup and repository structure
+- PRD (Product Requirements Document) implementation
+- Task tracking system with phase breakdown
+- Development workflow documentation
+- Basic file structure (HTML, CSS, JS, assets)
+
+### Project Foundation
+- Cursor-based development workflow established
+- GitHub repository connection configured
+- Conventional commit message standards implemented
+- Phase-based development approach documented
 
 ---
 
-**Development Notes:**
-- Using Cursor for AI-assisted development
-- Following conventional commit message format
-- Maintaining detailed task tracking in TASK_TRACKER.md
-- Focus on high-fidelity prototype for stakeholder demonstration 
+## Development Notes
+
+### Phase Progress
+- ✅ **Phase 1A**: Foundation & Setup (COMPLETED)
+- ✅ **Phase 1B**: Core Dashboard Development (COMPLETED)
+- ⏳ **Phase 1C**: Interactive Features & Modal (NEXT)
+
+### Current Status
+The project now features a fully functional dashboard with StoreHub's authentic design system. The interface displays Malaysian-localized opportunity cards for "Mama Kopitiam" owned by Alia, ready for Phase 1C development focusing on the "Prove It" justification modal and data visualizations.
+
+### Technical Decisions
+- **UI Framework**: Vanilla JavaScript with CSS Grid/Flexbox for maximum performance
+- **Design System**: StoreHub color palette with dark sidebar (#1F2937) and blue accents (#1E3A8A)
+- **Responsive Strategy**: Mobile-first approach with collapsible sidebar
+- **Data Management**: Mock data system simulating real backend responses
+- **Navigation**: Single-page application with dynamic content switching 
