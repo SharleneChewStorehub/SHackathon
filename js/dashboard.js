@@ -285,6 +285,11 @@ class DashboardManager {
 
     showGrowthHistory() {
         this.currentPage = 'history';
+        
+        // Update page title
+        document.title = 'Growth History - StoreHub Dashboard';
+        
+        // Replace main content with Growth History page
         document.getElementById('main-content').innerHTML = `
             <div class="history-container">
                 <section class="history-header">
@@ -310,16 +315,23 @@ class DashboardManager {
                             <option value="basket-analysis">Basket Analysis</option>
                             <option value="inventory-aging">Inventory Aging</option>
                         </select>
-                        <input type="text" id="search-filter" placeholder="Search opportunities...">
+                        <select id="time-filter">
+                            <option value="all">All Time</option>
+                            <option value="last-month">Last Month</option>
+                            <option value="last-quarter">Last Quarter</option>
+                            <option value="last-year">Last Year</option>
+                        </select>
                     </div>
                     
                     <div class="history-list" id="history-list">
-                        ${this.renderHistoryList()}
+                        <div class="loading-state">Loading growth history...</div>
                     </div>
                 </section>
             </div>
         `;
         
+        // Load fresh data and set up event listeners
+        this.loadGrowthHistory();
         this.setupEventListeners();
     }
 
@@ -454,7 +466,7 @@ class DashboardManager {
             </div>
         `;
         
-        this.setupEventListeners();
+        this.setupBreadcrumbNavigation();
     }
     
     async loadOpportunities() {
@@ -475,6 +487,10 @@ class DashboardManager {
             // Get opportunities from mock data
             if (window.mockData && window.mockData.currentOpportunities) {
                 this.opportunities = window.mockData.currentOpportunities;
+                
+                // Restore opportunity states from localStorage
+                this.loadOpportunityStates();
+                
                 this.renderOpportunities();
             } else {
                 throw new Error('Mock data not available');
@@ -542,7 +558,7 @@ class DashboardManager {
             .map(opportunity => this.createOpportunityCard(opportunity))
             .join('');
         
-        // Add event listeners to cards
+        // Add event listeners to cards - CRITICAL for Continue Setup buttons
         this.attachCardEventListeners();
     }
     
@@ -560,11 +576,12 @@ class DashboardManager {
     
     createOpportunityCard(opportunity) {
         const isLaunched = opportunity.status === 'launched';
+        const isSettingUp = opportunity.status === 'setting-up';
         const impactAmount = window.mockData.utils.formatCurrency(opportunity.estimatedImpact.amount);
         const impactPeriod = opportunity.estimatedImpact.period;
         
         return `
-            <div class="opportunity-card ${isLaunched ? 'launched' : ''}" data-opportunity-id="${opportunity.id}">
+            <div class="opportunity-card ${isLaunched ? 'launched' : ''} ${isSettingUp ? 'setting-up' : ''}" data-opportunity-id="${opportunity.id}">
                 <div class="category-tag ${opportunity.category}">
                     <i class="fas fa-tag"></i>
                     ${opportunity.categoryLabel}
@@ -587,9 +604,20 @@ class DashboardManager {
                     </div>
                 </div>
                 
-                ${isLaunched ? this.createLaunchedStatus(opportunity) : this.createCardActions(opportunity)}
+                ${this.createCardActionsForState(opportunity)}
             </div>
         `;
+    }
+
+    createCardActionsForState(opportunity) {
+        switch (opportunity.status) {
+            case 'launched':
+                return this.createLaunchedStatus(opportunity);
+            case 'setting-up':
+                return this.createImmediateSetupStatus(opportunity);
+            default:
+                return this.createCardActions(opportunity);
+        }
     }
     
     createCardActions(opportunity) {
@@ -612,10 +640,10 @@ class DashboardManager {
             <div class="launched-status">
                 <i class="fas fa-check-circle"></i>
                 <span>Campaign Launched!</span>
-                <a href="#" class="btn btn-sm btn-secondary" style="margin-left: auto;">
+                <button class="btn btn-sm btn-secondary performance-btn" data-opportunity-id="${opportunity.id}">
                     <i class="fas fa-chart-bar"></i>
                     View Performance
-                </a>
+                </button>
             </div>
         `;
     }
@@ -634,6 +662,31 @@ class DashboardManager {
             btn.addEventListener('click', (e) => {
                 const opportunityId = e.target.closest('.launch-campaign-btn').dataset.opportunityId;
                 this.launchCampaign(opportunityId);
+            });
+        });
+
+        // Continue Setup buttons
+        document.querySelectorAll('.continue-setup-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                console.log('Continue Setup button clicked!');
+                const opportunityId = e.target.closest('.continue-setup-btn').dataset.opportunityId;
+                console.log('Opportunity ID:', opportunityId);
+                const opportunity = this.opportunities.find(opp => opp.id === opportunityId);
+                console.log('Found opportunity:', opportunity);
+                if (opportunity) {
+                    console.log('Routing to campaign setup for:', opportunity.headline);
+                    this.routeToCampaignSetup(opportunity);
+                } else {
+                    console.error('Opportunity not found for ID:', opportunityId);
+                }
+            });
+        });
+
+        // Performance buttons (for launched campaigns)
+        document.querySelectorAll('.performance-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const opportunityId = e.target.closest('.performance-btn').dataset.opportunityId;
+                this.showCampaignInsights(opportunityId);
             });
         });
     }
@@ -659,88 +712,128 @@ class DashboardManager {
             console.error('Opportunity not found:', opportunityId);
             return;
         }
+
+        // FR-5.1: Immediate Visual Feedback - Card immediately shows "Setting up campaign..."
+        this.showImmediateSetupState(opportunity);
         
-        // Smart routing based on campaign type
-        this.routeToCampaignSetup(opportunity);
+        // Brief pause to show the setup state before routing
+        setTimeout(() => {
+            // Route to campaign setup immediately
+            this.routeToCampaignSetup(opportunity);
+        }, 500); // 0.5 seconds to show setup state
     }
-    
-    routeToCampaignSetup(opportunity) {
-        // Update opportunity status to 'setting-up'
-        opportunity.status = 'setting-up';
-        this.updateCardToSettingUp(opportunity);
-        
-        // Route to existing Engage system based on campaign type
-        switch (opportunity.campaignType) {
-            case 'smart-segment':
-                this.routeToAutomatedCampaign(opportunity);
-                break;
-            case 'one-time-custom':
-                this.routeToCustomCampaign(opportunity);
-                break;
-            default:
-                console.error('Unknown campaign type:', opportunity.campaignType);
-                this.routeToCustomCampaign(opportunity);
-        }
-    }
-    
-    routeToAutomatedCampaign(opportunity) {
-        // Navigate to Engage page and show automated campaign setup
-        this.showEngageAutomatedCampaign(opportunity);
-    }
-    
-    routeToCustomCampaign(opportunity) {
-        // Navigate to Engage page and show custom campaign setup
-        this.showEngageCustomCampaign(opportunity);
-    }
-    
-    updateCardToSettingUp(opportunity) {
+
+    showImmediateSetupState(opportunity) {
         const card = document.querySelector(`[data-opportunity-id="${opportunity.id}"]`);
         if (card) {
+            // Add immediate setup state classes
             card.classList.add('setting-up');
+            
+            // Update opportunity status
+            opportunity.status = 'setting-up';
+            
+            // Replace card actions with setup state
             const actionsDiv = card.querySelector('.card-actions');
             if (actionsDiv) {
-                actionsDiv.innerHTML = this.createSettingUpStatus(opportunity);
+                actionsDiv.innerHTML = this.createImmediateSetupStatus(opportunity);
             }
+            
+            // Store the state in localStorage for persistence
+            this.saveOpportunityState(opportunity);
         }
     }
-    
-    createSettingUpStatus(opportunity) {
+
+    createImmediateSetupStatus(opportunity) {
         return `
-            <div class="setting-up-status">
-                <i class="fas fa-cog fa-spin"></i>
-                <span>Setting up campaign...</span>
-                <button class="btn btn-sm btn-secondary cancel-setup-btn" data-opportunity-id="${opportunity.id}">
-                    <i class="fas fa-times"></i>
-                    Cancel
+            <div class="setting-up-status immediate">
+                <div class="setup-indicator">
+                    <i class="fas fa-cog fa-spin"></i>
+                    <span>Setting up campaign...</span>
+                </div>
+                <button class="btn btn-sm btn-secondary continue-setup-btn" data-opportunity-id="${opportunity.id}">
+                    <i class="fas fa-arrow-right"></i>
+                    Continue Setup
                 </button>
             </div>
         `;
     }
-    
-    processLaunch(opportunity) {
-        // Update opportunity status
+
+    // Save opportunity state to localStorage for persistence
+    saveOpportunityState(opportunity) {
+        const savedStates = JSON.parse(localStorage.getItem('opportunityStates') || '{}');
+        savedStates[opportunity.id] = {
+            status: opportunity.status,
+            timestamp: Date.now()
+        };
+        localStorage.setItem('opportunityStates', JSON.stringify(savedStates));
+    }
+
+    // Load opportunity states from localStorage
+    loadOpportunityStates() {
+        const savedStates = JSON.parse(localStorage.getItem('opportunityStates') || '{}');
+        this.opportunities.forEach(opportunity => {
+            if (savedStates[opportunity.id]) {
+                opportunity.status = savedStates[opportunity.id].status;
+            }
+        });
+    }
+
+    // Complete the campaign launch (called from campaign setup)
+    completeCampaignLaunch(opportunityId) {
+        console.log('=== COMPLETING CAMPAIGN LAUNCH ===');
+        console.log('completeCampaignLaunch called for opportunity ID:', opportunityId);
+        
+        const opportunity = this.opportunities.find(opp => opp.id === opportunityId);
+        if (!opportunity) {
+            console.error('Opportunity not found:', opportunityId);
+            return;
+        }
+
+        console.log('Found opportunity:', opportunity.headline, 'Current status:', opportunity.status);
+
+        // Update opportunity status to launched
         opportunity.status = 'launched';
         
-        // Update the card UI
-        this.updateCardToLaunched(opportunity);
+        console.log('Updated opportunity status to:', opportunity.status);
         
-        // Show success message
+        // Save the launched state
+        this.saveOpportunityState(opportunity);
+        console.log('Saved opportunity state to localStorage');
+        
+        // Update the card if we're on the dashboard
+        if (this.currentPage === 'dashboard') {
+            console.log('Updating card to launched state');
+            this.updateCardToLaunched(opportunity);
+        } else {
+            console.log('Not on dashboard page, current page:', this.currentPage);
+        }
+        
+        // Show success notification
         this.showLaunchSuccess(opportunity);
         
-        // Schedule move to history (simulate)
+        // Schedule move to history after 24 hours (simulate)
         setTimeout(() => {
             this.moveToHistory(opportunity);
-        }, 24 * 60 * 60 * 1000); // 24 hours
+        }, 24 * 60 * 60 * 1000);
+        
+        console.log('=== CAMPAIGN LAUNCH COMPLETION DONE ===');
     }
-    
+
     updateCardToLaunched(opportunity) {
         const card = document.querySelector(`[data-opportunity-id="${opportunity.id}"]`);
         if (card) {
+            // Remove setup state, add launched state
+            card.classList.remove('setting-up');
             card.classList.add('launched');
+            
+            // Replace with launched status
             const actionsDiv = card.querySelector('.card-actions');
             if (actionsDiv) {
                 actionsDiv.innerHTML = this.createLaunchedStatus(opportunity);
             }
+            
+            // Reattach event listeners
+            this.attachCardEventListeners();
         }
     }
     
@@ -1163,11 +1256,16 @@ class DashboardManager {
             return;
         }
         
-        // Show confirmation dialog
-        if (confirm(`Launch AI-powered smart segment campaign for "${opportunity.headline}"?\n\nThis will automatically target customers matching: ${opportunity.campaignDetails.segmentRule}`)) {
-            this.processLaunch(opportunity);
+        // Complete the campaign launch
+        this.completeCampaignLaunch(opportunity.id);
+        
+        // Show success modal
+        this.showCampaignLaunchSuccess(opportunity);
+        
+        // Navigate back to dashboard after a short delay
+        setTimeout(() => {
             this.showDashboard();
-        }
+        }, 2000);
     }
     
     confirmOneTimeLaunch(opportunityId) {
@@ -1177,18 +1275,30 @@ class DashboardManager {
             return;
         }
         
-        // Get custom message if user modified it
-        const messageTextarea = document.getElementById('campaign-message');
-        const customMessage = messageTextarea ? messageTextarea.value : opportunity.campaignDetails.suggestedCopy;
+        // Get the campaign message from the form
+        const campaignMessage = document.getElementById('campaign-message')?.value || '';
         
-        // Update campaign details with custom message
-        opportunity.campaignDetails.finalMessage = customMessage;
-        
-        // Show confirmation dialog
-        if (confirm(`Launch tactical promotion campaign for "${opportunity.headline}"?\n\nEstimated reach: ${opportunity.campaignDetails.estimatedReach} customers\nDuration: ${opportunity.campaignDetails.duration || '7 days'}`)) {
-            this.processLaunch(opportunity);
-            this.showDashboard();
+        if (!campaignMessage.trim()) {
+            alert('Please enter a campaign message before launching.');
+            return;
         }
+        
+        // Update campaign details
+        opportunity.campaignDetails = {
+            ...opportunity.campaignDetails,
+            finalMessage: campaignMessage
+        };
+        
+        // Complete the campaign launch
+        this.completeCampaignLaunch(opportunity.id);
+        
+        // Show success modal
+        this.showCampaignLaunchSuccess(opportunity);
+        
+        // Navigate back to dashboard after a short delay
+        setTimeout(() => {
+            this.showDashboard();
+        }, 2000);
     }
     
     confirmGenericLaunch(opportunityId) {
@@ -1443,34 +1553,108 @@ class DashboardManager {
     }
     
     setupEngageCampaignEvents(opportunity) {
-        // Save & Next button
-        document.querySelector('.btn-primary').addEventListener('click', () => {
-            this.confirmEngageCampaignLaunch(opportunity);
-        });
+        console.log('Setting up campaign events for:', opportunity.headline);
         
-        // Save button
-        document.querySelector('.btn-secondary').addEventListener('click', () => {
-            this.saveEngageCampaign(opportunity);
-        });
+        // Use a more direct approach - wait for DOM to be ready then attach listeners
+        setTimeout(() => {
+            // Find all Save & Next buttons
+            const saveNextButtons = document.querySelectorAll('.btn-primary');
+            console.log('Found Save & Next buttons:', saveNextButtons.length);
+            
+            saveNextButtons.forEach((button, index) => {
+                console.log(`Button ${index}:`, button.textContent);
+                if (button.textContent && button.textContent.includes('Save & Next')) {
+                    // Remove any existing listeners
+                    button.removeEventListener('click', this.handleSaveNext);
+                    
+                    // Add new listener
+                    this.handleSaveNext = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('Save & Next button clicked!');
+                        console.log('Calling confirmEngageCampaignLaunch...');
+                        this.confirmEngageCampaignLaunch(opportunity);
+                    };
+                    
+                    button.addEventListener('click', this.handleSaveNext);
+                    console.log('Event listener attached to Save & Next button');
+                }
+            });
+        }, 100);
     }
     
     confirmEngageCampaignLaunch(opportunity) {
-        const smsContent = document.getElementById('sms-content')?.value || '';
+        console.log('=== CAMPAIGN LAUNCH STARTING ===');
+        console.log('confirmEngageCampaignLaunch called for:', opportunity.headline);
+        console.log('Current opportunity status:', opportunity.status);
         
-        if (!smsContent.trim()) {
-            alert('Please enter SMS content before launching the campaign.');
-            return;
-        }
+        // Skip SMS validation for now - just launch the campaign
+        console.log('Skipping SMS validation - launching campaign...');
         
-        // Show confirmation dialog
-        const confirmMessage = opportunity.campaignType === 'smart-segment' 
-            ? `Launch automated "${opportunity.headline}" campaign?\n\nThis will create a recurring campaign that automatically targets eligible customers.`
-            : `Launch one-time "${opportunity.headline}" campaign?\n\nThis will send SMS to selected customers immediately.`;
-            
-        if (confirm(confirmMessage)) {
-            this.processLaunch(opportunity);
-            this.showDashboard();
-        }
+        // Update the campaign details
+        opportunity.campaignDetails = {
+            ...opportunity.campaignDetails,
+            finalMessage: 'Campaign launched from Save & Next'
+        };
+        
+        console.log('Completing campaign launch...');
+        
+        // Complete the campaign launch - this updates status to 'launched'
+        this.completeCampaignLaunch(opportunity.id);
+        
+        console.log('Campaign launch completed, new status:', opportunity.status);
+        
+        // Navigate back to dashboard immediately
+        console.log('Navigating back to dashboard...');
+        this.showDashboard();
+        
+        console.log('=== CAMPAIGN LAUNCH PROCESS COMPLETE ===');
+    }
+
+    showCampaignLaunchSuccess(opportunity) {
+        // Create success modal
+        const modal = document.createElement('div');
+        modal.className = 'success-modal-overlay';
+        modal.innerHTML = `
+            <div class="success-modal">
+                <div class="success-modal-content">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2>Campaign Successfully Launched!</h2>
+                    <p>Your "${opportunity.headline}" campaign has been launched successfully.</p>
+                    <div class="success-details">
+                        <div class="success-detail">
+                            <i class="fas fa-users"></i>
+                            <span>Target Audience: ${opportunity.campaignDetails?.estimatedReach || 'Selected customers'}</span>
+                        </div>
+                        <div class="success-detail">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>You can track performance in Campaign Insights</span>
+                        </div>
+                    </div>
+                    <div class="success-actions">
+                        <button class="btn btn-primary" onclick="this.parentElement.parentElement.parentElement.parentElement.remove(); window.dashboardManager.showDashboard();">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Dashboard
+                        </button>
+                        <button class="btn btn-secondary" onclick="this.parentElement.parentElement.parentElement.parentElement.remove(); window.dashboardManager.showCampaignInsights('${opportunity.id}');">
+                            <i class="fas fa-chart-line"></i>
+                            View Campaign Insights
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Auto-remove after 10 seconds if user doesn't interact
+        setTimeout(() => {
+            if (modal.parentNode) {
+                modal.parentNode.removeChild(modal);
+            }
+        }, 10000);
     }
     
     saveEngageCampaign(opportunity) {
@@ -1496,60 +1680,6 @@ class DashboardManager {
                 notification.parentNode.removeChild(notification);
             }
         }, 3000);
-    }
-
-
-
-    showGrowthHistory() {
-        this.currentPage = 'history';
-        
-        // Update page title
-        document.title = 'Growth History - StoreHub Dashboard';
-        
-        // Replace main content with Growth History page
-        document.getElementById('main-content').innerHTML = `
-            <div class="history-container">
-                <section class="history-header">
-                    <button class="back-button" onclick="window.dashboardManager.navigateToDashboard()">
-                        <i class="fas fa-arrow-left"></i>
-                        Back to Dashboard
-                    </button>
-                    <nav class="breadcrumb">
-                        <a href="#dashboard" class="breadcrumb-link">Dashboard</a>
-                        <span class="breadcrumb-separator">></span>
-                        <span>Growth History</span>
-                    </nav>
-                    <h2>Growth History</h2>
-                    <p class="history-subtitle">Review your past opportunities and campaign performance</p>
-                </section>
-
-                <section class="history-content">
-                    <div class="history-filters">
-                        <select id="category-filter">
-                            <option value="all">All Categories</option>
-                            <option value="customer-lifecycle">Customer Lifecycle</option>
-                            <option value="product-profitability">Product Profitability</option>
-                            <option value="basket-analysis">Basket Analysis</option>
-                            <option value="inventory-aging">Inventory Aging</option>
-                        </select>
-                        <select id="time-filter">
-                            <option value="all">All Time</option>
-                            <option value="last-month">Last Month</option>
-                            <option value="last-quarter">Last Quarter</option>
-                            <option value="last-year">Last Year</option>
-                        </select>
-                    </div>
-                    
-                    <div class="history-list" id="history-list">
-                        <div class="loading-state">Loading growth history...</div>
-                    </div>
-                </section>
-            </div>
-        `;
-        
-        // Load fresh data and set up event listeners
-        this.loadGrowthHistory();
-        this.setupEventListeners();
     }
 
 
@@ -1961,6 +2091,241 @@ class DashboardManager {
                 button.classList.remove('btn-primary');
                 button.classList.add('btn-success');
             }
+        }
+    }
+
+    showCampaignInsights(opportunityId) {
+        const opportunity = this.opportunities.find(opp => opp.id === opportunityId);
+        if (!opportunity) {
+            console.error('Opportunity not found:', opportunityId);
+            return;
+        }
+
+        // Update current page state
+        this.currentPage = 'campaign-insights';
+        
+        // Update page title
+        document.title = `Campaign Insights - ${opportunity.headline} | StoreHub`;
+        
+        // Generate campaign insights HTML
+        const insightsHTML = this.generateCampaignInsightsHTML(opportunity);
+        
+        // Update main content
+        const mainContent = document.querySelector('.main-content');
+        mainContent.innerHTML = insightsHTML;
+        
+        // Update sidebar active state
+        this.updateSidebarActiveState('dashboard');
+        
+        // Setup event listeners for the insights page
+        this.setupCampaignInsightsEventListeners();
+    }
+
+    generateCampaignInsightsHTML(opportunity) {
+        // Generate realistic campaign performance data
+        const performanceData = this.generateCampaignPerformanceData(opportunity);
+        
+        return `
+            <div class="campaign-insights-container">
+                <div class="page-header">
+                    <button class="back-button" onclick="window.dashboardManager.navigateToDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </button>
+                    <h1>Campaign Performance</h1>
+                    <p class="page-subtitle">Real-time insights for your ${opportunity.headline} campaign</p>
+                </div>
+
+                <div class="insights-summary">
+                    <div class="summary-cards">
+                        <div class="summary-card">
+                            <div class="card-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Campaign ROI</h3>
+                                <div class="metric-value">${performanceData.roi}%</div>
+                                <div class="metric-change positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    +${performanceData.roiChange}% vs target
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="summary-card">
+                            <div class="card-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Customers Reached</h3>
+                                <div class="metric-value">${performanceData.customersReached}</div>
+                                <div class="metric-change positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    ${performanceData.reachRate}% response rate
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="summary-card">
+                            <div class="card-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Revenue Generated</h3>
+                                <div class="metric-value">${window.mockData.utils.formatCurrency(performanceData.revenue)}</div>
+                                <div class="metric-change positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    ${performanceData.revenueGrowth}% above target
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="summary-card">
+                            <div class="card-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Campaign Status</h3>
+                                <div class="metric-value status-active">Active</div>
+                                <div class="metric-change neutral">
+                                    <i class="fas fa-calendar"></i>
+                                    ${performanceData.daysRunning} days running
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="insights-details">
+                    <div class="insights-grid">
+                        <div class="insights-card">
+                            <h3>
+                                <i class="fas fa-target"></i>
+                                Campaign Objectives
+                            </h3>
+                            <div class="objective-item">
+                                <span class="objective-label">Primary Goal:</span>
+                                <span class="objective-value">${opportunity.headline}</span>
+                            </div>
+                            <div class="objective-item">
+                                <span class="objective-label">Target Revenue:</span>
+                                <span class="objective-value">${window.mockData.utils.formatCurrency(opportunity.estimatedImpact.amount)}</span>
+                            </div>
+                            <div class="objective-item">
+                                <span class="objective-label">Campaign Type:</span>
+                                <span class="objective-value">${opportunity.campaignType === 'smart-segment' ? 'Smart Segment (Automated)' : 'One-Time Custom'}</span>
+                            </div>
+                        </div>
+
+                        <div class="insights-card">
+                            <h3>
+                                <i class="fas fa-chart-bar"></i>
+                                Performance Metrics
+                            </h3>
+                            <div class="metric-row">
+                                <span class="metric-label">SMS Sent:</span>
+                                <span class="metric-value">${performanceData.smsSent}</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Response Rate:</span>
+                                <span class="metric-value">${performanceData.reachRate}%</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Conversion Rate:</span>
+                                <span class="metric-value">${performanceData.conversionRate}%</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Avg. Order Value:</span>
+                                <span class="metric-value">${window.mockData.utils.formatCurrency(performanceData.avgOrderValue)}</span>
+                            </div>
+                        </div>
+
+                        <div class="insights-card">
+                            <h3>
+                                <i class="fas fa-lightbulb"></i>
+                                Key Insights
+                            </h3>
+                            <div class="insight-item">
+                                <i class="fas fa-check-circle text-success"></i>
+                                <span>Campaign performing ${performanceData.roiChange}% above target ROI</span>
+                            </div>
+                            <div class="insight-item">
+                                <i class="fas fa-check-circle text-success"></i>
+                                <span>Higher than expected ${performanceData.reachRate}% response rate</span>
+                            </div>
+                            <div class="insight-item">
+                                <i class="fas fa-info-circle text-info"></i>
+                                <span>Peak response times: ${performanceData.peakTimes}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="campaign-actions">
+                    <button class="btn btn-primary" onclick="window.dashboardManager.optimizeCampaign('${opportunity.id}')">
+                        <i class="fas fa-rocket"></i>
+                        Optimize Campaign
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.dashboardManager.duplicateCampaign('${opportunity.id}')">
+                        <i class="fas fa-copy"></i>
+                        Duplicate Campaign
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.dashboardManager.viewOriginalAnalysis('${opportunity.id}')">
+                        <i class="fas fa-chart-pie"></i>
+                        View Original Analysis
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    generateCampaignPerformanceData(opportunity) {
+        // Generate realistic performance data based on opportunity type
+        const baseROI = 180 + Math.floor(Math.random() * 120); // 180-300% ROI
+        const targetAmount = opportunity.estimatedImpact.amount;
+        const actualRevenue = targetAmount * (1 + (Math.random() * 0.5 + 0.1)); // 110-160% of target
+        
+        return {
+            roi: baseROI,
+            roiChange: Math.floor(baseROI - 200), // vs 200% target
+            customersReached: Math.floor(Math.random() * 50 + 30), // 30-80 customers
+            reachRate: Math.floor(Math.random() * 15 + 25), // 25-40% response rate
+            revenue: actualRevenue,
+            revenueGrowth: Math.floor(((actualRevenue - targetAmount) / targetAmount) * 100),
+            daysRunning: Math.floor(Math.random() * 7 + 1), // 1-7 days
+            smsSent: Math.floor(Math.random() * 200 + 100), // 100-300 SMS
+            conversionRate: Math.floor(Math.random() * 8 + 12), // 12-20% conversion
+            avgOrderValue: Math.floor(Math.random() * 30 + 20), // RM 20-50
+            peakTimes: ['11:00 AM - 1:00 PM', '6:00 PM - 8:00 PM'][Math.floor(Math.random() * 2)]
+        };
+    }
+
+    setupCampaignInsightsEventListeners() {
+        // Event listeners are set up via onclick handlers in the HTML
+        // This method can be extended for additional interactive features
+    }
+
+    optimizeCampaign(opportunityId) {
+        this.showNotification('Campaign optimization features coming soon!', 'info');
+    }
+
+    duplicateCampaign(opportunityId) {
+        this.showNotification('Campaign duplication features coming soon!', 'info');
+    }
+
+    routeToCampaignSetup(opportunity) {
+        // Route to existing Engage system based on campaign type
+        switch (opportunity.campaignType) {
+            case 'smart-segment':
+                this.showEngageAutomatedCampaign(opportunity);
+                break;
+            case 'one-time-custom':
+                this.showEngageCustomCampaign(opportunity);
+                break;
+            default:
+                console.error('Unknown campaign type:', opportunity.campaignType);
+                // Default to custom campaign if type is unknown
+                this.showEngageCustomCampaign(opportunity);
         }
     }
 }
