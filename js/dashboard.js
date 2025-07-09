@@ -2,106 +2,217 @@
 
 class DashboardManager {
     constructor() {
-        this.currentOpportunities = [];
-        this.loadingState = null;
-        this.opportunitiesContainer = null;
-        this.infoButton = null;
-        
+        this.opportunities = [];
+        this.currentPage = 'dashboard';
+        this.isLoading = false;
         this.init();
     }
-    
+
     init() {
-        // Wait for DOM to be ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.initializeElements());
-        } else {
-            this.initializeElements();
-        }
-    }
-    
-    initializeElements() {
-        // Get DOM elements
-        this.opportunitiesContainer = document.getElementById('opportunities-container');
-        this.loadingState = document.getElementById('loading-state');
-        this.infoButton = document.getElementById('info-button');
-        
-        if (!this.opportunitiesContainer) {
-            console.error('Dashboard container not found');
-            return;
-        }
-        
-        // Set up event listeners
         this.setupEventListeners();
-        
-        // Load opportunities
+        this.setupMobileMenu();
         this.loadOpportunities();
     }
-    
+
     setupEventListeners() {
-        // Info button click
-        if (this.infoButton) {
-            this.infoButton.addEventListener('click', () => this.showGrowthHistory());
-        }
-        
-        // Navigation handling
-        this.setupNavigation();
-    }
-    
-    setupNavigation() {
-        const navLinks = document.querySelectorAll('.nav-link');
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
+        // Navigation event listeners
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('.sidebar-item')) {
                 e.preventDefault();
-                const href = link.getAttribute('href');
-                this.navigateTo(href);
+                this.handleNavigation(e.target.getAttribute('href'));
+            }
+        });
+
+        // Info button for Growth History
+        const infoButton = document.getElementById('info-button');
+        if (infoButton) {
+            infoButton.addEventListener('click', () => {
+                this.showGrowthHistory();
             });
+        }
+
+        // Opportunity card interactions
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('.launch-btn') || e.target.closest('.launch-btn')) {
+                e.preventDefault();
+                const button = e.target.closest('.launch-btn');
+                const opportunityId = button.getAttribute('data-opportunity-id');
+                this.launchCampaign(opportunityId);
+            }
+
+            if (e.target.matches('.analysis-btn') || e.target.closest('.analysis-btn')) {
+                e.preventDefault();
+                const button = e.target.closest('.analysis-btn');
+                const opportunityId = button.getAttribute('data-opportunity-id');
+                this.showAnalysis(opportunityId);
+            }
+        });
+
+        // Modal close functionality
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('.modal-backdrop') || e.target.matches('.modal-close')) {
+                this.closeModal();
+            }
+        });
+
+        // Escape key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.closeModal();
+            }
         });
     }
-    
-    navigateTo(route) {
-        // Remove active class from all nav links
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.classList.remove('active');
+
+    setupMobileMenu() {
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        if (menuToggle && sidebar) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+            });
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768 && 
+                    !sidebar.contains(e.target) && 
+                    !menuToggle.contains(e.target) && 
+                    sidebar.classList.contains('open')) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        }
+    }
+
+    handleNavigation(href) {
+        // Update active state
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.classList.remove('active');
         });
         
-        // Hide all containers
-        document.querySelectorAll('.dashboard-container, .history-container, .campaign-container').forEach(container => {
-            container.style.display = 'none';
-        });
-        
-        // Show appropriate container and activate nav link
-        switch(route) {
+        const activeItem = document.querySelector(`[href="${href}"]`);
+        if (activeItem) {
+            activeItem.classList.add('active');
+        }
+
+        // Handle page navigation
+        switch (href) {
             case '#dashboard':
-                document.querySelector('.dashboard-container').style.display = 'block';
-                document.querySelector('.nav-link[href="#dashboard"]').classList.add('active');
+                this.showDashboard();
                 break;
             case '#reports':
                 this.showGrowthHistory();
                 break;
             case '#engage':
-                // Would navigate to engage section
-                alert('Engage module would be integrated here');
+                this.showEngagePage();
                 break;
-            case '#settings':
-                // Would navigate to settings
-                alert('Settings page would be integrated here');
-                break;
+            default:
+                console.log(`Navigation to ${href} not implemented yet`);
         }
     }
-    
+
+    showDashboard() {
+        this.currentPage = 'dashboard';
+        document.getElementById('main-content').innerHTML = `
+            <div class="dashboard-container">
+                <section class="welcome-section">
+                    <h2>Welcome back, Alia!</h2>
+                    <p class="welcome-subtitle">Here are your growth opportunities for today</p>
+                </section>
+
+                <section class="opportunities-widget" id="opportunities-widget">
+                    <div class="widget-header">
+                        <h3>Today's Opportunities</h3>
+                        <button class="info-button" id="info-button" title="View past opportunities">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="opportunities-container" id="opportunities-container">
+                        <div class="loading-state" id="loading-state">
+                            <div class="spinner"></div>
+                            <p>Analyzing your business data...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="dashboard-grid">
+                    <div class="widget-placeholder">
+                        <h4>Sales Overview</h4>
+                        <p>Traditional dashboard widgets would appear here</p>
+                    </div>
+                    <div class="widget-placeholder">
+                        <h4>Customer Insights</h4>
+                        <p>Static reports and charts</p>
+                    </div>
+                    <div class="widget-placeholder">
+                        <h4>Inventory Status</h4>
+                        <p>Current stock levels</p>
+                    </div>
+                </section>
+            </div>
+        `;
+        
+        this.loadOpportunities();
+        this.setupEventListeners();
+    }
+
     showGrowthHistory() {
-        document.querySelectorAll('.dashboard-container, .history-container, .campaign-container').forEach(container => {
-            container.style.display = 'none';
-        });
+        this.currentPage = 'history';
+        document.getElementById('main-content').innerHTML = `
+            <div class="history-container">
+                <section class="history-header">
+                    <nav class="breadcrumb">
+                        <a href="#dashboard">Dashboard</a>
+                        <span class="breadcrumb-separator">></span>
+                        <span>Growth History</span>
+                    </nav>
+                    <h2>Growth History</h2>
+                    <p class="history-subtitle">Review your past opportunities and campaign performance</p>
+                </section>
+
+                <section class="history-content">
+                    <div class="history-filters">
+                        <select id="category-filter">
+                            <option value="all">All Categories</option>
+                            <option value="customer-lifecycle">Customer Lifecycle</option>
+                            <option value="product-profitability">Product Profitability</option>
+                            <option value="basket-analysis">Basket Analysis</option>
+                            <option value="inventory-aging">Inventory Aging</option>
+                        </select>
+                        <input type="text" id="search-filter" placeholder="Search opportunities...">
+                    </div>
+                    
+                    <div class="history-list" id="history-list">
+                        ${this.renderHistoryList()}
+                    </div>
+                </section>
+            </div>
+        `;
         
-        document.querySelector('.history-container').style.display = 'block';
-        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-        document.querySelector('.nav-link[href="#reports"]').classList.add('active');
+        this.setupEventListeners();
+    }
+
+    showEngagePage() {
+        this.currentPage = 'engage';
+        document.getElementById('main-content').innerHTML = `
+            <div class="engage-container">
+                <section class="engage-header">
+                    <h2>Engage - SMS Marketing</h2>
+                    <p class="engage-subtitle">Launch targeted campaigns to grow your business</p>
+                </section>
+
+                <section class="engage-content">
+                    <div class="engage-placeholder">
+                        <h4>Campaign Management</h4>
+                        <p>This would be the main Engage module interface</p>
+                        <button class="btn btn-primary">Create New Campaign</button>
+                    </div>
+                </section>
+            </div>
+        `;
         
-        // Load history if not already loaded
-        if (window.historyManager) {
-            window.historyManager.loadHistory();
-        }
+        this.setupEventListeners();
     }
     
     async loadOpportunities() {
@@ -114,7 +225,7 @@ class DashboardManager {
             
             // Get opportunities from mock data
             if (window.mockData && window.mockData.currentOpportunities) {
-                this.currentOpportunities = window.mockData.currentOpportunities;
+                this.opportunities = window.mockData.currentOpportunities;
                 this.renderOpportunities();
             } else {
                 throw new Error('Mock data not available');
@@ -156,13 +267,13 @@ class DashboardManager {
     renderOpportunities() {
         this.hideLoading();
         
-        if (!this.currentOpportunities || this.currentOpportunities.length === 0) {
+        if (!this.opportunities || this.opportunities.length === 0) {
             this.showEmptyState();
             return;
         }
         
         // Sort opportunities by priority
-        const sortedOpportunities = [...this.currentOpportunities].sort((a, b) => a.priority - b.priority);
+        const sortedOpportunities = [...this.opportunities].sort((a, b) => a.priority - b.priority);
         
         // Render opportunity cards
         this.opportunitiesContainer.innerHTML = sortedOpportunities
@@ -264,7 +375,7 @@ class DashboardManager {
     }
     
     showAnalysis(opportunityId) {
-        const opportunity = this.currentOpportunities.find(opp => opp.id === opportunityId);
+        const opportunity = this.opportunities.find(opp => opp.id === opportunityId);
         if (!opportunity) {
             console.error('Opportunity not found:', opportunityId);
             return;
@@ -279,7 +390,7 @@ class DashboardManager {
     }
     
     launchCampaign(opportunityId) {
-        const opportunity = this.currentOpportunities.find(opp => opp.id === opportunityId);
+        const opportunity = this.opportunities.find(opp => opp.id === opportunityId);
         if (!opportunity) {
             console.error('Opportunity not found:', opportunityId);
             return;
@@ -294,97 +405,126 @@ class DashboardManager {
     processLaunch(opportunity) {
         // Update opportunity status
         opportunity.status = 'launched';
-        opportunity.launchedDate = new Date().toISOString();
         
-        // Update UI
+        // Update the card UI
         this.updateCardToLaunched(opportunity);
         
         // Show success message
         this.showLaunchSuccess(opportunity);
         
-        // Simulate moving to history after delay
+        // Schedule move to history (simulate)
         setTimeout(() => {
             this.moveToHistory(opportunity);
-        }, 24000); // 24 seconds for demo (would be 24 hours in production)
+        }, 24 * 60 * 60 * 1000); // 24 hours
     }
     
     updateCardToLaunched(opportunity) {
         const card = document.querySelector(`[data-opportunity-id="${opportunity.id}"]`);
         if (card) {
             card.classList.add('launched');
-            
-            // Replace actions with launched status
-            const actionsContainer = card.querySelector('.card-actions');
-            if (actionsContainer) {
-                actionsContainer.outerHTML = this.createLaunchedStatus(opportunity);
+            const actionsDiv = card.querySelector('.card-actions');
+            if (actionsDiv) {
+                actionsDiv.innerHTML = this.createLaunchedStatus(opportunity);
             }
         }
     }
     
     showLaunchSuccess(opportunity) {
-        // Create and show success notification
+        // Create a temporary success notification
         const notification = document.createElement('div');
         notification.className = 'launch-notification';
         notification.innerHTML = `
-            <div style="position: fixed; top: 20px; right: 20px; background: var(--success-color); color: white; padding: 1rem 1.5rem; border-radius: 0.5rem; box-shadow: var(--shadow-lg); z-index: 1000; display: flex; align-items: center; gap: 0.5rem;">
+            <div class="notification-content">
                 <i class="fas fa-check-circle"></i>
-                <span>Campaign "${opportunity.headline}" launched successfully!</span>
-                <button onclick="this.parentElement.remove()" style="background: none; border: none; color: white; margin-left: 1rem; cursor: pointer;">
-                    <i class="fas fa-times"></i>
-                </button>
+                <span>Campaign launched successfully!</span>
+                <button class="notification-close">&times;</button>
             </div>
+        `;
+        
+        // Add styles
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            z-index: 1001;
+            animation: slideIn 0.3s ease-out;
         `;
         
         document.body.appendChild(notification);
         
         // Auto-remove after 5 seconds
         setTimeout(() => {
-            if (notification.parentElement) {
+            if (notification.parentNode) {
                 notification.remove();
             }
         }, 5000);
+        
+        // Close button handler
+        notification.querySelector('.notification-close').addEventListener('click', () => {
+            notification.remove();
+        });
     }
     
     moveToHistory(opportunity) {
         // Remove from current opportunities
-        this.currentOpportunities = this.currentOpportunities.filter(opp => opp.id !== opportunity.id);
+        this.opportunities = this.opportunities.filter(opp => opp.id !== opportunity.id);
         
-        // Add to historical opportunities
+        // Add to history (would be handled by backend in production)
         if (window.mockData && window.mockData.historicalOpportunities) {
-            window.mockData.historicalOpportunities.unshift(opportunity);
+            window.mockData.historicalOpportunities.unshift({
+                ...opportunity,
+                completedDate: new Date().toISOString(),
+                status: 'completed'
+            });
         }
         
         // Re-render opportunities
         this.renderOpportunities();
-        
-        // Show notification
-        const notification = document.createElement('div');
-        notification.innerHTML = `
-            <div style="position: fixed; top: 20px; right: 20px; background: var(--info-color); color: white; padding: 1rem 1.5rem; border-radius: 0.5rem; box-shadow: var(--shadow-lg); z-index: 1000; display: flex; align-items: center; gap: 0.5rem;">
-                <i class="fas fa-archive"></i>
-                <span>Opportunity moved to Growth History</span>
-                <button onclick="this.parentElement.remove()" style="background: none; border: none; color: white; margin-left: 1rem; cursor: pointer;">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            if (notification.parentElement) {
-                notification.remove();
-            }
-        }, 3000);
     }
     
-    // Public methods for external access
+    renderHistoryList() {
+        if (!window.mockData || !window.mockData.historicalOpportunities) {
+            return '<div class="empty-state"><p>No historical opportunities available.</p></div>';
+        }
+        
+        return window.mockData.historicalOpportunities
+            .map(opportunity => `
+                <div class="history-item">
+                    <div class="history-item-header">
+                        <span class="history-item-date">${new Date(opportunity.completedDate || opportunity.createdDate).toLocaleDateString()}</span>
+                        <span class="history-item-status ${opportunity.status}">${opportunity.status}</span>
+                    </div>
+                    <div class="category-tag ${opportunity.category}">
+                        ${opportunity.categoryLabel}
+                    </div>
+                    <h4 class="card-headline">${opportunity.headline}</h4>
+                    <p class="card-summary">${opportunity.summary}</p>
+                    <div class="card-impact">
+                        <span class="impact-amount">${window.mockData.utils.formatCurrency(opportunity.estimatedImpact.amount)}</span>
+                        <span class="impact-period">/${opportunity.estimatedImpact.period}</span>
+                    </div>
+                </div>
+            `).join('');
+    }
+    
+    closeModal() {
+        const modal = document.querySelector('.modal-backdrop');
+        if (modal) {
+            modal.remove();
+        }
+    }
+    
     refreshOpportunities() {
         this.loadOpportunities();
     }
     
     getOpportunityById(id) {
-        return this.currentOpportunities.find(opp => opp.id === id);
+        return this.opportunities.find(opp => opp.id === id);
     }
 }
 

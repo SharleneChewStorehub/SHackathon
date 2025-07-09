@@ -3,7 +3,7 @@
 
 // Merchant Information
 const merchantData = {
-    name: "Kafe Siti Maimunah",
+    name: "Mama Kopitiam",
     type: "F&B",
     location: "Bangsar, Kuala Lumpur",
     establishedDate: "2019-03-15",
@@ -77,7 +77,7 @@ const currentOpportunities = [
             type: "smart-segment",
             segmentRule: "Lifetime Spend > RM400 AND Last Visit > 30 days",
             suggestedOffer: "25% off your favorite order + free dessert",
-            suggestedCopy: "We miss you at Kafe Siti Maimunah! Come back this week and enjoy 25% off your usual order plus complimentary dessert. Your table is waiting! 🍰",
+            suggestedCopy: "We miss you at Mama Kopitiam! Come back this week and enjoy 25% off your usual order plus complimentary dessert. Your table is waiting! 🍰",
             estimatedReach: 23,
             estimatedCost: 180
         }
@@ -145,7 +145,7 @@ const currentOpportunities = [
         campaignDetails: {
             type: "one-time-custom",
             suggestedOffer: "Buy 2 Karipap Pusing, Get 1 Free + Drink Combo",
-            suggestedCopy: "Try our signature Karipap Pusing at Kafe Siti Maimunah! 🥟 This week only: Buy 2, Get 1 FREE + combo with any drink for just RM3 more. Taste the tradition!",
+            suggestedCopy: "Try our signature Karipap Pusing at Mama Kopitiam! 🥟 This week only: Buy 2, Get 1 FREE + combo with any drink for just RM3 more. Taste the tradition!",
             estimatedReach: 450,
             estimatedCost: 120,
             duration: "7 days"

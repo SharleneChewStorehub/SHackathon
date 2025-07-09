@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Merchant Backoffice - Dynamic Growth Dashboard</title>
+    <title>StoreHub Backoffice - Dynamic Growth Dashboard</title>
     <meta name="description" content="AI-powered growth opportunities dashboard for merchants">
     
     <!-- Styles -->
@@ -19,27 +19,100 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Navigation Header -->
-    <header class="nav-header">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <h1>Merchant Backoffice</h1>
-                <span class="nav-subtitle">Growth Dashboard</span>
+    <!-- StoreHub Header -->
+    <header class="storehub-header">
+        <div class="header-content">
+            <div class="header-left">
+                <button class="menu-toggle" id="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="storehub-logo">
+                    <span class="logo-text">STORE<span class="logo-accent">HUB</span></span>
+                    <span class="logo-subtitle">Backoffice</span>
+                </div>
             </div>
-            <nav class="nav-menu">
-                <a href="#dashboard" class="nav-link active">Dashboard</a>
-                <a href="#reports" class="nav-link">Reports</a>
-                <a href="#engage" class="nav-link">Engage</a>
-                <a href="#settings" class="nav-link">Settings</a>
-            </nav>
+            <div class="header-right">
+                <button class="header-btn">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <button class="header-btn">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>What's New</span>
+                </button>
+                <div class="user-menu">
+                    <i class="fas fa-user"></i>
+                    <span>Sharlene Chew</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- Main Dashboard Container -->
-    <main class="dashboard-container">
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <a href="#dashboard" class="sidebar-item active">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#deals-club" class="sidebar-item">
+                <i class="fas fa-gem"></i>
+                <span>The Deals Club</span>
+            </a>
+            <a href="#membership" class="sidebar-item">
+                <i class="fas fa-id-card"></i>
+                <span>Membership</span>
+            </a>
+            <a href="#online-orders" class="sidebar-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Online Orders</span>
+            </a>
+            <a href="#offline-transactions" class="sidebar-item">
+                <i class="fas fa-cash-register"></i>
+                <span>Offline Transactions</span>
+            </a>
+            <a href="#reports" class="sidebar-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Reports</span>
+            </a>
+            <a href="#customers" class="sidebar-item">
+                <i class="fas fa-users"></i>
+                <span>Customers</span>
+            </a>
+            <a href="#engage" class="sidebar-item">
+                <i class="fas fa-bullhorn"></i>
+                <span>Engage</span>
+            </a>
+            <a href="#products" class="sidebar-item">
+                <i class="fas fa-box"></i>
+                <span>Products</span>
+            </a>
+            <a href="#stock" class="sidebar-item">
+                <i class="fas fa-warehouse"></i>
+                <span>Stock Management</span>
+            </a>
+            <a href="#employees" class="sidebar-item">
+                <i class="fas fa-user-tie"></i>
+                <span>Employees</span>
+            </a>
+            <a href="#promotions" class="sidebar-item">
+                <i class="fas fa-tags"></i>
+                <span>Promotions</span>
+            </a>
+            <a href="#settings" class="sidebar-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content" id="main-content">
+        <!-- Dashboard Container -->
+        <div class="dashboard-container">
         <!-- Welcome Section -->
         <section class="welcome-section">
-            <h2>Welcome back, Siti!</h2>
+            <h2>Welcome back, Alia!</h2>
             <p class="welcome-subtitle">Here are your growth opportunities for today</p>
         </section>
 
@@ -76,10 +149,10 @@
                 <p>Current stock levels</p>
             </div>
         </section>
-    </main>
+        </div>
 
-    <!-- Growth History Page (Initially Hidden) -->
-    <main class="history-container" id="history-container" style="display: none;">
+        <!-- Growth History Page (Initially Hidden) -->
+        <div class="history-container" id="history-container" style="display: none;">
         <section class="history-header">
             <nav class="breadcrumb">
                 <a href="#dashboard">Dashboard</a>
@@ -106,10 +179,10 @@
                 <!-- Historical opportunities will be populated here -->
             </div>
         </section>
-    </main>
+        </div>
 
-    <!-- Campaign Pages (Initially Hidden) -->
-    <main class="campaign-container" id="campaign-container" style="display: none;">
+        <!-- Campaign Pages (Initially Hidden) -->
+        <div class="campaign-container" id="campaign-container" style="display: none;">
         <section class="campaign-header">
             <nav class="breadcrumb">
                 <a href="#dashboard">Dashboard</a>
@@ -122,6 +195,7 @@
         <section class="campaign-content" id="campaign-content">
             <!-- Campaign setup forms will be populated here -->
         </section>
+        </div>
     </main>
 
     <!-- Justification Modal -->
