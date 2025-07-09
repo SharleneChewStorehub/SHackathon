@@ -12,6 +12,12 @@ class DashboardManager {
         this.setupEventListeners();
         this.setupMobileMenu();
         this.loadOpportunities();
+        
+        // Listen for modal campaign launch events
+        document.addEventListener('launchCampaign', (e) => {
+            const opportunity = e.detail.opportunity;
+            this.processLaunch(opportunity);
+        });
     }
 
     setupEventListeners() {
