@@ -330,9 +330,8 @@ class DashboardManager {
             </div>
         `;
         
-        // Load fresh data and set up event listeners
+        // Load fresh data
         this.loadGrowthHistory();
-        this.setupEventListeners();
     }
 
     showEngagePage() {
@@ -1359,8 +1358,14 @@ class DashboardManager {
                         </div>
                         
                         <div class="campaign-actions">
-                            <button class="btn btn-secondary">Save</button>
-                            <button class="btn btn-primary">Save & Next</button>
+                            <button class="btn btn-secondary" onclick="window.dashboardManager.cancelCampaignSetup('${opportunity.id}')">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </button>
+                            <button class="btn btn-primary" id="complete-campaign-btn" onclick="window.dashboardManager.completeCampaignAndReturnToDashboard('${opportunity.id}')">
+                                <i class="fas fa-check"></i>
+                                Complete Campaign
+                            </button>
                         </div>
                     </div>
                 </section>
@@ -1451,7 +1456,7 @@ class DashboardManager {
         `;
         
         this.setupBreadcrumbNavigation();
-        this.setupEngageCampaignEvents(opportunity);
+        // Remove the problematic setupEngageCampaignEvents call
     }
     
     showEngageCustomCampaign(opportunity) {
@@ -1478,8 +1483,14 @@ class DashboardManager {
                         </div>
                         
                         <div class="campaign-actions">
-                            <button class="btn btn-secondary">Save</button>
-                            <button class="btn btn-primary">Save & Next</button>
+                            <button class="btn btn-secondary" onclick="window.dashboardManager.cancelCampaignSetup('${opportunity.id}')">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </button>
+                            <button class="btn btn-primary" id="complete-campaign-btn" onclick="window.dashboardManager.completeCampaignAndReturnToDashboard('${opportunity.id}')">
+                                <i class="fas fa-check"></i>
+                                Complete Campaign
+                            </button>
                         </div>
                     </div>
                 </section>
@@ -1538,8 +1549,8 @@ class DashboardManager {
                                 <h4>Schedule</h4>
                                 <div class="schedule-field">
                                     <label>* Send Date & Time</label>
-                                    <input type="datetime-local" value="2025-01-15T14:00">
-                                    <small>Choose when to send this campaign</small>
+                                    <input type="datetime-local" value="2025-07-09T11:00">
+                                    <small>Select when you want to send this campaign</small>
                                 </div>
                             </div>
                         </div>
@@ -1549,118 +1560,47 @@ class DashboardManager {
         `;
         
         this.setupBreadcrumbNavigation();
-        this.setupEngageCampaignEvents(opportunity);
+        // Remove the problematic setupEngageCampaignEvents call
     }
     
-    setupEngageCampaignEvents(opportunity) {
-        console.log('Setting up campaign events for:', opportunity.headline);
+    // NEW METHOD: Simple, direct campaign completion that works
+    completeCampaignAndReturnToDashboard(opportunityId) {
+        console.log('=== COMPLETING CAMPAIGN AND RETURNING TO DASHBOARD ===');
+        console.log('Opportunity ID:', opportunityId);
         
-        // Use a more direct approach - wait for DOM to be ready then attach listeners
-        setTimeout(() => {
-            // Find all Save & Next buttons
-            const saveNextButtons = document.querySelectorAll('.btn-primary');
-            console.log('Found Save & Next buttons:', saveNextButtons.length);
-            
-            saveNextButtons.forEach((button, index) => {
-                console.log(`Button ${index}:`, button.textContent);
-                if (button.textContent && button.textContent.includes('Save & Next')) {
-                    // Remove any existing listeners
-                    button.removeEventListener('click', this.handleSaveNext);
-                    
-                    // Add new listener
-                    this.handleSaveNext = (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        console.log('Save & Next button clicked!');
-                        console.log('Calling confirmEngageCampaignLaunch...');
-                        this.confirmEngageCampaignLaunch(opportunity);
-                    };
-                    
-                    button.addEventListener('click', this.handleSaveNext);
-                    console.log('Event listener attached to Save & Next button');
-                }
-            });
-        }, 100);
-    }
-    
-    confirmEngageCampaignLaunch(opportunity) {
-        console.log('=== CAMPAIGN LAUNCH STARTING ===');
-        console.log('confirmEngageCampaignLaunch called for:', opportunity.headline);
-        console.log('Current opportunity status:', opportunity.status);
+        // Find the opportunity
+        const opportunity = this.opportunities.find(opp => opp.id === opportunityId);
+        if (!opportunity) {
+            console.error('Opportunity not found:', opportunityId);
+            return;
+        }
         
-        // Skip SMS validation for now - just launch the campaign
-        console.log('Skipping SMS validation - launching campaign...');
+        console.log('Found opportunity:', opportunity.headline);
         
-        // Update the campaign details
+        // Update campaign details
         opportunity.campaignDetails = {
             ...opportunity.campaignDetails,
-            finalMessage: 'Campaign launched from Save & Next'
+            finalMessage: 'Campaign completed successfully',
+            completedAt: new Date().toISOString(),
+            status: 'completed'
         };
         
-        console.log('Completing campaign launch...');
-        
         // Complete the campaign launch - this updates status to 'launched'
-        this.completeCampaignLaunch(opportunity.id);
+        this.completeCampaignLaunch(opportunityId);
         
-        console.log('Campaign launch completed, new status:', opportunity.status);
+        // Show success notification
+        this.showNotification('Campaign launched successfully!', 'success');
         
-        // Navigate back to dashboard immediately
-        console.log('Navigating back to dashboard...');
+        // Navigate back to dashboard
+        console.log('Returning to dashboard...');
         this.showDashboard();
         
-        console.log('=== CAMPAIGN LAUNCH PROCESS COMPLETE ===');
+        console.log('=== CAMPAIGN COMPLETION PROCESS FINISHED ===');
     }
 
-    showCampaignLaunchSuccess(opportunity) {
-        // Create success modal
-        const modal = document.createElement('div');
-        modal.className = 'success-modal-overlay';
-        modal.innerHTML = `
-            <div class="success-modal">
-                <div class="success-modal-content">
-                    <div class="success-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <h2>Campaign Successfully Launched!</h2>
-                    <p>Your "${opportunity.headline}" campaign has been launched successfully.</p>
-                    <div class="success-details">
-                        <div class="success-detail">
-                            <i class="fas fa-users"></i>
-                            <span>Target Audience: ${opportunity.campaignDetails?.estimatedReach || 'Selected customers'}</span>
-                        </div>
-                        <div class="success-detail">
-                            <i class="fas fa-chart-bar"></i>
-                            <span>You can track performance in Campaign Insights</span>
-                        </div>
-                    </div>
-                    <div class="success-actions">
-                        <button class="btn btn-primary" onclick="this.parentElement.parentElement.parentElement.parentElement.remove(); window.dashboardManager.showDashboard();">
-                            <i class="fas fa-arrow-left"></i>
-                            Back to Dashboard
-                        </button>
-                        <button class="btn btn-secondary" onclick="this.parentElement.parentElement.parentElement.parentElement.remove(); window.dashboardManager.showCampaignInsights('${opportunity.id}');">
-                            <i class="fas fa-chart-line"></i>
-                            View Campaign Insights
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(modal);
-        
-        // Auto-remove after 10 seconds if user doesn't interact
-        setTimeout(() => {
-            if (modal.parentNode) {
-                modal.parentNode.removeChild(modal);
-            }
-        }, 10000);
-    }
-    
-    saveEngageCampaign(opportunity) {
-        // Save campaign without launching
-        this.showNotification('Campaign saved successfully!', 'success');
-    }
+    // REMOVE THE PROBLEMATIC METHODS
+    // Remove setupEngageCampaignEvents method entirely
+    // Remove confirmEngageCampaignLaunch method entirely
 
     showNotification(message, type = 'info') {
         // Create notification element
@@ -1681,8 +1621,6 @@ class DashboardManager {
             }
         }, 3000);
     }
-
-
 
     loadGrowthHistory() {
         const historyList = document.getElementById('history-list');
@@ -1793,11 +1731,11 @@ class DashboardManager {
                     </div>
                     
                     <div class="history-item-actions">
-                        <a href="#" class="action-link" onclick="dashboard.viewCampaignInsights('${opportunity.id}')">
+                        <a href="#" class="action-link" onclick="window.dashboardManager.viewCampaignInsights('${opportunity.id}')">
                             <i class="fas fa-chart-bar"></i>
                             View Campaign Insights
                         </a>
-                        <a href="#" class="action-link" onclick="dashboard.viewOriginalAnalysis('${opportunity.id}')">
+                        <a href="#" class="action-link" onclick="window.dashboardManager.viewOriginalAnalysis('${opportunity.id}')">
                             <i class="fas fa-search"></i>
                             View Original Analysis
                         </a>
@@ -2092,6 +2030,26 @@ class DashboardManager {
                 button.classList.add('btn-success');
             }
         }
+    }
+
+    setupBreadcrumbNavigation() {
+        // Set up breadcrumb navigation event listeners
+        const breadcrumbLinks = document.querySelectorAll('.breadcrumb-link');
+        breadcrumbLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = link.getAttribute('href');
+                this.handleNavigation(href);
+            });
+        });
+    }
+
+    showCampaignLaunchSuccess(opportunity) {
+        // Show success notification for campaign launch
+        this.showNotification(`🎉 Campaign "${opportunity.headline}" launched successfully!`, 'success');
+        
+        // Optional: Show a more detailed success modal (simplified for now)
+        console.log('Campaign launched successfully:', opportunity.headline);
     }
 
     showCampaignInsights(opportunityId) {
