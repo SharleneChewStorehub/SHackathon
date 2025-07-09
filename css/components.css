@@ -461,157 +461,286 @@
     }
 } 
 
-/* Engage Overview Styles */
+/* Engage Overview Styles - Compact design matching actual StoreHub Backoffice */
 .engage-overview {
+    padding: 1.5rem;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    background: white;
+    min-height: 100vh;
 }
 
 .engage-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e9ecef;
 }
 
-.engage-header h2 {
+.engage-header h1 {
     color: var(--text-primary);
+    font-size: 1.75rem;
+    font-weight: 500;
     margin: 0;
 }
 
-.credits-display {
-    min-width: 300px;
+.engage-credits {
+    display: flex;
+    justify-content: flex-end;
 }
 
 .credits-card {
-    background: var(--surface);
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: var(--shadow-sm);
-    text-align: center;
+    background: white;
+    border-radius: 6px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+    border: 1px solid #e9ecef;
 }
 
-.credits-card h3 {
+.credits-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.credits-header h3 {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    margin: 0;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.refresh-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.2rem;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    font-size: 0.8rem;
+}
+
+.refresh-btn:hover {
+    background: #f8f9fa;
     color: var(--text-primary);
-    margin: 0 0 1rem 0;
-    font-size: 1.1rem;
 }
 
-.credits-count {
-    font-size: 3rem;
-    font-weight: bold;
+.credits-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.credits-number {
+    font-size: 2rem;
+    font-weight: 700;
     color: var(--storehub-orange);
-    margin-bottom: 1rem;
+    line-height: 1;
 }
 
 .credits-breakdown {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-    padding: 0.5rem 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-}
-
-.credit-item {
-    display: flex;
     flex-direction: column;
+    gap: 0.25rem;
+}
+
+.credit-row {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    font-size: 0.9rem;
+    min-width: 80px;
 }
 
-.credit-item span:first-child {
+.credit-label {
+    font-size: 0.8rem;
     color: var(--text-secondary);
-    margin-bottom: 0.25rem;
 }
 
-.credit-item span:last-child {
+.credit-value {
+    font-weight: 600;
     color: var(--text-primary);
+    font-size: 0.8rem;
+}
+
+.topup-btn {
+    background: var(--storehub-orange);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    font-size: 0.85rem;
+}
+
+.topup-btn:hover {
+    background: #e55a2b;
+}
+
+.topup-btn i {
+    margin-right: 0.4rem;
+}
+
+.automated-campaigns-section {
+    margin-bottom: 1.5rem;
+}
+
+.automated-campaigns-section h2 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+.campaigns-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.campaign-column {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
+}
+
+.campaign-category-header {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.campaign-category-header h3 {
+    color: var(--text-primary);
+    margin: 0 0 0.25rem 0;
+    font-size: 0.95rem;
     font-weight: 600;
 }
 
-.automated-campaigns, .custom-campaign, .best-practices {
-    margin-bottom: 3rem;
-}
-
-.automated-campaigns h3, .custom-campaign h3, .best-practices h3 {
-    color: var(--text-primary);
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
-}
-
-.campaign-categories {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
-}
-
-.campaign-category {
-    background: var(--surface);
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: var(--shadow-sm);
-}
-
-.campaign-category h4 {
-    color: var(--text-primary);
-    margin: 0 0 0.5rem 0;
-    font-size: 1.2rem;
-}
-
-.campaign-category p {
+.campaign-category-header p {
     color: var(--text-secondary);
-    margin: 0 0 1rem 0;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.campaign-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
 }
 
 .campaign-option {
     display: flex;
     align-items: center;
-    padding: 0.75rem;
-    margin-bottom: 0.5rem;
-    border-radius: 6px;
-    background: var(--background);
+    padding: 0.5rem;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s ease;
+    border: 1px solid transparent;
 }
 
 .campaign-option:hover {
-    background: var(--storehub-orange);
-    color: var(--text-white);
+    background: #f8f9fa;
+    border-color: #e9ecef;
 }
 
 .campaign-option.active {
     background: var(--storehub-orange);
-    color: var(--text-white);
+    color: white;
+    border-color: var(--storehub-orange);
 }
 
-.campaign-option i {
-    margin-right: 0.75rem;
-    font-size: 1.1rem;
+.campaign-option.highlighted {
+    background: var(--storehub-orange);
+    color: white;
+    border-color: var(--storehub-orange);
 }
 
-.custom-campaign-option {
+.campaign-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    margin-right: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+    font-size: 0.8rem;
+}
+
+.campaign-option:not(.active):not(.highlighted) .campaign-icon {
+    background: #f8f9fa;
+    color: var(--text-secondary);
+}
+
+.campaign-name {
+    font-weight: 500;
+    font-size: 0.8rem;
+}
+
+.custom-campaign-section {
+    margin-bottom: 1.5rem;
+}
+
+.custom-campaign-section h2 {
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+.section-description {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+    font-size: 0.9rem;
+}
+
+.custom-campaign-card {
+    background: white;
+    border-radius: 6px;
     padding: 1rem;
-    background: var(--surface);
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
 }
 
-.custom-campaign-option:hover {
-    background: var(--storehub-orange);
-    color: var(--text-white);
-    transform: translateY(-2px);
+.campaign-option.large {
+    padding: 1rem;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
 }
 
-.custom-campaign-option i {
-    margin-right: 1rem;
-    font-size: 1.5rem;
+.campaign-option.large:hover {
+    background: #f1f3f4;
+    border-color: #d1d5db;
+}
+
+.campaign-option.large .campaign-icon {
+    width: 32px;
+    height: 32px;
+    background: #6b7280;
+    color: white;
+    margin-right: 0.75rem;
+}
+
+.campaign-option.large .campaign-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
 }
 
 /* Engage Campaign Setup Styles */
@@ -845,18 +974,86 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .engage-overview {
+        padding: 1rem;
+    }
+    
     .engage-header {
         flex-direction: column;
         gap: 1rem;
     }
     
-    .credits-display {
-        min-width: auto;
-        width: 100%;
+    .engage-header h1 {
+        font-size: 1.5rem;
     }
     
-    .campaign-categories {
+    .credits-card {
+        min-width: 100%;
+        padding: 0.75rem;
+    }
+    
+    .campaigns-grid {
         grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .credits-number {
+        font-size: 1.5rem;
+    }
+    
+    .campaign-column {
+        padding: 0.75rem;
+    }
+    
+    .campaign-category-header {
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+    
+    .campaign-category-header h3 {
+        font-size: 0.9rem;
+    }
+    
+    .campaign-category-header p {
+        font-size: 0.75rem;
+    }
+    
+    .campaign-option {
+        padding: 0.4rem;
+    }
+    
+    .campaign-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 0.4rem;
+        font-size: 0.7rem;
+    }
+    
+    .campaign-name {
+        font-size: 0.75rem;
+    }
+    
+    .campaign-option.large {
+        padding: 0.75rem;
+    }
+    
+    .campaign-option.large .campaign-icon {
+        width: 28px;
+        height: 28px;
+        margin-right: 0.6rem;
+    }
+    
+    .campaign-option.large .campaign-name {
+        font-size: 0.85rem;
+    }
+    
+    .automated-campaigns-section h2,
+    .custom-campaign-section h2 {
+        font-size: 1.2rem;
+    }
+    
+    .section-description {
+        font-size: 0.85rem;
     }
     
     .campaign-setup-header {

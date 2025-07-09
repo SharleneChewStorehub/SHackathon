@@ -11,16 +11,28 @@ class DashboardManager {
     init() {
         this.setupEventListeners();
         this.setupMobileMenu();
-        this.initializeGrowthHistory();
         this.loadOpportunities();
     }
 
     setupEventListeners() {
-        // Navigation event listeners
+        // Navigation event listeners - Handle all dashboard navigation
         document.addEventListener('click', (e) => {
+            // Sidebar navigation
             if (e.target.matches('.sidebar-item')) {
                 e.preventDefault();
                 this.handleNavigation(e.target.getAttribute('href'));
+            }
+            
+            // Breadcrumb navigation
+            if (e.target.matches('.breadcrumb-link')) {
+                e.preventDefault();
+                this.handleNavigation(e.target.getAttribute('href'));
+            }
+            
+            // Back to dashboard buttons
+            if (e.target.matches('.back-button') || e.target.closest('.back-button')) {
+                e.preventDefault();
+                this.navigateToDashboard();
             }
         });
 
@@ -106,7 +118,7 @@ class DashboardManager {
         // Handle page navigation
         switch (href) {
             case '#dashboard':
-                this.showDashboard();
+                this.navigateToDashboard();
                 break;
             case '#reports':
                 this.showGrowthHistory();
@@ -119,8 +131,33 @@ class DashboardManager {
         }
     }
 
+    navigateToDashboard() {
+        // Universal method to navigate to dashboard from any page
+        this.currentPage = 'dashboard';
+        
+        // Update page title
+        document.title = 'StoreHub Dashboard - Today\'s Opportunities';
+        
+        // Update sidebar active state
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        const dashboardItem = document.querySelector('[href="#dashboard"]');
+        if (dashboardItem) {
+            dashboardItem.classList.add('active');
+        }
+        
+        // Reset main content to dashboard
+        this.showDashboard();
+    }
+
     showDashboard() {
         this.currentPage = 'dashboard';
+        
+        // Update page title
+        document.title = 'StoreHub Dashboard - Today\'s Opportunities';
+        
+        // Reset main content to dashboard
         document.getElementById('main-content').innerHTML = `
             <div class="dashboard-container">
                 <section class="welcome-section">
@@ -206,9 +243,14 @@ class DashboardManager {
                 <section class="opportunities-widget" id="opportunities-widget">
                     <div class="widget-header">
                         <h3>Today's Opportunities</h3>
-                        <button class="info-button" id="info-button" title="View past opportunities">
-                            <i class="fas fa-info-circle"></i>
-                        </button>
+                        <div class="header-buttons">
+                            <button class="nav-button growth-history-btn" id="info-button">
+                                Growth History
+                            </button>
+                            <button class="nav-button explore-opportunities-btn" onclick="window.dashboardManager.showOpportunityOptions()">
+                                Explore More Opportunities
+                            </button>
+                        </div>
                     </div>
                     
                     <div class="opportunities-container" id="opportunities-container">
@@ -236,6 +278,7 @@ class DashboardManager {
             </div>
         `;
         
+        // Load opportunities and set up event listeners
         this.loadOpportunities();
         this.setupEventListeners();
     }
@@ -245,6 +288,10 @@ class DashboardManager {
         document.getElementById('main-content').innerHTML = `
             <div class="history-container">
                 <section class="history-header">
+                    <button class="back-button" onclick="window.dashboardManager.navigateToDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </button>
                     <nav class="breadcrumb">
                         <a href="#dashboard" class="breadcrumb-link">Dashboard</a>
                         <span class="breadcrumb-separator">></span>
@@ -274,7 +321,6 @@ class DashboardManager {
         `;
         
         this.setupEventListeners();
-        this.setupBreadcrumbNavigation();
     }
 
     showEngagePage() {
@@ -282,87 +328,128 @@ class DashboardManager {
         document.getElementById('main-content').innerHTML = `
             <div class="engage-overview">
                 <section class="engage-header">
-                    <h2>Engage Overview</h2>
-                    <div class="credits-display">
+                    <button class="back-button" onclick="window.dashboardManager.navigateToDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </button>
+                    <h1>Engage Overview</h1>
+                    <div class="engage-credits">
                         <div class="credits-card">
-                            <h3>Available Credits</h3>
-                            <div class="credits-count">200</div>
-                            <div class="credits-breakdown">
-                                <div class="credit-item">
-                                    <span>Purchased</span>
-                                    <span>200</span>
+                            <div class="credits-header">
+                                <h3>Available Credits</h3>
+                                <button class="refresh-btn">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                            <div class="credits-main">
+                                <div class="credits-number">200</div>
+                                <div class="credits-breakdown">
+                                    <div class="credit-row">
+                                        <span class="credit-label">Purchased</span>
+                                        <span class="credit-value">200</span>
+                                    </div>
+                                    <div class="credit-row">
+                                        <span class="credit-label">Free</span>
+                                        <span class="credit-value">0</span>
+                                    </div>
                                 </div>
-                                <div class="credit-item">
-                                    <span>Free</span>
-                                    <span>0</span>
+                            </div>
+                            <button class="topup-btn">
+                                <i class="fas fa-plus"></i>
+                                Top-up
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="automated-campaigns-section">
+                    <h2>Automated Campaigns</h2>
+                    <div class="campaigns-grid">
+                        <div class="campaign-column">
+                            <div class="campaign-category-header">
+                                <h3>Welcome Message</h3>
+                                <p>Reward new customers with vouchers or freebies</p>
+                            </div>
+                            <div class="campaign-options">
+                                <div class="campaign-option">
+                                    <div class="campaign-icon">
+                                        <i class="fas fa-user-plus"></i>
+                                    </div>
+                                    <span class="campaign-name">Welcome New Customers</span>
                                 </div>
                             </div>
-                            <button class="btn btn-primary">+ Top-up</button>
+                        </div>
+                        
+                        <div class="campaign-column">
+                            <div class="campaign-category-header">
+                                <h3>Engage Customers</h3>
+                                <p>Stay top of mind with your existing customers</p>
+                            </div>
+                            <div class="campaign-options">
+                                <div class="campaign-option active">
+                                    <div class="campaign-icon">
+                                        <i class="fas fa-birthday-cake"></i>
+                                    </div>
+                                    <span class="campaign-name">Birthday Promotion</span>
+                                </div>
+                                <div class="campaign-option">
+                                    <div class="campaign-icon">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                    </div>
+                                    <span class="campaign-name">Cashback Reminder</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="campaign-column">
+                            <div class="campaign-category-header">
+                                <h3>Bring Back Customers</h3>
+                                <p>Remind inactive customers to return and spend again</p>
+                            </div>
+                            <div class="campaign-options">
+                                <div class="campaign-option">
+                                    <div class="campaign-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <span class="campaign-name">Expiring Cashback Alert</span>
+                                </div>
+                                <div class="campaign-option highlighted">
+                                    <div class="campaign-icon">
+                                        <i class="fas fa-user-friends"></i>
+                                    </div>
+                                    <span class="campaign-name">Win Back Lost Customers</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="campaign-column">
+                            <div class="campaign-category-header">
+                                <h3>Other</h3>
+                                <p>Extra tools to get ahead of the competition</p>
+                            </div>
+                            <div class="campaign-options">
+                                <div class="campaign-option">
+                                    <div class="campaign-icon">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="campaign-name">Boost Google Reviews</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                <section class="automated-campaigns">
-                    <h3>Automated Campaigns</h3>
-                    <div class="campaign-categories">
-                        <div class="campaign-category">
-                            <h4>Welcome Message</h4>
-                            <p>Reward new customers with vouchers or freebies</p>
-                            <div class="campaign-option">
-                                <i class="fas fa-user-plus"></i>
-                                <span>Welcome New Customers</span>
+                <section class="custom-campaign-section">
+                    <h2>Custom Campaign</h2>
+                    <p class="section-description">Send one-time SMS campaigns to promote your new products, limited-time offers, and special promotions.</p>
+                    <div class="custom-campaign-card">
+                        <div class="campaign-option large">
+                            <div class="campaign-icon">
+                                <i class="fas fa-sms"></i>
                             </div>
-                        </div>
-                        
-                        <div class="campaign-category">
-                            <h4>Engage Customers</h4>
-                            <p>Stay top of mind with your existing customers</p>
-                            <div class="campaign-option">
-                                <i class="fas fa-birthday-cake"></i>
-                                <span>Birthday Promotion</span>
-                            </div>
-                            <div class="campaign-option">
-                                <i class="fas fa-money-bill-wave"></i>
-                                <span>Cashback Reminder</span>
-                            </div>
-                        </div>
-                        
-                        <div class="campaign-category">
-                            <h4>Bring Back Customers</h4>
-                            <p>Remind inactive customers to return and spend again</p>
-                            <div class="campaign-option">
-                                <i class="fas fa-clock"></i>
-                                <span>Expiring Cashback Alert</span>
-                            </div>
-                            <div class="campaign-option active">
-                                <i class="fas fa-user-friends"></i>
-                                <span>Win Back Lost Customers</span>
-                            </div>
-                        </div>
-                        
-                        <div class="campaign-category">
-                            <h4>Other</h4>
-                            <p>Extra tools to get ahead of the competition</p>
-                            <div class="campaign-option">
-                                <i class="fas fa-star"></i>
-                                <span>Boost Google Reviews</span>
-                            </div>
+                            <span class="campaign-name">One-Time SMS Campaign</span>
                         </div>
                     </div>
-                </section>
-
-                <section class="custom-campaign">
-                    <h3>Custom Campaign</h3>
-                    <p>Send one-time SMS campaigns to promote your new products, limited-time offers, and special promotions.</p>
-                    <div class="custom-campaign-option">
-                        <i class="fas fa-sms"></i>
-                        <span>One-Time SMS Campaign</span>
-                    </div>
-                </section>
-
-                <section class="best-practices">
-                    <h3>Best Practices for businesses like yours!</h3>
-                    <p>Watch 30-second snippets of Best Practices to drive repeated sales, automatically!</p>
                 </section>
             </div>
         `;
@@ -740,16 +827,7 @@ class DashboardManager {
             `).join('');
     }
     
-    setupBreadcrumbNavigation() {
-        // Handle breadcrumb navigation
-        document.querySelectorAll('.breadcrumb-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const href = link.getAttribute('href');
-                this.handleNavigation(href);
-            });
-        });
-    }
+
 
     closeModal() {
         const modal = document.querySelector('.modal-backdrop');
@@ -1420,29 +1498,73 @@ class DashboardManager {
         }, 3000);
     }
 
-    // Growth History Page Management
-    initializeGrowthHistory() {
-        const infoButton = document.querySelector('.info-button');
-        const backButton = document.getElementById('back-to-dashboard');
+
+
+    showGrowthHistory() {
+        this.currentPage = 'history';
+        
+        // Update page title
+        document.title = 'Growth History - StoreHub Dashboard';
+        
+        // Replace main content with Growth History page
+        document.getElementById('main-content').innerHTML = `
+            <div class="history-container">
+                <section class="history-header">
+                    <button class="back-button" onclick="window.dashboardManager.navigateToDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </button>
+                    <nav class="breadcrumb">
+                        <a href="#dashboard" class="breadcrumb-link">Dashboard</a>
+                        <span class="breadcrumb-separator">></span>
+                        <span>Growth History</span>
+                    </nav>
+                    <h2>Growth History</h2>
+                    <p class="history-subtitle">Review your past opportunities and campaign performance</p>
+                </section>
+
+                <section class="history-content">
+                    <div class="history-filters">
+                        <select id="category-filter">
+                            <option value="all">All Categories</option>
+                            <option value="customer-lifecycle">Customer Lifecycle</option>
+                            <option value="product-profitability">Product Profitability</option>
+                            <option value="basket-analysis">Basket Analysis</option>
+                            <option value="inventory-aging">Inventory Aging</option>
+                        </select>
+                        <select id="time-filter">
+                            <option value="all">All Time</option>
+                            <option value="last-month">Last Month</option>
+                            <option value="last-quarter">Last Quarter</option>
+                            <option value="last-year">Last Year</option>
+                        </select>
+                    </div>
+                    
+                    <div class="history-list" id="history-list">
+                        <div class="loading-state">Loading growth history...</div>
+                    </div>
+                </section>
+            </div>
+        `;
+        
+        // Load fresh data and set up event listeners
+        this.loadGrowthHistory();
+        this.setupEventListeners();
+    }
+
+
+
+    loadGrowthHistory() {
+        const historyList = document.getElementById('history-list');
+        if (!historyList) return;
+
+        // Show loading state
+        historyList.innerHTML = '<div class="loading-state">Loading growth history...</div>';
+
+        // Set up filter event listeners
         const categoryFilter = document.getElementById('category-filter');
         const timeFilter = document.getElementById('time-filter');
-
-        // Navigate to Growth History page
-        if (infoButton) {
-            infoButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.showGrowthHistory();
-            });
-        }
-
-        // Navigate back to dashboard
-        if (backButton) {
-            backButton.addEventListener('click', () => {
-                this.showDashboard();
-            });
-        }
-
-        // Filter functionality
+        
         if (categoryFilter) {
             categoryFilter.addEventListener('change', () => {
                 this.filterHistoryItems();
@@ -1454,61 +1576,6 @@ class DashboardManager {
                 this.filterHistoryItems();
             });
         }
-
-        // Load initial history data
-        this.loadGrowthHistory();
-    }
-
-    showGrowthHistory() {
-        const dashboardContainer = document.querySelector('.dashboard-container');
-        const historyPage = document.getElementById('growth-history-page');
-        
-        if (dashboardContainer && historyPage) {
-            dashboardContainer.style.display = 'none';
-            historyPage.style.display = 'block';
-            
-            // Update page title
-            document.title = 'Growth History - StoreHub Dashboard';
-            
-            // Load fresh data
-            this.loadGrowthHistory();
-        }
-    }
-
-    showDashboard() {
-        const dashboardContainer = document.querySelector('.dashboard-container');
-        const historyPage = document.getElementById('growth-history-page');
-        const mainContent = document.getElementById('main-content');
-        
-        // Hide Growth History page if it exists
-        if (historyPage) {
-            historyPage.style.display = 'none';
-        }
-        
-        // Reset main content if it was modified for opportunity options
-        if (this.currentPage === 'opportunity-options') {
-            location.reload(); // Simple reload to reset to dashboard
-            return;
-        }
-        
-        // Show dashboard container
-        if (dashboardContainer) {
-            dashboardContainer.style.display = 'block';
-        }
-        
-        // Update page title
-        document.title = 'StoreHub Dashboard - Today\'s Opportunities';
-        
-        // Reset current page
-        this.currentPage = 'dashboard';
-    }
-
-    loadGrowthHistory() {
-        const historyList = document.getElementById('history-list');
-        if (!historyList) return;
-
-        // Show loading state
-        historyList.innerHTML = '<div class="loading-state">Loading growth history...</div>';
 
         // Simulate loading delay
         setTimeout(() => {

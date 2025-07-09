@@ -774,14 +774,25 @@ class ModalManager {
             return;
         }
         
+        console.log('Modal launching campaign for opportunity:', this.currentOpportunity.id);
+        
         // Close modal first
         this.closeModal();
         
-        // Route to campaign setup (same as opportunity card button)
-        if (window.dashboardManager) {
-            window.dashboardManager.routeToCampaignSetup(this.currentOpportunity);
+        // Use the exact same method as the dashboard launch button
+        if (window.dashboardManager && typeof window.dashboardManager.launchCampaign === 'function') {
+            // Call the dashboard's launchCampaign method with the opportunity ID
+            window.dashboardManager.launchCampaign(this.currentOpportunity.id);
         } else {
-            console.error('Dashboard manager not available');
+            // Retry after a short delay if dashboard manager isn't ready
+            setTimeout(() => {
+                if (window.dashboardManager && typeof window.dashboardManager.launchCampaign === 'function') {
+                    window.dashboardManager.launchCampaign(this.currentOpportunity.id);
+                } else {
+                    console.error('Dashboard manager not available after retry');
+                    this.showNotification('Unable to launch campaign. Please try again.', 'error');
+                }
+            }, 100);
         }
     }
 
@@ -789,20 +800,42 @@ class ModalManager {
         // Create notification element
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
+        
+        let icon = 'info';
+        if (type === 'success') icon = 'check';
+        else if (type === 'error') icon = 'exclamation-triangle';
+        else if (type === 'warning') icon = 'exclamation-circle';
+        
         notification.innerHTML = `
-            <i class="fas fa-${type === 'success' ? 'check' : 'info'}-circle"></i>
+            <i class="fas fa-${icon}-circle"></i>
             <span>${message}</span>
+        `;
+        
+        // Add styles
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--danger)' : 'var(--info)'};
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            z-index: 1001;
+            animation: slideIn 0.3s ease-out;
+            max-width: 400px;
         `;
         
         // Add to body
         document.body.appendChild(notification);
         
-        // Remove after 3 seconds
+        // Remove after 4 seconds (longer for error messages)
+        const timeout = type === 'error' ? 5000 : 3000;
         setTimeout(() => {
             if (notification.parentNode) {
                 notification.parentNode.removeChild(notification);
             }
-        }, 3000);
+        }, timeout);
     }
 }
 
