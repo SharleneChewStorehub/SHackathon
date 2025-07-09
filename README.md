@@ -25,7 +25,7 @@ Malaysian F&B and retail merchants possess wealth of data but lack time and anal
 ### Our Solution
 **AI-Powered Growth Consultant** that:
 - Analyzes merchant data automatically
-- Surfaces 1-3 prioritized opportunities daily
+- Surfaces 1-3 prioritized opportunities daily, but have more options for merchant to explore
 - Provides compelling business justifications
 - Enables one-click campaign launches
 - Demonstrates clear, attributable ROI
@@ -241,11 +241,11 @@ sharlene-shackathon/
 - **Cross-browser Compatibility**: Modern browser support ✅
 
 ### Business Metrics
-- **Revenue Generated**: RM 18,450 from historical campaigns
-- **Campaign Success Rate**: 79-121% of target achievement
+- **Revenue Generated**: RM xxx from historical campaigns
+- **Campaign Success Rate**: x% of target achievement
 - **User Engagement**: 60-second insight-to-action workflow
-- **Feature Adoption**: Projected 25% increase in premium features
-- **Merchant Retention**: Projected 40% churn reduction
+- **Feature Adoption**: Projected x% increase in premium features
+- **Merchant Retention**: Projected x% churn reduction
 
 ---
 
@@ -268,36 +268,6 @@ sharlene-shackathon/
 - **Personalization Engine**: Merchant-specific optimization
 - **Predictive Analytics**: Forecasting and trend analysis
 - **Automated Decision Making**: Intelligent campaign optimization
-
----
-
-## 🏆 Awards & Recognition
-
-### Development Excellence
-- **Innovation Award**: Pioneering AI-first merchant solutions
-- **Technical Achievement**: Seamless vanilla JavaScript architecture
-- **Design Excellence**: Authentic StoreHub branding and UX
-- **Business Impact**: Measurable ROI and merchant value creation
-
-### Industry Recognition
-- **Digital Transformation**: Leading SME technology advancement
-- **Market Innovation**: Redefining merchant dashboard standards
-- **Scalability Achievement**: Framework for global expansion
-- **AI Integration**: Practical machine learning implementation
-
----
-
-## 📞 Contact & Support
-
-### Development Team
-- **Lead Developer**: Sharlene Chew
-- **Project Repository**: [GitHub](https://github.com/SharleneChewStorehub/SHackathon)
-- **Demo Environment**: [Live Demo](http://localhost:8000)
-
-### Business Inquiries
-- **StoreHub Technology**: Leading merchant solutions provider
-- **Partnership Opportunities**: AI and analytics integration
-- **Scaling Discussions**: Market expansion and deployment
 
 ---
 
