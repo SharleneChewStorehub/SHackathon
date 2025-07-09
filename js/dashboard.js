@@ -11,6 +11,7 @@ class DashboardManager {
     init() {
         this.setupEventListeners();
         this.setupMobileMenu();
+        this.initializeGrowthHistory();
         this.loadOpportunities();
     }
 
@@ -1417,6 +1418,483 @@ class DashboardManager {
                 notification.parentNode.removeChild(notification);
             }
         }, 3000);
+    }
+
+    // Growth History Page Management
+    initializeGrowthHistory() {
+        const infoButton = document.querySelector('.info-button');
+        const backButton = document.getElementById('back-to-dashboard');
+        const categoryFilter = document.getElementById('category-filter');
+        const timeFilter = document.getElementById('time-filter');
+
+        // Navigate to Growth History page
+        if (infoButton) {
+            infoButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.showGrowthHistory();
+            });
+        }
+
+        // Navigate back to dashboard
+        if (backButton) {
+            backButton.addEventListener('click', () => {
+                this.showDashboard();
+            });
+        }
+
+        // Filter functionality
+        if (categoryFilter) {
+            categoryFilter.addEventListener('change', () => {
+                this.filterHistoryItems();
+            });
+        }
+
+        if (timeFilter) {
+            timeFilter.addEventListener('change', () => {
+                this.filterHistoryItems();
+            });
+        }
+
+        // Load initial history data
+        this.loadGrowthHistory();
+    }
+
+    showGrowthHistory() {
+        const dashboardContainer = document.querySelector('.dashboard-container');
+        const historyPage = document.getElementById('growth-history-page');
+        
+        if (dashboardContainer && historyPage) {
+            dashboardContainer.style.display = 'none';
+            historyPage.style.display = 'block';
+            
+            // Update page title
+            document.title = 'Growth History - StoreHub Dashboard';
+            
+            // Load fresh data
+            this.loadGrowthHistory();
+        }
+    }
+
+    showDashboard() {
+        const dashboardContainer = document.querySelector('.dashboard-container');
+        const historyPage = document.getElementById('growth-history-page');
+        const mainContent = document.getElementById('main-content');
+        
+        // Hide Growth History page if it exists
+        if (historyPage) {
+            historyPage.style.display = 'none';
+        }
+        
+        // Reset main content if it was modified for opportunity options
+        if (this.currentPage === 'opportunity-options') {
+            location.reload(); // Simple reload to reset to dashboard
+            return;
+        }
+        
+        // Show dashboard container
+        if (dashboardContainer) {
+            dashboardContainer.style.display = 'block';
+        }
+        
+        // Update page title
+        document.title = 'StoreHub Dashboard - Today\'s Opportunities';
+        
+        // Reset current page
+        this.currentPage = 'dashboard';
+    }
+
+    loadGrowthHistory() {
+        const historyList = document.getElementById('history-list');
+        if (!historyList) return;
+
+        // Show loading state
+        historyList.innerHTML = '<div class="loading-state">Loading growth history...</div>';
+
+        // Simulate loading delay
+        setTimeout(() => {
+            const historicalData = window.mockData.historicalOpportunities;
+            this.renderHistoryItems(historicalData);
+        }, 500);
+    }
+
+    renderHistoryItems(opportunities) {
+        const historyList = document.getElementById('history-list');
+        if (!historyList) return;
+
+        if (opportunities.length === 0) {
+            historyList.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>No campaign history found</h3>
+                    <p>Start launching campaigns from your opportunities to see results here.</p>
+                </div>
+            `;
+            return;
+        }
+
+        const historyHTML = opportunities.map(opportunity => {
+            const successScore = this.calculateSuccessScore(opportunity);
+            const successClass = this.getSuccessClass(successScore);
+            const successTag = this.getSuccessTag(successScore);
+            
+            return `
+                <div class="history-item" data-category="${opportunity.category}" data-date="${opportunity.launchedDate}">
+                    <div class="history-item-header">
+                        <div class="history-item-info">
+                            <div class="history-item-category" style="background-color: ${opportunity.categoryColor}">
+                                ${opportunity.categoryLabel}
+                            </div>
+                            <h3 class="history-item-title">${opportunity.headline}</h3>
+                            <div class="history-item-date">
+                                Launched: ${this.formatDate(opportunity.launchedDate)}
+                            </div>
+                        </div>
+                        <div class="history-item-success">
+                            <div class="success-score ${successClass}">${successScore}%</div>
+                            <div class="success-tag ${successTag.class}">${successTag.text}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="history-item-results">
+                        <div class="result-section">
+                            <h4>📊 Potential (Forecast)</h4>
+                            <div class="result-metrics">
+                                <div class="result-metric">
+                                    <span class="result-metric-label">Target Revenue</span>
+                                    <span class="result-metric-value">RM${opportunity.estimatedImpact.amount.toLocaleString()}</span>
+                                </div>
+                                <div class="result-metric">
+                                    <span class="result-metric-label">Expected Reach</span>
+                                    <span class="result-metric-value">${opportunity.actualResults.campaignsSent} customers</span>
+                                </div>
+                                <div class="result-metric">
+                                    <span class="result-metric-label">Confidence Level</span>
+                                    <span class="result-metric-value">${opportunity.estimatedImpact.confidence}%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="result-section">
+                            <h4>🎯 Actual (Results)</h4>
+                            <div class="result-metrics">
+                                <div class="result-metric">
+                                    <span class="result-metric-label">Revenue Generated</span>
+                                    <span class="result-metric-value ${opportunity.actualResults.revenueGenerated >= opportunity.estimatedImpact.amount ? 'positive' : 'negative'}">
+                                        RM${opportunity.actualResults.revenueGenerated.toLocaleString()}
+                                    </span>
+                                </div>
+                                <div class="result-metric">
+                                    <span class="result-metric-label">Response Rate</span>
+                                    <span class="result-metric-value positive">${opportunity.actualResults.responseRate}%</span>
+                                </div>
+                                <div class="result-metric">
+                                    <span class="result-metric-label">ROI</span>
+                                    <span class="result-metric-value positive">${opportunity.actualResults.roi}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="history-item-actions">
+                        <a href="#" class="action-link" onclick="dashboard.viewCampaignInsights('${opportunity.id}')">
+                            <i class="fas fa-chart-bar"></i>
+                            View Campaign Insights
+                        </a>
+                        <a href="#" class="action-link" onclick="dashboard.viewOriginalAnalysis('${opportunity.id}')">
+                            <i class="fas fa-search"></i>
+                            View Original Analysis
+                        </a>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        historyList.innerHTML = historyHTML;
+    }
+
+    calculateSuccessScore(opportunity) {
+        const actual = opportunity.actualResults.revenueGenerated;
+        const target = opportunity.estimatedImpact.amount;
+        return Math.round((actual / target) * 100);
+    }
+
+    getSuccessClass(score) {
+        if (score >= 100) return 'high';
+        if (score >= 70) return 'medium';
+        return 'low';
+    }
+
+    getSuccessTag(score) {
+        if (score >= 100) return { class: 'exceeded', text: 'GOAL EXCEEDED' };
+        if (score >= 70) return { class: 'partial', text: 'PARTIAL SUCCESS' };
+        return { class: 'missed', text: 'GOAL MISSED' };
+    }
+
+    filterHistoryItems() {
+        const categoryFilter = document.getElementById('category-filter');
+        const timeFilter = document.getElementById('time-filter');
+        const historyItems = document.querySelectorAll('.history-item');
+
+        if (!categoryFilter || !timeFilter) return;
+
+        const selectedCategory = categoryFilter.value;
+        const selectedTime = timeFilter.value;
+
+        historyItems.forEach(item => {
+            const itemCategory = item.dataset.category;
+            const itemDate = new Date(item.dataset.date);
+            
+            let showItem = true;
+
+            // Category filter
+            if (selectedCategory !== 'all' && itemCategory !== selectedCategory) {
+                showItem = false;
+            }
+
+            // Time filter
+            if (selectedTime !== 'all') {
+                const now = new Date();
+                let cutoffDate;
+
+                switch (selectedTime) {
+                    case 'last-month':
+                        cutoffDate = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+                        break;
+                    case 'last-quarter':
+                        cutoffDate = new Date(now.getFullYear(), now.getMonth() - 3, now.getDate());
+                        break;
+                    case 'last-year':
+                        cutoffDate = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+                        break;
+                    default:
+                        cutoffDate = new Date(0);
+                }
+
+                if (itemDate < cutoffDate) {
+                    showItem = false;
+                }
+            }
+
+            item.style.display = showItem ? 'block' : 'none';
+        });
+    }
+
+    viewCampaignInsights(opportunityId) {
+        // Simulate navigation to campaign insights page
+        this.showNotification('Navigating to Campaign Insights...', 'info');
+        
+        // In a real implementation, this would navigate to the Engage module
+        setTimeout(() => {
+            this.showNotification('Campaign Insights page would open here', 'success');
+        }, 1000);
+    }
+
+    viewOriginalAnalysis(opportunityId) {
+        // Find the historical opportunity
+        const opportunity = window.mockData.historicalOpportunities.find(opp => opp.id === opportunityId);
+        
+        if (opportunity) {
+            // Show a simplified version of the original analysis
+            this.showNotification('Original Analysis: ' + opportunity.summary, 'info');
+            
+            // In a real implementation, this would show the original justification modal
+            setTimeout(() => {
+                this.showNotification('Original analysis modal would open here', 'success');
+            }, 1000);
+        }
+    }
+
+    formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-MY', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    }
+
+    showOpportunityOptions() {
+        this.currentPage = 'opportunity-options';
+        document.getElementById('main-content').innerHTML = `
+            <div class="page-container">
+                <div class="page-header">
+                    <button class="back-button" onclick="window.dashboardManager.showDashboard()">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </button>
+                    <h1>Explore More Opportunities</h1>
+                    <p class="page-subtitle">Discover additional growth opportunities for your business</p>
+                </div>
+                
+                <div class="opportunity-options-filters">
+                    <div class="filter-group">
+                        <label for="options-category-filter">Filter by Category:</label>
+                        <select id="options-category-filter" onchange="window.dashboardManager.filterOpportunityOptions()">
+                            <option value="all">All Categories</option>
+                            <option value="customer-lifecycle">Customer Lifecycle</option>
+                            <option value="product-profitability">Product Profitability</option>
+                            <option value="basket-analysis">Basket Analysis</option>
+                            <option value="inventory-aging">Inventory Aging</option>
+                            <option value="time-based">Time-Based Optimization</option>
+                            <option value="seasonal">Seasonal Opportunities</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="options-priority-filter">Filter by Priority:</label>
+                        <select id="options-priority-filter" onchange="window.dashboardManager.filterOpportunityOptions()">
+                            <option value="all">All Priorities</option>
+                            <option value="1">High Priority</option>
+                            <option value="2">Medium Priority</option>
+                            <option value="3">Low Priority</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="opportunity-options-grid" id="opportunity-options-grid">
+                    <div class="loading-state">Loading opportunities...</div>
+                </div>
+            </div>
+        `;
+        
+        // Load opportunity options
+        this.loadOpportunityOptions();
+    }
+
+    loadOpportunityOptions() {
+        const optionsGrid = document.getElementById('opportunity-options-grid');
+        if (!optionsGrid) return;
+
+        // Show loading state
+        optionsGrid.innerHTML = '<div class="loading-state">Loading opportunities...</div>';
+
+        // Simulate loading delay
+        setTimeout(() => {
+            const additionalOpportunities = window.mockData.additionalOpportunities;
+            this.renderOpportunityOptions(additionalOpportunities);
+        }, 500);
+    }
+
+    renderOpportunityOptions(opportunities) {
+        const optionsGrid = document.getElementById('opportunity-options-grid');
+        if (!optionsGrid) return;
+
+        if (opportunities.length === 0) {
+            optionsGrid.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>No opportunities found</h3>
+                    <p>Try adjusting your filters to see more opportunities.</p>
+                </div>
+            `;
+            return;
+        }
+
+        const optionsHTML = opportunities.map(opportunity => `
+            <div class="opportunity-option-card" data-category="${opportunity.category}" data-priority="${opportunity.priority}">
+                <div class="option-header">
+                    <div class="category-tag ${opportunity.category}">
+                        ${opportunity.categoryLabel}
+                    </div>
+                    <div class="priority-badge priority-${opportunity.priority}">
+                        ${opportunity.priority === 1 ? 'High' : opportunity.priority === 2 ? 'Medium' : 'Low'} Priority
+                    </div>
+                </div>
+                
+                <h3 class="option-title">${opportunity.headline}</h3>
+                <p class="option-summary">${opportunity.summary}</p>
+                
+                <div class="option-impact">
+                    <div class="impact-metric">
+                        <span class="impact-label">Potential Impact:</span>
+                        <span class="impact-value">RM${opportunity.estimatedImpact.amount.toLocaleString()}</span>
+                    </div>
+                    <div class="impact-metric">
+                        <span class="impact-label">Confidence:</span>
+                        <span class="impact-value">${opportunity.estimatedImpact.confidence}%</span>
+                    </div>
+                </div>
+                
+                <div class="option-actions">
+                    <button class="btn btn-secondary" onclick="window.dashboardManager.viewOpportunityDetails('${opportunity.id}')">
+                        <i class="fas fa-eye"></i>
+                        View Details
+                    </button>
+                    <button class="btn btn-primary" onclick="window.dashboardManager.activateOpportunity('${opportunity.id}')">
+                        <i class="fas fa-plus"></i>
+                        Add to Dashboard
+                    </button>
+                </div>
+            </div>
+        `).join('');
+
+        optionsGrid.innerHTML = optionsHTML;
+    }
+
+    filterOpportunityOptions() {
+        const categoryFilter = document.getElementById('options-category-filter');
+        const priorityFilter = document.getElementById('options-priority-filter');
+        const optionCards = document.querySelectorAll('.opportunity-option-card');
+
+        if (!categoryFilter || !priorityFilter) return;
+
+        const selectedCategory = categoryFilter.value;
+        const selectedPriority = priorityFilter.value;
+
+        optionCards.forEach(card => {
+            const cardCategory = card.dataset.category;
+            const cardPriority = card.dataset.priority;
+            
+            let showCard = true;
+
+            // Category filter
+            if (selectedCategory !== 'all' && cardCategory !== selectedCategory) {
+                showCard = false;
+            }
+
+            // Priority filter
+            if (selectedPriority !== 'all' && cardPriority !== selectedPriority) {
+                showCard = false;
+            }
+
+            card.style.display = showCard ? 'block' : 'none';
+        });
+    }
+
+    viewOpportunityDetails(opportunityId) {
+        // Find the opportunity in additional opportunities
+        const opportunity = window.mockData.additionalOpportunities.find(opp => opp.id === opportunityId);
+        if (!opportunity) return;
+
+        // Show a detailed modal (simplified for now)
+        alert(`Opportunity Details:\n\n${opportunity.headline}\n\n${opportunity.summary}\n\nPotential Impact: RM${opportunity.estimatedImpact.amount.toLocaleString()}\nConfidence: ${opportunity.estimatedImpact.confidence}%`);
+    }
+
+    activateOpportunity(opportunityId) {
+        // Find the opportunity in additional opportunities
+        const opportunity = window.mockData.additionalOpportunities.find(opp => opp.id === opportunityId);
+        if (!opportunity) return;
+
+        // Add to current opportunities (simplified - in real app would sync with backend)
+        window.mockData.currentOpportunities.push({
+            ...opportunity,
+            status: 'active',
+            createdDate: new Date().toISOString()
+        });
+
+        // Show success message
+        this.showNotification(`"${opportunity.headline}" has been added to your dashboard!`, 'success');
+        
+        // Update the card to show it's been activated
+        const card = document.querySelector(`[data-category="${opportunity.category}"][data-priority="${opportunity.priority}"]`);
+        if (card) {
+            const button = card.querySelector('.btn-primary');
+            if (button) {
+                button.innerHTML = '<i class="fas fa-check"></i> Added to Dashboard';
+                button.disabled = true;
+                button.classList.remove('btn-primary');
+                button.classList.add('btn-success');
+            }
+        }
     }
 }
 

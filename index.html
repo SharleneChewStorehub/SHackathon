@@ -196,9 +196,14 @@
         <section class="opportunities-widget" id="opportunities-widget">
             <div class="widget-header">
                 <h3>Today's Opportunities</h3>
-                <button class="info-button" id="info-button" title="View past opportunities">
-                    <i class="fas fa-info-circle"></i>
-                </button>
+                <div class="header-buttons">
+                    <button class="nav-button growth-history-btn" id="info-button">
+                        Growth History
+                    </button>
+                    <button class="nav-button explore-opportunities-btn" onclick="window.dashboardManager.showOpportunityOptions()">
+                        Explore More Opportunities
+                    </button>
+                </div>
             </div>
             
             <div class="opportunities-container" id="opportunities-container">
@@ -274,6 +279,111 @@
         </div>
     </main>
 
+    <!-- Growth History Page -->
+    <div id="growth-history-page" class="page-container" style="display: none;">
+        <div class="page-header">
+            <button id="back-to-dashboard" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </button>
+            <h1>Growth History</h1>
+            <p class="page-subtitle">Your strategic growth journey and campaign performance</p>
+        </div>
+
+
+
+        <div class="history-summary">
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="summary-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="summary-content">
+                        <h3>Total Campaigns</h3>
+                        <div class="summary-value">12</div>
+                        <div class="summary-change positive">+3 this month</div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="summary-content">
+                        <h3>Revenue Generated</h3>
+                        <div class="summary-value">RM18,450</div>
+                        <div class="summary-change positive">+15% monthly growth</div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="summary-content">
+                        <h3>Average ROI</h3>
+                        <div class="summary-value">245%</div>
+                        <div class="summary-change positive">Above industry average</div>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="summary-content">
+                        <h3>Response Rate</h3>
+                        <div class="summary-value">31%</div>
+                        <div class="summary-change positive">Strong engagement</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-filters">
+            <div class="filter-group">
+                <label>Filter by Category:</label>
+                <select id="category-filter">
+                    <option value="all">All Categories</option>
+                    <option value="customer-lifecycle">Customer Lifecycle</option>
+                    <option value="product-profitability">Product Profitability</option>
+                    <option value="basket-analysis">Basket Analysis</option>
+                    <option value="inventory-aging">Inventory Aging</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Time Period:</label>
+                <select id="time-filter">
+                    <option value="all">All Time</option>
+                    <option value="last-month">Last Month</option>
+                    <option value="last-quarter">Last Quarter</option>
+                    <option value="last-year">Last Year</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="history-timeline">
+            <div class="timeline-header">
+                <h2>Campaign History</h2>
+                <div class="timeline-legend">
+                    <div class="legend-item">
+                        <div class="legend-color success"></div>
+                        <span>Goal Exceeded</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color partial"></div>
+                        <span>Partial Success</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color missed"></div>
+                        <span>Goal Missed</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="history-list" class="history-list">
+                <!-- Historical opportunities will be populated here -->
+            </div>
+        </div>
+    </div>
+
     <!-- Justification Modal -->
     <div class="modal-overlay" id="modal-overlay">
         <div class="modal-container" id="modal-container">
@@ -289,10 +399,29 @@
             </div>
             
             <div class="modal-footer">
-                <button class="btn btn-secondary" id="download-csv">
-                    <i class="fas fa-download"></i>
-                    Download CSV
-                </button>
+                <div class="csv-download-container">
+                    <button class="btn btn-secondary" id="download-csv">
+                        <i class="fas fa-download"></i>
+                        Download CSV
+                        <i class="fas fa-chevron-down csv-dropdown-arrow"></i>
+                    </button>
+                    <div class="csv-dropdown" id="csv-dropdown">
+                        <div class="csv-option" data-type="actionable">
+                            <div class="csv-option-header">
+                                <i class="fas fa-table"></i>
+                                <span>Download Actionable List</span>
+                            </div>
+                            <div class="csv-option-desc">Ready-to-use raw data for immediate action</div>
+                        </div>
+                        <div class="csv-option" data-type="summary">
+                            <div class="csv-option-header">
+                                <i class="fas fa-file-alt"></i>
+                                <span>Download Insight Summary</span>
+                            </div>
+                            <div class="csv-option-desc">Portable business case for review and sharing</div>
+                        </div>
+                    </div>
+                </div>
                 <button class="btn btn-primary" id="modal-launch-campaign">
                     Launch Campaign
                 </button>

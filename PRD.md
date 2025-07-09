@@ -1,8 +1,8 @@
 # Product Requirements Document: Dynamic Growth Dashboard
 
 - **Project Codename:** "Today's Opportunities"
-- **Document Version:** 1.4
-- **Date:** January 15, 2025
+- **Document Version:** 1.5
+- **Date:** July 9, 2025
 - **Status:** FINAL
 
 ---
@@ -13,6 +13,7 @@
 * **v1.2:** Incorporated CTO feedback: Refined AI/ML roadmap to a heuristics-first approach, added the data pipeline as a formal dependency, and specified a phased microservice rollout.
 * **v1.3:** Added "Development Workflow & Tooling Guidelines" section to specify the role of Cursor in version control, guidance, and progress logging.
 * **v1.4:** Updated to reflect actual implementation: Changed persona from Priya to Alia (Mama Kopitiam), confirmed vanilla JavaScript approach, and added StoreHub branding requirements.
+* **v1.5:** Major refinement of the user workflow based on brainstorming. Overhauled FR-3 to specify a dual-option CSV download ("Actionable List" & "Insight Summary") and FR-6 to redefine "Growth History" as a "CEO Report Card" showing "Potential vs. Actual" results.
 
 ---
 
@@ -55,6 +56,8 @@ Consequently, value-add features like the "Engage" add-on are perceived as havin
 
 * As a Busy Owner, I want to see pre-analyzed, prioritized growth opportunities when I log in, so that I immediately know what action will have the biggest impact on my business.
 * As a Skeptical Owner, I want to see the data and reasoning behind a suggestion, so that I can trust that the AI's recommendation is valid and not a generic gimmick.
+* **As a Time-Poor Owner, I want to download a summary of an opportunity, so I can review it later or share it with my business partner.**
+* **As a Hands-On Owner, I want to download the raw data behind a suggestion, so I can perform my own analysis or use it for a manual marketing campaign.**
 * As a Growth-Focused Owner, I want to launch a targeted marketing campaign based on a specific insight with one click, so that I can close the gap between analysis and action instantly.
 * As a Results-Driven Owner, I want to easily track the performance and ROI of campaigns launched from these opportunities, so that I can confirm the feature is providing tangible value.
 * As an Organized Owner, I want to view a history of past opportunities and the actions I took, so that I can review my growth strategy over time.
@@ -79,7 +82,19 @@ Consequently, value-add features like the "Engage" add-on are perceived as havin
 * **FR-3.1:** Clicking `[See the Analysis]` shall open a pop-up modal.
 * **FR-3.2:** The modal must serve as a "Justification Dashboard," providing a compelling business case for the opportunity.
 * **FR-3.3:** The modal shall contain a short narrative summary explaining the insight and one or more relevant data visualizations (e.g., a 2x2 matrix, a comparative bar chart, a trend line).
-* **FR-3.4:** The modal must contain a `[Download CSV]` button to export the relevant raw data (e.g., the list of at-risk customers).
+* **FR-3.4 (REVISED): The "Downloadable Growth Kit"**
+    * **FR-3.4.1:** The modal must contain a `[Download CSV]` button that, upon clicking, reveals a dropdown menu with two distinct options.
+        * **Rationale:** This caters to different merchant workflows. Some merchants want to act immediately (`Launch Campaign`), some want raw data to analyze (`Actionable List`), and others want a summary to review or share (`Insight Summary`). Providing these options makes the feature valuable for all user types.
+    * **FR-3.4.2: Option 1 - `Download Actionable List`**
+        * **Purpose:** To provide the merchant with ready-to-use, data-rich raw data for immediate, flexible action. This is for the "Hands-On Owner."
+        * **Example 1 ("Win Back At-Risk VIPs"):** A list of the specific customers, including `Customer Name`, `Phone Number`, `Last Visit Date`, `Lifetime Spend`, and `Favorite Item` for personalization.
+        * **Example 2 ("Boost Most Profitable Item"):** A "Profit Booster's Playbook" with two worksheets: one showing a profit deep-dive on the target item, and a second comparing the top 5 most and least profitable items to inspire combo deals.
+        * **Example 3 ("Increase Average Order Value"):** A "Perfect Combo Builder" analyzing what Nasi Lemak buyers most frequently add to their order, including the profit margin of those potential add-on items.
+    * **FR-3.4.3: Option 2 - `Download Insight Summary`**
+        * **Purpose:** To provide a portable, shareable "business case" that packages the on-screen analysis into a clean, offline file. This serves multiple needs: allowing a "Busy Owner" to review it later, enabling delegation to a team member, and creating a "Before Snapshot" for record-keeping.
+        * **Structure:** A multi-worksheet CSV file.
+        * **Worksheet 1: "Opportunity Briefing":** A well-formatted snapshot of all the information from the modal, including the narrative, supporting data cards (`Current Sales Volume`, `Profit Margin`, etc.), and expected impact.
+        * **Worksheet 2: "Promotion Planner":** A simple, pre-formatted template to help the merchant plan their campaign *before* launching. It includes fields for `Promotion Idea`, `Offer Details`, `Target Audience`, and a simple profit calculator (`Standard Price`, `Proposed Discount`, `New Profit Per Unit`).
 
 #### **FR-4: The Insight-to-Action Workflow**
 * **FR-4.1:** Clicking `[Launch Campaign]` shall intelligently route the user to the correct campaign creation page within the "Engage" module.
@@ -91,10 +106,21 @@ Consequently, value-add features like the "Engage" add-on are perceived as havin
 * **FR-5.2:** The card's text shall change to "✅ Campaign Launched! `[View Performance]`". The link will direct the user to the relevant Campaign Insights page.
 * **FR-5.3:** After a set period (e.g., 24 hours), the card shall be removed from the dashboard and moved to the "Growth History" page.
 
-#### **FR-6: The "Growth History" Page (Hackathon Scope)**
-* **FR-6.1:** A new page titled "Growth History" shall be created, accessible from the main "Reports" section of the Backoffice.
-* **FR-6.2:** This page shall display a chronological list of all past opportunities that have been actioned or have expired from the main dashboard.
-* **FR-6.3 (Hackathon):** The page will be a simple list displaying the mock cards to demonstrate where they are archived, completing the feature's story.
+#### **FR-6: The "Growth History" Page (REVISED)**
+* **FR-6.1:** A new page titled "Growth History" shall be created, accessible from the main "Reports" section of the Backoffice and the "i" icon on the dashboard widget.
+* **FR-6.2 (REVISED): The "CEO's Report Card" Vision**
+    * **Purpose:** The Growth History page will not be a simple log. It will serve as a high-level "Strategic Journal" or "Report Card," allowing a merchant to see the results of their past actions at a glance. It complements, but does not replace, the detailed `Engage > Campaign Insights` reports.
+* **FR-6.3 (NEW): "Potential vs. Actual" Results**
+    * Each entry in the history must clearly compare the original forecast with the final, actual result, closing the loop on every opportunity.
+    * **Example:**
+        * **Goal:** Recover 32 at-risk weekend customers with a potential of RM2,400/monthly.
+        * **Result:** Recovered 18 customers, adding RM1,550 in actual monthly revenue.
+* **FR-6.4 (NEW): "Success Score" Visual Indicator**
+    * Each entry must include a visual cue for quick scanning, such as a percentage (`Success Score: 65% of Goal`) or a simple tag (`[GOAL MET]`, `[PARTIAL SUCCESS]`).
+* **FR-6.5 (NEW): Smart "Drill-Down" Links**
+    * To provide full context without clutter, each entry will contain two distinct links:
+        * **`[View Campaign Insights]`**: Links to the existing, detailed campaign performance report in the "Engage" module.
+        * **`[View Original Analysis]`**: Links to a read-only view of the original "Prove It" modal, reminding the merchant of the starting point and rationale for the opportunity.
 
 ---
 
@@ -189,7 +215,7 @@ This section outlines the expected workflow and usage of the primary development
 
 ### **15. Implementation Status (Phase 1 Hackathon)**
 
-**Current Status:** Phase 1D+ Complete with Critical Hotfixes (January 15, 2025)
+**Current Status:** Phase 1C Complete (January 15, 2025)
 
 **Completed Features:**
 * ✅ Responsive dashboard with authentic StoreHub branding
@@ -200,12 +226,7 @@ This section outlines the expected workflow and usage of the primary development
 * ✅ Complete workflow: opportunity discovery → analysis → campaign launch
 * ✅ Mobile-first responsive design with collapsible navigation
 * ✅ Performance targets achieved: <2s dashboard load, <3s modal render, <60s workflow
-* ✅ Smart campaign routing system with Engage integration
-* ✅ Authentic Engage overview and campaign setup pages
-* ✅ Enhanced modal system with comparison matrix and proper chart display
-* ✅ Complete end-to-end workflow from opportunity to campaign execution
-* ✅ Critical bug fixes: chart data labels and modal button functionality
 
-**Next Phase:** Phase 1E - Growth History Page Development
+**Next Phase:** Phase 1D - Campaign Integration & Workflow System
 
-**Demo Readiness:** 98% complete (missing only Growth History page navigation)
+**Demo Readiness:** 95% complete (Phase 1E complete with Growth History and CSV refinements)

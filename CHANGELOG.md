@@ -8,9 +8,299 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Next Phase
-- **Phase 1E**: Growth History Page (Historical opportunity tracking, Navigation system)
 - **Phase 1F**: Polish & Performance (UI refinement, Performance optimization, Cross-browser testing)
 - **Phase 1G**: Final Integration & Demo Prep (End-to-end testing, Demo preparation, Documentation)
+
+---
+
+## [0.5.3] - 2024-01-15 - **HOTFIX: Growth History & Navigation System Fixes**
+
+### **🔧 CRITICAL FIXES**
+
+#### **Fixed - Header Positioning Issues**
+- **Layout Problem**: Growth History and Opportunity Options pages had headers cut off by main navigation
+- **Root Cause**: `.page-container` positioned at `top: 0` overlapped with 64px header height
+- **Solution**: Adjusted positioning to `top: 64px` with proper height calculations `height: calc(100vh - 64px)`
+- **Mobile Enhancement**: Updated mobile responsive positioning with consistent 64px header offset
+- **Impact**: Both pages now display headers properly below main navigation across all devices
+
+#### **Fixed - Back Button Navigation**
+- **Navigation Issue**: Opportunity Options page back button not functioning correctly
+- **Root Cause**: `showDashboard()` method wasn't handling multiple page types properly
+- **Solution**: Enhanced method with proper page state management and `currentPage` tracking
+- **Added**: `location.reload()` for Opportunity Options page reset to ensure clean dashboard state
+- **Impact**: Both Growth History and Opportunity Options back buttons now work seamlessly
+
+#### **Enhanced - Component Scaling & Visual Hierarchy**
+- **Optimization**: Reduced padding and margins throughout Growth History page for better proportions
+- **Summary Cards**: Optimized minimum width from 250px to 220px for improved grid layout
+- **Typography**: Enhanced font sizes and spacing for better visual hierarchy
+- **Timeline**: Improved spacing and visual balance in timeline and filter sections
+- **Consistency**: Maintained StoreHub branding across all scaled components
+
+#### **Technical Implementation**
+- **CSS Updates**: Enhanced dashboard.css with proper positioning and responsive design
+- **JavaScript Enhancement**: Improved showDashboard() method with multi-page state management
+- **Mobile Optimization**: Consistent 64px header offset across all screen sizes
+- **Cross-Device Testing**: Verified functionality across desktop, tablet, and mobile devices
+
+### **📱 MOBILE ENHANCEMENTS**
+
+#### **Enhanced - Mobile Responsiveness**
+- **Header Positioning**: Consistent 64px header offset for mobile devices
+- **Touch Navigation**: Improved touch-friendly back button interactions
+- **Viewport Usage**: Proper height calculations for full viewport usage
+- **Screen Adaptation**: Responsive design works seamlessly across all device sizes
+
+#### **Enhanced - User Experience**
+- **Seamless Navigation**: Smooth transitions between dashboard, Growth History, and Opportunity Options
+- **State Management**: Proper page state tracking prevents navigation conflicts
+- **Visual Feedback**: Enhanced hover effects and interactive states
+- **Accessibility**: Improved keyboard navigation and focus management
+
+### **🎯 PERFORMANCE IMPROVEMENTS**
+
+#### **Enhanced - Loading Experience**
+- **Faster Transitions**: Optimized page switching with proper state management
+- **Reduced Layout Shift**: Fixed positioning prevents content jumping
+- **Smooth Animations**: Enhanced transitions between pages and components
+- **Memory Efficiency**: Proper cleanup and resource management
+
+#### **Enhanced - Code Quality**
+- **State Management**: Centralized page state tracking with currentPage property
+- **Error Handling**: Improved error handling for navigation edge cases
+- **Code Organization**: Better separation of concerns for page management
+- **Maintainability**: Enhanced code structure for future development
+
+---
+
+## [0.5.2] - 2024-01-15 - **MAJOR ENHANCEMENT: Growth History Page Refinements & Opportunity Options**
+
+### **🎨 MAJOR UI/UX IMPROVEMENTS**
+
+#### **Enhanced - Growth History Page Styling**
+- **Authentic StoreHub Design**: Complete visual transformation with enhanced StoreHub branding
+- **Premium Card Design**: Elevated summary cards with gradient borders, enhanced shadows, and smooth hover animations
+- **Modern Layout**: Increased container width to 1400px with improved spacing and typography
+- **Enhanced Background**: Beautiful gradient background (135deg, #f8f9fa to #e9ecef) for premium feel
+- **Interactive Elements**: All cards now feature hover effects with border color changes and shadow elevation
+- **Improved Typography**: Enhanced font weights, sizes, and spacing throughout the interface
+- **Professional Back Button**: Styled as primary orange button with shadow and hover effects
+- **Enhanced Icons**: Larger, gradient-styled icons with proper shadows and visual hierarchy
+
+#### **Fixed - Layout Issues**
+- **Container Positioning**: Fixed page-container positioning and width calculations for proper sidebar integration
+- **Responsive Design**: Enhanced mobile responsiveness with proper sidebar offset removal on mobile devices
+- **Visual Hierarchy**: Improved spacing, borders, and visual flow throughout the page
+- **Component Scaling**: Fixed all components to scale properly across different screen sizes
+
+#### **Enhanced - Info Button UX**
+- **Clear Purpose**: Transformed info button into prominent orange circular button with white icon
+- **Tooltip Integration**: Added "View Growth History" tooltip on hover for clear user guidance
+- **Visual Feedback**: Enhanced hover effects with scaling animation and shadow changes
+- **Accessibility**: Improved button sizing (32px) and proper focus states for better usability
+
+### **🚀 NEW FEATURE: Opportunity Options System**
+
+#### **Added - Comprehensive Opportunity Pool**
+- **12 Additional Opportunities**: Created extensive library of growth opportunities across 6 categories
+- **Enhanced Categories**: Added "Time-Based Optimization" and "Seasonal Opportunities" categories
+- **Priority System**: Implemented High/Medium/Low priority classification with color-coded badges
+- **Realistic Impact Data**: Each opportunity includes potential revenue, confidence levels, and detailed descriptions
+
+#### **Added - Opportunity Options Page**
+- **Professional Interface**: Modern card-based layout with StoreHub branding and premium styling
+- **Advanced Filtering**: Category and priority filters for easy opportunity discovery
+- **Interactive Cards**: Hover effects, gradient borders, and smooth animations
+- **Action System**: "View Details" and "Add to Dashboard" functionality for each opportunity
+- **Responsive Grid**: Adaptive layout that works seamlessly across all device sizes
+
+#### **Added - Dynamic Opportunity Management**
+- **Smart Activation**: Opportunities can be added to the main dashboard from the options page
+- **Real-time Feedback**: Success notifications and button state changes upon activation
+- **Persistent State**: Added opportunities integrate seamlessly with existing dashboard functionality
+- **User Guidance**: Clear visual feedback and tooltips throughout the activation process
+
+### **📊 ENHANCED MOCK DATA**
+
+#### **Expanded - Historical Campaign Data**
+- **9 Historical Campaigns**: Increased from 3 to 9 completed campaigns with varied success rates
+- **Comprehensive Metrics**: Added detailed completion dates, success scores, and category-specific results
+- **Realistic Performance**: Mix of exceeded goals (126%, 124%, 121%), partial success (113%, 111%, 79%), and missed targets (72%, 64%)
+- **Enhanced Categories**: Expanded coverage across all business pillars with authentic Malaysian F&B context
+
+#### **Added - Additional Opportunity Data**
+- **12 New Opportunities**: Comprehensive pool covering Birthday Campaigns, Loyalty Rewards, Premium Upselling, etc.
+- **Enhanced Categories**: Time-based optimization (Happy Hour, Weekend Rush) and Seasonal opportunities (Festivals, Weather-based)
+- **Detailed Impact Analysis**: Each opportunity includes revenue potential, confidence levels, and strategic rationale
+- **Priority Classification**: Smart prioritization based on business impact and implementation complexity
+
+### **🎯 NAVIGATION ENHANCEMENTS**
+
+#### **Added - Seamless Page Flow**
+- **Multi-level Navigation**: Dashboard → Growth History → Opportunity Options with proper back button functionality
+- **Breadcrumb Integration**: Clear navigation path with proper page title updates
+- **State Management**: Smooth transitions between pages with proper loading states
+- **User Experience**: Intuitive flow that guides merchants through opportunity discovery and activation
+
+#### **Enhanced - User Guidance**
+- **Clear Call-to-Actions**: Prominent "Explore More Opportunities" button on Growth History page
+- **Visual Hierarchy**: Proper emphasis on key actions and navigation elements
+- **Contextual Help**: Tooltips and descriptions that guide users through the opportunity selection process
+- **Progressive Disclosure**: Information presented in digestible chunks with clear next steps
+
+### **💻 TECHNICAL IMPROVEMENTS**
+
+#### **Enhanced - JavaScript Architecture**
+- **New Methods**: Added `showOpportunityOptions()`, `loadOpportunityOptions()`, `renderOpportunityOptions()`, `filterOpportunityOptions()`
+- **Opportunity Management**: `viewOpportunityDetails()` and `activateOpportunity()` methods for complete opportunity lifecycle
+- **Enhanced Filtering**: Advanced filtering system for categories and priorities with real-time updates
+- **Error Handling**: Comprehensive error handling and user feedback throughout the opportunity system
+
+#### **Enhanced - CSS Architecture**
+- **Opportunity Options Styling**: 150+ lines of comprehensive CSS for the new opportunity options system
+- **Enhanced Animations**: Smooth transitions, hover effects, and visual feedback throughout the interface
+- **Responsive Design**: Mobile-first approach with proper breakpoints and touch-friendly interactions
+- **StoreHub Branding**: Consistent color scheme, typography, and visual elements across all new features
+
+#### **Enhanced - Data Structure**
+- **Expanded Mock Data**: Enhanced `mockData.js` with additional opportunities and comprehensive campaign history
+- **Category System**: Extended category support with proper color coding and visual representation
+- **Priority System**: Implemented priority classification with visual badges and filtering capabilities
+- **Performance Metrics**: Enhanced success scoring and detailed campaign performance tracking
+
+### **🎨 DESIGN SYSTEM ENHANCEMENTS**
+
+#### **Added - New Design Elements**
+- **Priority Badges**: Color-coded priority indicators (Red for High, Orange for Medium, Green for Low)
+- **Enhanced Category Tags**: Extended color system for new categories (Time-based: Purple, Seasonal: Orange)
+- **Gradient Accents**: Subtle gradients throughout cards and buttons for premium feel
+- **Interactive States**: Comprehensive hover, focus, and active states for all interactive elements
+
+#### **Enhanced - Visual Hierarchy**
+- **Typography Scale**: Improved font sizes, weights, and spacing for better readability
+- **Color System**: Enhanced contrast ratios and accessibility compliance
+- **Spacing System**: Consistent padding, margins, and gap values throughout the interface
+- **Shadow System**: Layered shadows for depth and visual hierarchy
+
+### **📱 MOBILE OPTIMIZATION**
+
+#### **Enhanced - Mobile Experience**
+- **Responsive Grids**: Opportunity cards adapt to single-column layout on mobile devices
+- **Touch-Friendly**: Larger touch targets and proper spacing for mobile interactions
+- **Collapsible Filters**: Mobile-optimized filter system with vertical layout
+- **Optimized Typography**: Adjusted font sizes and spacing for mobile readability
+
+#### **Fixed - Mobile Layout Issues**
+- **Sidebar Integration**: Proper sidebar offset removal on mobile devices
+- **Card Scaling**: Opportunity cards now scale properly on all screen sizes
+- **Filter Layout**: Mobile-optimized filter layout with vertical stacking
+- **Button Sizing**: Proper button sizing and spacing for touch interactions
+
+### **🔧 PERFORMANCE IMPROVEMENTS**
+
+#### **Enhanced - Loading Experience**
+- **Realistic Loading States**: Proper loading animations and state management
+- **Smooth Transitions**: Enhanced page transitions with proper state management
+- **Efficient Rendering**: Optimized DOM manipulation and event handling
+- **Memory Management**: Proper cleanup and resource management
+
+#### **Enhanced - User Feedback**
+- **Success Notifications**: Clear feedback for all user actions
+- **Visual State Changes**: Immediate visual feedback for button interactions
+- **Loading Indicators**: Proper loading states for all asynchronous operations
+- **Error Handling**: Comprehensive error handling with user-friendly messages
+
+---
+
+## [0.5.1] - 2024-01-15 - **HOTFIX: Growth History Layout & CSV Download Refinements**
+
+### **🔧 CRITICAL FIXES**
+
+#### **Fixed - Growth History Page Layout**
+- **Layout Issue**: Fixed Growth History page being cut off by sidebar overlap
+- **Root Cause**: Missing sidebar offset calculation in .page-container CSS
+- **Solution**: Added `margin-left: 280px` and `width: calc(100% - 280px)` to properly position content
+- **Mobile Fix**: Added responsive overrides to remove sidebar offset on mobile devices
+- **Impact**: Growth History page now displays properly across all screen sizes
+
+#### **Added - FR-3.4 CSV Download Refinements (Missing from Phase 1E)**
+- **Dual-Option CSV Download System**: Implemented complete FR-3.4 requirements from PRD v1.5
+- **Download Actionable List**: Ready-to-use raw data for immediate action
+  - **VIP Win-Back**: Customer list with phone numbers, last visit dates, lifetime spend, and favorite items
+  - **Product Boost**: Profit analysis with units sold, revenue, cost, profit margins, and repeat purchase rates
+  - **Combo Deals**: Order analysis with base items, add-ons, customer types, and profit margins
+- **Download Insight Summary**: Portable business case for review and sharing
+  - **Opportunity Briefing**: Complete snapshot of modal analysis with narrative and supporting data
+  - **Promotion Planner**: Pre-formatted template for campaign planning with profit calculator
+- **Enhanced UX**: Dropdown menu with clear descriptions and icons for each option type
+- **Smart Filenames**: Dynamic filename generation based on download type and date
+
+#### **Enhanced - Modal Interaction System**
+- **Dropdown Toggle**: Smooth animation with rotating chevron arrow
+- **Click Outside**: Automatic dropdown closure when clicking outside
+- **Visual Feedback**: Hover effects and clear option descriptions
+- **Mobile Optimization**: Responsive dropdown sizing for mobile devices
+
+#### **Technical Implementation**
+- **Enhanced modal.js**: Added 150+ lines for dual-option CSV system
+- **Enhanced modal.css**: Added 80+ lines for dropdown styling and animations
+- **Updated HTML**: Modified modal footer to include dropdown container
+- **Data Generation**: Comprehensive actionable data for all 3 opportunity types
+
+---
+
+## [0.5.0] - 2024-01-15 - **PHASE 1E COMPLETION**
+
+### **🎉 MAJOR MILESTONE: Growth History Page & CEO Report Card**
+
+#### **Added - Phase 1E: Growth History Page**
+- **Complete "CEO Report Card" System**
+  - High-level strategic journal showing "Potential vs. Actual" results for all past campaigns
+  - Success score visual indicators with percentage completion and color-coded tags
+  - Comprehensive timeline view of historical opportunities and campaign performance
+  - Smart drill-down links to campaign insights and original analysis
+
+- **Growth History Page Interface**
+  - **Summary Dashboard**: 4 key performance cards showing total campaigns (12), revenue generated (RM18,450), average ROI (245%), and response rate (31%)
+  - **Advanced Filtering**: Category-based filtering (Customer Lifecycle, Product Profitability, Basket Analysis, Inventory Aging) and time period filtering (Last Month, Quarter, Year)
+  - **Timeline Legend**: Visual indicators for Goal Exceeded (green), Partial Success (yellow), and Goal Missed (red)
+  - **Responsive Design**: Mobile-optimized layout with collapsible elements and touch-friendly interactions
+
+- **"Potential vs. Actual" Results System**
+  - **Side-by-Side Comparison**: Each historical campaign shows forecasted targets alongside actual achieved results
+  - **Success Score Calculation**: Automated percentage calculation based on actual revenue vs. target revenue
+  - **Color-Coded Performance**: Green for exceeded goals (≥100%), yellow for partial success (≥70%), red for missed goals (<70%)
+  - **Detailed Metrics**: Target revenue, expected reach, confidence level vs. actual revenue, response rate, and ROI
+
+- **Smart Drill-Down Navigation**
+  - **View Campaign Insights**: Direct links to detailed campaign performance reports in Engage module
+  - **View Original Analysis**: Links to read-only view of the original "Prove It" justification modal
+  - **Seamless Navigation**: Back button with proper state management between dashboard and history page
+
+- **Enhanced Historical Data**
+  - **3 Completed Campaigns**: Weekend Warrior Recovery (79% success), Mee Goreng Mamak Promotion (121% success), Kuih Stock Clearance (111% success)
+  - **Comprehensive Results**: Each campaign includes campaigns sent, response rate, revenue generated, ROI, and category-specific metrics
+  - **Realistic Performance**: Mix of exceeded, partial, and missed goals to demonstrate authentic business outcomes
+
+#### **Enhanced - Navigation & User Experience**
+- **Dashboard Info Button**: Properly connected to Growth History page navigation
+- **Page State Management**: Smooth transitions between dashboard and history views with proper title updates
+- **Filter Functionality**: Real-time filtering of historical campaigns by category and time period
+- **Loading States**: Realistic loading animations and empty state handling
+- **Mobile Responsiveness**: Optimized layout for all screen sizes with proper touch interactions
+
+#### **Technical Implementation**
+- **Enhanced dashboard.js**: Added 280+ lines of Growth History functionality with navigation, filtering, and data rendering
+- **Enhanced dashboard.css**: Added 400+ lines of comprehensive styling for history page, cards, timeline, and responsive design
+- **Enhanced mockData.js**: Added detailed historical campaign results with realistic performance metrics
+- **Navigation System**: Seamless page transitions with proper state management and URL handling
+
+#### **Fixed - Data Integration**
+- **Historical Opportunities**: Enhanced mock data with realistic campaign performance outcomes
+- **Success Calculations**: Accurate percentage calculations based on actual vs. target performance
+- **Date Formatting**: Proper Malaysian date formatting (en-MY locale) for campaign launch dates
+- **Currency Formatting**: Consistent RM currency formatting throughout historical data
 
 ---
 

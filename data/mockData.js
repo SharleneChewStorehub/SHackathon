@@ -221,7 +221,7 @@ const currentOpportunities = [
     }
 ];
 
-// Historical Opportunities (for Growth History page)
+// Historical Opportunities (for Growth History page) - Enhanced with more comprehensive data
 const historicalOpportunities = [
     {
         id: "opp_h001",
@@ -240,12 +240,16 @@ const historicalOpportunities = [
         campaignType: "smart-segment",
         createdDate: "2024-01-01T09:00:00Z",
         launchedDate: "2024-01-02T14:30:00Z",
+        completedDate: "2024-01-15T23:59:59Z",
         status: "completed",
         actualResults: {
             campaignsSent: 32,
             responseRate: 56,
             revenueGenerated: 1890,
-            roi: 315
+            roi: 315,
+            customersRecovered: 18,
+            costPerCustomer: 15,
+            successScore: 79
         }
     },
     {
@@ -265,12 +269,16 @@ const historicalOpportunities = [
         campaignType: "one-time-custom",
         createdDate: "2023-12-20T10:00:00Z",
         launchedDate: "2023-12-21T16:00:00Z",
+        completedDate: "2023-12-28T23:59:59Z",
         status: "completed",
         actualResults: {
             campaignsSent: 567,
             responseRate: 23,
             revenueGenerated: 1456,
-            roi: 243
+            roi: 243,
+            unitsSold: 234,
+            averageOrderValue: 18.90,
+            successScore: 121
         }
     },
     {
@@ -290,24 +298,415 @@ const historicalOpportunities = [
         campaignType: "one-time-custom",
         createdDate: "2023-12-15T11:00:00Z",
         launchedDate: "2023-12-15T18:00:00Z",
+        completedDate: "2023-12-22T23:59:59Z",
         status: "completed",
         actualResults: {
             campaignsSent: 234,
             responseRate: 34,
             revenueGenerated: 420,
-            roi: 187
+            roi: 187,
+            wasteReduced: 380,
+            itemsSold: 156,
+            successScore: 111
+        }
+    },
+    {
+        id: "opp_h004",
+        category: "customer-lifecycle",
+        categoryLabel: "Customer Lifecycle",
+        categoryColor: "#FF6B6B",
+        headline: "New Customer Welcome Series",
+        summary: "Automated welcome campaign for first-time customers to boost retention.",
+        estimatedImpact: {
+            type: "retention",
+            amount: 1800,
+            period: "monthly",
+            confidence: 85
+        },
+        priority: 1,
+        campaignType: "smart-segment",
+        createdDate: "2023-11-28T09:00:00Z",
+        launchedDate: "2023-11-29T10:00:00Z",
+        completedDate: "2023-12-29T23:59:59Z",
+        status: "completed",
+        actualResults: {
+            campaignsSent: 156,
+            responseRate: 42,
+            revenueGenerated: 2240,
+            roi: 380,
+            newCustomerRetention: 67,
+            repeatPurchaseRate: 34,
+            successScore: 124
+        }
+    },
+    {
+        id: "opp_h005",
+        category: "basket-analysis",
+        categoryLabel: "Basket Analysis",
+        categoryColor: "#FFE66D",
+        headline: "Breakfast Combo Upsell",
+        summary: "Promoted breakfast combos to increase morning revenue and average order value.",
+        estimatedImpact: {
+            type: "revenue",
+            amount: 950,
+            period: "monthly",
+            confidence: 70
+        },
+        priority: 2,
+        campaignType: "one-time-custom",
+        createdDate: "2023-11-15T08:00:00Z",
+        launchedDate: "2023-11-16T07:30:00Z",
+        completedDate: "2023-11-23T23:59:59Z",
+        status: "completed",
+        actualResults: {
+            campaignsSent: 445,
+            responseRate: 28,
+            revenueGenerated: 680,
+            roi: 156,
+            averageOrderIncrease: 3.20,
+            comboConversionRate: 18,
+            successScore: 72
+        }
+    },
+    {
+        id: "opp_h006",
+        category: "product-profitability",
+        categoryLabel: "Product Profitability",
+        categoryColor: "#4ECDC4",
+        headline: "Premium Coffee Push",
+        summary: "Promoted high-margin specialty coffee drinks during afternoon hours.",
+        estimatedImpact: {
+            type: "revenue",
+            amount: 1400,
+            period: "monthly",
+            confidence: 65
+        },
+        priority: 2,
+        campaignType: "one-time-custom",
+        createdDate: "2023-10-20T13:00:00Z",
+        launchedDate: "2023-10-21T14:00:00Z",
+        completedDate: "2023-10-28T23:59:59Z",
+        status: "completed",
+        actualResults: {
+            campaignsSent: 389,
+            responseRate: 19,
+            revenueGenerated: 890,
+            roi: 123,
+            premiumItemsSold: 67,
+            marginImprovement: 12,
+            successScore: 64
+        }
+    },
+    {
+        id: "opp_h007",
+        category: "customer-lifecycle",
+        categoryLabel: "Customer Lifecycle",
+        categoryColor: "#FF6B6B",
+        headline: "Inactive Customer Reactivation",
+        summary: "Targeted customers who haven't visited in 30+ days with special offers.",
+        estimatedImpact: {
+            type: "revenue",
+            amount: 2800,
+            period: "monthly",
+            confidence: 60
+        },
+        priority: 1,
+        campaignType: "smart-segment",
+        createdDate: "2023-10-05T10:00:00Z",
+        launchedDate: "2023-10-06T11:00:00Z",
+        completedDate: "2023-10-20T23:59:59Z",
+        status: "completed",
+        actualResults: {
+            campaignsSent: 234,
+            responseRate: 31,
+            revenueGenerated: 3150,
+            roi: 425,
+            customersReactivated: 72,
+            averageSpendPerReturn: 43.75,
+            successScore: 113
+        }
+    },
+    {
+        id: "opp_h008",
+        category: "inventory-aging",
+        categoryLabel: "Inventory Aging",
+        categoryColor: "#A8E6CF",
+        headline: "Seasonal Menu Clearance",
+        summary: "Cleared seasonal items before menu rotation to minimize waste.",
+        estimatedImpact: {
+            type: "cost-saving",
+            amount: 620,
+            period: "one-time",
+            confidence: 95
+        },
+        priority: 3,
+        campaignType: "one-time-custom",
+        createdDate: "2023-09-25T09:00:00Z",
+        launchedDate: "2023-09-25T17:00:00Z",
+        completedDate: "2023-09-30T23:59:59Z",
+        status: "completed",
+        actualResults: {
+            campaignsSent: 345,
+            responseRate: 41,
+            revenueGenerated: 780,
+            roi: 267,
+            wasteReduced: 620,
+            itemsClearedPercentage: 89,
+            successScore: 126
+        }
+    },
+    {
+        id: "opp_h009",
+        category: "basket-analysis",
+        categoryLabel: "Basket Analysis",
+        categoryColor: "#FFE66D",
+        headline: "Dessert Add-On Campaign",
+        summary: "Promoted dessert add-ons to main meal orders during dinner hours.",
+        estimatedImpact: {
+            type: "revenue",
+            amount: 780,
+            period: "monthly",
+            confidence: 75
+        },
+        priority: 2,
+        campaignType: "one-time-custom",
+        createdDate: "2023-09-10T15:00:00Z",
+        launchedDate: "2023-09-11T18:00:00Z",
+        completedDate: "2023-09-18T23:59:59Z",
+        status: "completed",
+        actualResults: {
+            campaignsSent: 456,
+            responseRate: 22,
+            revenueGenerated: 560,
+            roi: 134,
+            dessertAttachmentRate: 15,
+            averageAddOnValue: 5.60,
+            successScore: 72
         }
     }
 ];
 
-// Campaign Performance Data
+// Additional Opportunity Pool (for "Opportunity Options" page)
+const additionalOpportunities = [
+    {
+        id: "opp_add001",
+        category: "customer-lifecycle",
+        categoryLabel: "Customer Lifecycle",
+        categoryColor: "#FF6B6B",
+        headline: "Birthday Campaign Automation",
+        summary: "Automated birthday wishes with special offers to increase customer loyalty.",
+        estimatedImpact: {
+            type: "revenue",
+            amount: 1200,
+            period: "monthly",
+            confidence: 80
+        },
+        priority: 2,
+        campaignType: "smart-segment",
+        status: "available"
+    },
+    {
+        id: "opp_add002",
+        category: "customer-lifecycle",
+        categoryLabel: "Customer Lifecycle",
+        categoryColor: "#FF6B6B",
+        headline: "Loyalty Milestone Rewards",
+        summary: "Celebrate customer milestones (5th visit, 10th order) with surprise rewards.",
+        estimatedImpact: {
+            type: "retention",
+            amount: 1800,
+            period: "monthly",
+            confidence: 85
+        },
+        priority: 1,
+        campaignType: "smart-segment",
+        status: "available"
+    },
+    {
+        id: "opp_add003",
+        category: "product-profitability",
+        categoryLabel: "Product Profitability",
+        categoryColor: "#4ECDC4",
+        headline: "Slow-Moving Item Revival",
+        summary: "Revive underperforming menu items with targeted promotions and bundling.",
+        estimatedImpact: {
+            type: "revenue",
+            amount: 950,
+            period: "monthly",
+            confidence: 65
+        },
+        priority: 2,
+        campaignType: "one-time-custom",
+        status: "available"
+    },
+    {
+        id: "opp_add004",
+        category: "product-profitability",
+        categoryLabel: "Product Profitability",
+        categoryColor: "#4ECDC4",
+        headline: "Premium Upsell Strategy",
+        summary: "Promote premium versions of popular items to increase profit margins.",
+        estimatedImpact: {
+            type: "revenue",
+            amount: 1600,
+            period: "monthly",
+            confidence: 70
+        },
+        priority: 1,
+        campaignType: "one-time-custom",
+        status: "available"
+    },
+    {
+        id: "opp_add005",
+        category: "basket-analysis",
+        categoryLabel: "Basket Analysis",
+        categoryColor: "#FFE66D",
+        headline: "Perfect Pairing Suggestions",
+        summary: "AI-powered food and drink pairing recommendations to increase order value.",
+        estimatedImpact: {
+            type: "revenue",
+            amount: 1350,
+            period: "monthly",
+            confidence: 75
+        },
+        priority: 1,
+        campaignType: "smart-segment",
+        status: "available"
+    },
+    {
+        id: "opp_add006",
+        category: "basket-analysis",
+        categoryLabel: "Basket Analysis",
+        categoryColor: "#FFE66D",
+        headline: "Group Order Incentives",
+        summary: "Special pricing for group orders to increase average transaction size.",
+        estimatedImpact: {
+            type: "revenue",
+            amount: 2200,
+            period: "monthly",
+            confidence: 80
+        },
+        priority: 1,
+        campaignType: "one-time-custom",
+        status: "available"
+    },
+    {
+        id: "opp_add007",
+        category: "inventory-aging",
+        categoryLabel: "Inventory Aging",
+        categoryColor: "#A8E6CF",
+        headline: "Smart Inventory Alerts",
+        summary: "Automated alerts and promotions for items approaching expiration.",
+        estimatedImpact: {
+            type: "cost-saving",
+            amount: 450,
+            period: "monthly",
+            confidence: 90
+        },
+        priority: 2,
+        campaignType: "smart-segment",
+        status: "available"
+    },
+    {
+        id: "opp_add008",
+        category: "inventory-aging",
+        categoryLabel: "Inventory Aging",
+        categoryColor: "#A8E6CF",
+        headline: "Daily Special Optimization",
+        summary: "Optimize daily specials based on inventory levels and customer preferences.",
+        estimatedImpact: {
+            type: "revenue",
+            amount: 1100,
+            period: "monthly",
+            confidence: 75
+        },
+        priority: 2,
+        campaignType: "one-time-custom",
+        status: "available"
+    },
+    {
+        id: "opp_add009",
+        category: "time-based",
+        categoryLabel: "Time-Based Optimization",
+        categoryColor: "#9B59B6",
+        headline: "Happy Hour Boost",
+        summary: "Strategic promotions during slow periods to increase foot traffic.",
+        estimatedImpact: {
+            type: "revenue",
+            amount: 1750,
+            period: "monthly",
+            confidence: 70
+        },
+        priority: 1,
+        campaignType: "one-time-custom",
+        status: "available"
+    },
+    {
+        id: "opp_add010",
+        category: "time-based",
+        categoryLabel: "Time-Based Optimization",
+        categoryColor: "#9B59B6",
+        headline: "Weekend Rush Optimization",
+        summary: "Optimize weekend operations and pricing for maximum revenue.",
+        estimatedImpact: {
+            type: "revenue",
+            amount: 2400,
+            period: "monthly",
+            confidence: 75
+        },
+        priority: 1,
+        campaignType: "smart-segment",
+        status: "available"
+    },
+    {
+        id: "opp_add011",
+        category: "seasonal",
+        categoryLabel: "Seasonal Opportunities",
+        categoryColor: "#E67E22",
+        headline: "Festival Menu Promotion",
+        summary: "Special festival menus and promotions during Malaysian holidays.",
+        estimatedImpact: {
+            type: "revenue",
+            amount: 3200,
+            period: "seasonal",
+            confidence: 85
+        },
+        priority: 1,
+        campaignType: "one-time-custom",
+        status: "available"
+    },
+    {
+        id: "opp_add012",
+        category: "seasonal",
+        categoryLabel: "Seasonal Opportunities",
+        categoryColor: "#E67E22",
+        headline: "Weather-Based Promotions",
+        summary: "Dynamic promotions based on weather conditions (hot drinks on rainy days).",
+        estimatedImpact: {
+            type: "revenue",
+            amount: 890,
+            period: "monthly",
+            confidence: 65
+        },
+        priority: 2,
+        campaignType: "smart-segment",
+        status: "available"
+    }
+];
+
+// Campaign Performance Data - Enhanced
 const campaignPerformance = {
     totalCampaigns: 12,
     totalRevenue: 18450,
     averageROI: 245,
     averageResponseRate: 31,
     topPerformingCategory: "customer-lifecycle",
-    monthlyGrowth: 15
+    monthlyGrowth: 15,
+    successfulCampaigns: 9,
+    partialSuccessCampaigns: 2,
+    missedGoalCampaigns: 1,
+    totalCustomersReached: 3456,
+    totalCostSavings: 1450
 };
 
 // Chart Data for Visualizations
@@ -351,6 +750,7 @@ window.mockData = {
     merchant: merchantData,
     currentOpportunities,
     historicalOpportunities,
+    additionalOpportunities,
     campaignPerformance,
     chartData,
     utils

@@ -39,7 +39,23 @@ class ModalManager {
         });
         
         // Button events
-        this.downloadBtn.addEventListener('click', () => this.downloadCSV());
+        this.downloadBtn.addEventListener('click', () => this.toggleCSVDropdown());
+        
+        // CSV dropdown events
+        this.csvDropdown = document.getElementById('csv-dropdown');
+        this.csvDropdownArrow = document.querySelector('.csv-dropdown-arrow');
+        
+        // CSV option events
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.csv-option')) {
+                const option = e.target.closest('.csv-option');
+                const type = option.dataset.type;
+                this.downloadCSV(type);
+                this.hideCSVDropdown();
+            } else if (!e.target.closest('.csv-download-container')) {
+                this.hideCSVDropdown();
+            }
+        });
         if (this.launchBtn) {
             this.launchBtn.addEventListener('click', () => this.launchCampaign());
         } else {
@@ -589,43 +605,167 @@ class ModalManager {
         this.charts = {};
     }
 
-    downloadCSV() {
+    toggleCSVDropdown() {
+        if (!this.csvDropdown) return;
+        
+        const isActive = this.csvDropdown.classList.contains('active');
+        
+        if (isActive) {
+            this.hideCSVDropdown();
+        } else {
+            this.showCSVDropdown();
+        }
+    }
+    
+    showCSVDropdown() {
+        if (!this.csvDropdown) return;
+        
+        this.csvDropdown.classList.add('active');
+        if (this.csvDropdownArrow) {
+            this.csvDropdownArrow.classList.add('rotated');
+        }
+    }
+    
+    hideCSVDropdown() {
+        if (!this.csvDropdown) return;
+        
+        this.csvDropdown.classList.remove('active');
+        if (this.csvDropdownArrow) {
+            this.csvDropdownArrow.classList.remove('rotated');
+        }
+    }
+
+    downloadCSV(type = 'summary') {
         if (!this.currentOpportunity) return;
         
-        const csvData = this.generateCSVData(this.currentOpportunity);
+        let csvData, filename;
+        
+        if (type === 'actionable') {
+            csvData = this.generateActionableListCSV(this.currentOpportunity);
+            filename = `${this.currentOpportunity.id}-actionable-list-${new Date().toISOString().split('T')[0]}.csv`;
+        } else {
+            csvData = this.generateInsightSummaryCSV(this.currentOpportunity);
+            filename = `${this.currentOpportunity.id}-insight-summary-${new Date().toISOString().split('T')[0]}.csv`;
+        }
+        
         const blob = new Blob([csvData], { type: 'text/csv' });
         const url = window.URL.createObjectURL(blob);
         
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${this.currentOpportunity.id}-analysis-${new Date().toISOString().split('T')[0]}.csv`;
+        a.download = filename;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
         
-        // Show success notification
-        this.showNotification('CSV downloaded successfully!', 'success');
+        const downloadType = type === 'actionable' ? 'Actionable List' : 'Insight Summary';
+        this.showNotification(`${downloadType} CSV downloaded successfully!`, 'success');
     }
 
-    generateCSVData(opportunity) {
-        const headers = ['Metric', 'Value', 'Trend', 'Impact'];
-        const dataPoints = this.getDataPoints(opportunity);
-        const impactValue = window.mockData.utils.formatCurrency(opportunity.estimatedImpact.amount) + '/' + opportunity.estimatedImpact.period;
+    generateActionableListCSV(opportunity) {
+        // Generate ready-to-use raw data for immediate action
+        const actionableData = this.getActionableData(opportunity);
         
-        let csv = headers.join(',') + '\n';
+        let csv = actionableData.headers.join(',') + '\n';
         
-        dataPoints.forEach(point => {
-            const row = [
-                `"${point.label}"`,
-                `"${point.value}"`,
-                `"${point.trend || 'neutral'}"`,
-                `"${impactValue}"`
-            ];
-            csv += row.join(',') + '\n';
+        actionableData.rows.forEach(row => {
+            const csvRow = row.map(cell => `"${cell}"`);
+            csv += csvRow.join(',') + '\n';
         });
         
         return csv;
+    }
+    
+    generateInsightSummaryCSV(opportunity) {
+        // Generate portable business case with two worksheets
+        let csv = '';
+        
+        // Worksheet 1: Opportunity Briefing
+        csv += 'OPPORTUNITY BRIEFING\n';
+        csv += 'Field,Value\n';
+        csv += `"Opportunity","${opportunity.headline}"\n`;
+        csv += `"Category","${opportunity.categoryLabel}"\n`;
+        csv += `"Summary","${opportunity.summary}"\n`;
+        csv += `"Estimated Impact","${window.mockData.utils.formatCurrency(opportunity.estimatedImpact.amount)} ${opportunity.estimatedImpact.period}"\n`;
+        csv += `"Confidence Level","${opportunity.estimatedImpact.confidence}%"\n`;
+        csv += `"Created Date","${new Date(opportunity.createdDate).toLocaleDateString('en-MY')}"\n`;
+        csv += `"Narrative","${this.getNarrativeText(opportunity)}"\n`;
+        
+        // Add supporting data
+        const dataPoints = this.getDataPoints(opportunity);
+        dataPoints.forEach(point => {
+            csv += `"${point.label}","${point.value}"\n`;
+        });
+        
+        csv += '\n\n';
+        
+        // Worksheet 2: Promotion Planner
+        csv += 'PROMOTION PLANNER\n';
+        csv += 'Field,Your Plan,Notes\n';
+        csv += '"Promotion Idea","","What specific promotion will you run?"\n';
+        csv += '"Offer Details","","What discount/incentive will you provide?"\n';
+        csv += '"Target Audience","","Which customers will you target?"\n';
+        csv += '"Campaign Duration","","How long will this promotion run?"\n';
+        csv += '"Success Metrics","","How will you measure success?"\n';
+        csv += '\n';
+        csv += 'PROFIT CALCULATOR\n';
+        csv += 'Field,Value,Formula\n';
+        csv += '"Standard Price","","Enter your normal selling price"\n';
+        csv += '"Proposed Discount","","Enter discount percentage or amount"\n';
+        csv += '"New Price","","=Standard Price - Discount"\n';
+        csv += '"Cost per Unit","","Enter your cost to make/buy this item"\n';
+        csv += '"New Profit per Unit","","=New Price - Cost per Unit"\n';
+        csv += '"Expected Volume Increase","","How many more units do you expect to sell?"\n';
+        csv += '"Total Additional Profit","","=New Profit per Unit × Volume Increase"\n';
+        
+        return csv;
+    }
+    
+    getActionableData(opportunity) {
+        const actionableMap = {
+            'win-back-vips': {
+                headers: ['Customer Name', 'Phone Number', 'Last Visit Date', 'Lifetime Spend', 'Favorite Item', 'Avg Order Value', 'Visit Frequency'],
+                rows: [
+                    ['Siti Aminah', '+60123456789', '2024-12-10', 'RM890.50', 'Nasi Lemak Special', 'RM52.30', 'Weekly'],
+                    ['Ahmad Faisal', '+60123456790', '2024-12-08', 'RM1,205.60', 'Karipap Pusing', 'RM43.80', 'Bi-weekly'],
+                    ['Lim Wei Ming', '+60123456791', '2024-12-12', 'RM978.00', 'Mee Goreng Mamak', 'RM48.90', 'Weekly'],
+                    ['Fatimah Zahra', '+60123456792', '2024-12-05', 'RM1,456.20', 'Nasi Lemak + Kopi O', 'RM67.20', 'Daily'],
+                    ['Raj Kumar', '+60123456793', '2024-12-07', 'RM756.80', 'Teh Tarik + Roti Canai', 'RM35.60', 'Bi-weekly'],
+                    ['Chen Li Mei', '+60123456794', '2024-12-11', 'RM1,123.40', 'Curry Laksa', 'RM58.90', 'Weekly'],
+                    ['Hassan Abdullah', '+60123456795', '2024-12-06', 'RM834.70', 'Char Kway Teow', 'RM41.20', 'Weekly'],
+                    ['Priya Sharma', '+60123456796', '2024-12-09', 'RM1,298.30', 'Nasi Lemak + Teh Tarik', 'RM62.80', 'Daily']
+                ]
+            },
+            'boost-karipap': {
+                headers: ['Item Name', 'Units Sold', 'Revenue', 'Cost', 'Profit', 'Margin %', 'Repeat Purchase Rate', 'Customer Rating'],
+                rows: [
+                    ['Karipap Pusing', '89', 'RM534.00', 'RM117.00', 'RM417.00', '78%', '78%', '4.6/5'],
+                    ['Nasi Lemak', '340', 'RM2,890.00', 'RM1,590.00', 'RM1,300.00', '45%', '85%', '4.8/5'],
+                    ['Kopi O', '198', 'RM1,250.00', 'RM438.00', 'RM812.00', '65%', '72%', '4.5/5'],
+                    ['Mee Goreng Mamak', '156', 'RM1,248.00', 'RM598.00', 'RM650.00', '52%', '68%', '4.4/5'],
+                    ['Teh Tarik', '134', 'RM756.00', 'RM242.00', 'RM514.00', '68%', '81%', '4.7/5'],
+                    ['Curry Puff', '67', 'RM402.00', 'RM168.00', 'RM234.00', '58%', '65%', '4.3/5'],
+                    ['Roti Canai', '89', 'RM445.00', 'RM178.00', 'RM267.00', '60%', '70%', '4.5/5'],
+                    ['Char Kway Teow', '45', 'RM495.00', 'RM297.00', 'RM198.00', '40%', '62%', '4.2/5']
+                ]
+            },
+            'combo-deals': {
+                headers: ['Order ID', 'Base Item', 'Add-on Item', 'Order Value', 'Customer Type', 'Time of Day', 'Day of Week', 'Profit Margin'],
+                rows: [
+                    ['O001', 'Nasi Lemak', 'None', 'RM8.50', 'Regular', '12:30 PM', 'Monday', '45%'],
+                    ['O002', 'Nasi Lemak', 'Kopi O', 'RM14.00', 'VIP', '1:15 PM', 'Monday', '52%'],
+                    ['O003', 'Nasi Lemak', 'None', 'RM8.50', 'New', '12:45 PM', 'Monday', '45%'],
+                    ['O004', 'Nasi Lemak', 'Teh Tarik', 'RM13.50', 'Regular', '1:30 PM', 'Monday', '58%'],
+                    ['O005', 'Nasi Lemak', 'None', 'RM8.50', 'Regular', '2:00 PM', 'Monday', '45%'],
+                    ['O006', 'Nasi Lemak', 'Kopi O', 'RM14.00', 'VIP', '2:15 PM', 'Monday', '52%'],
+                    ['O007', 'Nasi Lemak', 'None', 'RM8.50', 'Regular', '12:00 PM', 'Monday', '45%'],
+                    ['O008', 'Nasi Lemak', 'Teh Tarik', 'RM13.50', 'Regular', '1:45 PM', 'Monday', '58%']
+                ]
+            }
+        };
+        
+        return actionableMap[opportunity.id] || actionableMap['win-back-vips'];
     }
 
     launchCampaign() {
