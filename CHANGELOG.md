@@ -14,6 +14,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.4.1] - 2024-01-15 - **HOTFIX: Chart Display & Modal Functionality**
+
+### **🔧 CRITICAL FIXES**
+
+#### **Fixed - Chart Display Issues**
+- **Added Missing Chart Plugin**: Integrated Chart.js datalabels plugin for proper chart information display
+- **Fixed Chart Visibility**: Changed chart text colors from white to black for better visibility on light backgrounds
+- **Enhanced Data Labels**: Added proper formatting for currency (RM prefix) and percentage values
+- **Improved Chart Styling**: Added consistent grid lines, font sizes, and color schemes across all charts
+- **Plugin Registration**: Properly registered ChartDataLabels plugin with Chart.js
+
+#### **Fixed - Modal Launch Button**
+- **Initialization Race Condition**: Fixed timing issue where modal manager wasn't available when dashboard tried to use it
+- **Synchronized Initialization**: Both dashboard and modal managers now initialize on DOMContentLoaded
+- **Button Functionality**: Modal "Launch Campaign" button now properly routes to campaign setup pages
+- **Error Handling**: Added proper error messages for debugging button functionality
+
+#### **Enhanced - User Experience**
+- **Chart Readability**: All charts now display proper numbers, labels, and formatting
+- **Consistent Styling**: Unified chart appearance with black text, light gray grids, and proper contrast
+- **Data Visualization**: Charts show actual values with appropriate currency and percentage formatting
+- **Seamless Workflow**: Complete integration between modal analysis and campaign setup
+
+#### **Technical Implementation**
+- **Added CDN**: `chartjs-plugin-datalabels@2` for chart data labels
+- **Enhanced modal.js**: Improved chart configuration with proper datalabels formatting
+- **Fixed dashboard.js**: Changed initialization timing to prevent race conditions
+- **Removed Debug Code**: Cleaned up console logging for production-ready code
+
+---
+
 ## [0.4.0] - 2024-01-15 - **PHASE 1D COMPLETION**
 
 ### **🚀 MAJOR MILESTONE: Campaign Integration & Workflow System**
