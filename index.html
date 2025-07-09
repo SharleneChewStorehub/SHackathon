@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merchant Backoffice - Dynamic Growth Dashboard</title>
+    <meta name="description" content="AI-powered growth opportunities dashboard for merchants">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/modal.css">
+    <link rel="stylesheet" href="css/components.css">
+    
+    <!-- Chart.js for data visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="nav-header">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>Merchant Backoffice</h1>
+                <span class="nav-subtitle">Growth Dashboard</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#dashboard" class="nav-link active">Dashboard</a>
+                <a href="#reports" class="nav-link">Reports</a>
+                <a href="#engage" class="nav-link">Engage</a>
+                <a href="#settings" class="nav-link">Settings</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Dashboard Container -->
+    <main class="dashboard-container">
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <h2>Welcome back, Priya!</h2>
+            <p class="welcome-subtitle">Here are your growth opportunities for today</p>
+        </section>
+
+        <!-- Today's Opportunities Widget -->
+        <section class="opportunities-widget" id="opportunities-widget">
+            <div class="widget-header">
+                <h3>Today's Opportunities</h3>
+                <button class="info-button" id="info-button" title="View past opportunities">
+                    <i class="fas fa-info-circle"></i>
+                </button>
+            </div>
+            
+            <div class="opportunities-container" id="opportunities-container">
+                <!-- Opportunity cards will be dynamically inserted here -->
+                <div class="loading-state" id="loading-state">
+                    <div class="spinner"></div>
+                    <p>Analyzing your business data...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Other Dashboard Widgets (Placeholder) -->
+        <section class="dashboard-grid">
+            <div class="widget-placeholder">
+                <h4>Sales Overview</h4>
+                <p>Traditional dashboard widgets would appear here</p>
+            </div>
+            <div class="widget-placeholder">
+                <h4>Customer Insights</h4>
+                <p>Static reports and charts</p>
+            </div>
+            <div class="widget-placeholder">
+                <h4>Inventory Status</h4>
+                <p>Current stock levels</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Growth History Page (Initially Hidden) -->
+    <main class="history-container" id="history-container" style="display: none;">
+        <section class="history-header">
+            <nav class="breadcrumb">
+                <a href="#dashboard">Dashboard</a>
+                <span class="breadcrumb-separator">></span>
+                <span>Growth History</span>
+            </nav>
+            <h2>Growth History</h2>
+            <p class="history-subtitle">Review your past opportunities and campaign performance</p>
+        </section>
+
+        <section class="history-content">
+            <div class="history-filters">
+                <select id="category-filter">
+                    <option value="all">All Categories</option>
+                    <option value="customer-lifecycle">Customer Lifecycle</option>
+                    <option value="product-profitability">Product Profitability</option>
+                    <option value="basket-analysis">Basket Analysis</option>
+                    <option value="inventory-aging">Inventory Aging</option>
+                </select>
+                <input type="text" id="search-filter" placeholder="Search opportunities...">
+            </div>
+            
+            <div class="history-list" id="history-list">
+                <!-- Historical opportunities will be populated here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Campaign Pages (Initially Hidden) -->
+    <main class="campaign-container" id="campaign-container" style="display: none;">
+        <section class="campaign-header">
+            <nav class="breadcrumb">
+                <a href="#dashboard">Dashboard</a>
+                <span class="breadcrumb-separator">></span>
+                <span>Campaign Setup</span>
+            </nav>
+            <h2>Launch Campaign</h2>
+        </section>
+
+        <section class="campaign-content" id="campaign-content">
+            <!-- Campaign setup forms will be populated here -->
+        </section>
+    </main>
+
+    <!-- Justification Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-container" id="modal-container">
+            <div class="modal-header">
+                <h3 id="modal-title">Opportunity Analysis</h3>
+                <button class="modal-close" id="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-content" id="modal-content">
+                <!-- Modal content will be dynamically populated -->
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="download-csv">
+                    <i class="fas fa-download"></i>
+                    Download CSV
+                </button>
+                <button class="btn btn-primary" id="modal-launch-campaign">
+                    Launch Campaign
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data/mockData.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/campaign.js"></script>
+    <script src="js/history.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 
