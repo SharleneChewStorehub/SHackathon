@@ -31,6 +31,36 @@
     color: var(--storehub-orange);
 }
 
+/* Reset Demo Button */
+.reset-demo-btn {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.reset-demo-btn:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+
+.reset-demo-btn:active {
+    transform: translateY(0);
+}
+
+.reset-demo-btn i {
+    font-size: 0.875rem;
+}
+
 /* Dashboard Metrics Cards (like StoreHub) */
 .metrics-grid {
     display: grid;

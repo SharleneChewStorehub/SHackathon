@@ -169,6 +169,9 @@ class DashboardManager {
                         <button class="time-period-btn active">Today</button>
                         <button class="time-period-btn">This Week</button>
                         <button class="time-period-btn">This Month</button>
+                        <button class="reset-demo-btn" onclick="window.dashboardManager.resetOpportunityStates()" title="Reset all opportunity cards for demo">
+                            <i class="fas fa-refresh"></i> Reset Demo
+                        </button>
                     </div>
                 </section>
 
@@ -934,6 +937,27 @@ class DashboardManager {
     
     getOpportunityById(id) {
         return this.opportunities.find(opp => opp.id === id);
+    }
+
+    // Reset all opportunity cards to original state (for demo purposes)
+    resetOpportunityStates() {
+        console.log('Resetting all opportunity states...');
+        
+        // Clear localStorage
+        localStorage.removeItem('opportunityStates');
+        
+        // Reset all opportunity statuses to 'pending'
+        this.opportunities.forEach(opportunity => {
+            opportunity.status = 'pending';
+        });
+        
+        // Re-render opportunities to show original state
+        this.renderOpportunities();
+        
+        // Show success notification
+        this.showNotification('All opportunity cards reset to original state!', 'success');
+        
+        console.log('Opportunity states reset successfully');
     }
 
     handleTimePeriodChange(button) {
