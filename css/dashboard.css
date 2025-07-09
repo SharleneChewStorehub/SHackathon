@@ -1,4 +1,4 @@
-/* Dashboard Specific Styles - StoreHub Design */
+/* Dashboard Specific Styles - StoreHub Black & Orange Design */
 /* Opportunities Widget and Dashboard Components */
 
 /* Dashboard Grid Layout */
@@ -68,8 +68,8 @@
 }
 
 .info-button:hover {
-    color: var(--primary-blue);
-    background-color: var(--main-bg);
+    color: var(--storehub-orange);
+    background-color: var(--storehub-orange-bg);
 }
 
 /* Opportunities Container */
@@ -94,7 +94,7 @@
 .opportunity-card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
-    border-color: var(--primary-blue-light);
+    border-color: var(--storehub-orange-light);
 }
 
 .opportunity-card.launched {
@@ -129,22 +129,22 @@
 }
 
 .category-tag.customer-lifecycle {
-    background: rgba(239, 68, 68, 0.1);
+    background: var(--storehub-orange-bg);
     color: var(--customer-lifecycle);
 }
 
 .category-tag.product-profitability {
-    background: rgba(16, 185, 129, 0.1);
+    background: rgba(40, 167, 69, 0.1);
     color: var(--product-profitability);
 }
 
 .category-tag.basket-analysis {
-    background: rgba(245, 158, 11, 0.1);
+    background: rgba(255, 193, 7, 0.1);
     color: var(--basket-analysis);
 }
 
 .category-tag.inventory-aging {
-    background: rgba(139, 92, 246, 0.1);
+    background: rgba(111, 66, 193, 0.1);
     color: var(--inventory-aging);
 }
 
@@ -219,14 +219,14 @@
 }
 
 .btn-primary {
-    background: var(--primary-blue);
-    color: white;
-    border-color: var(--primary-blue);
+    background: var(--storehub-orange);
+    color: var(--text-white);
+    border-color: var(--storehub-orange);
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: var(--primary-blue-dark);
-    border-color: var(--primary-blue-dark);
+    background: var(--storehub-orange-dark);
+    border-color: var(--storehub-orange-dark);
 }
 
 .btn-secondary {
@@ -242,13 +242,13 @@
 
 .btn-success {
     background: var(--success);
-    color: white;
+    color: var(--text-white);
     border-color: var(--success);
 }
 
 .btn-success:hover:not(:disabled) {
-    background: #059669;
-    border-color: #059669;
+    background: #218838;
+    border-color: #1e7e34;
 }
 
 /* Campaign Status */
@@ -257,7 +257,7 @@
     align-items: center;
     gap: var(--spacing-sm);
     padding: var(--spacing-sm) var(--spacing-md);
-    background: rgba(16, 185, 129, 0.1);
+    background: rgba(40, 167, 69, 0.1);
     color: var(--success);
     border-radius: var(--border-radius);
     font-size: var(--font-size-sm);
@@ -271,7 +271,7 @@
 
 /* Performance Link */
 .performance-link {
-    color: var(--primary-blue);
+    color: var(--storehub-orange);
     text-decoration: none;
     font-weight: 500;
     font-size: var(--font-size-sm);
@@ -279,7 +279,7 @@
 }
 
 .performance-link:hover {
-    color: var(--primary-blue-dark);
+    color: var(--storehub-orange-dark);
     text-decoration: underline;
 }
 
@@ -293,13 +293,13 @@
 }
 
 .breadcrumb a {
-    color: var(--primary-blue);
+    color: var(--storehub-orange);
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
 .breadcrumb a:hover {
-    color: var(--primary-blue-dark);
+    color: var(--storehub-orange-dark);
 }
 
 .breadcrumb-separator {
@@ -345,8 +345,8 @@
 .history-filters select:focus,
 .history-filters input:focus {
     outline: none;
-    border-color: var(--primary-blue);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: var(--storehub-orange);
+    box-shadow: 0 0 0 3px var(--storehub-orange-bg);
 }
 
 .history-list {
@@ -364,7 +364,7 @@
 
 .history-item:hover {
     box-shadow: var(--shadow-md);
-    border-color: var(--primary-blue-light);
+    border-color: var(--storehub-orange-light);
 }
 
 .history-item-header {
@@ -389,7 +389,7 @@
 }
 
 .history-item-status.completed {
-    background: rgba(16, 185, 129, 0.1);
+    background: rgba(40, 167, 69, 0.1);
     color: var(--success);
 }
 

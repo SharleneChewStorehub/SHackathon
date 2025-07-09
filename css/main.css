@@ -1,49 +1,65 @@
 /* StoreHub Backoffice - Dynamic Growth Dashboard */
-/* Main CSS with StoreHub Design System */
+/* Main CSS with Authentic StoreHub Black & Orange Design System */
 
-/* CSS Variables - StoreHub Color Palette */
+/* CSS Variables - StoreHub Authentic Color Palette */
 :root {
-    /* StoreHub Brand Colors */
-    --primary-blue: #1E3A8A;
-    --primary-blue-light: #3B82F6;
-    --primary-blue-dark: #1E40AF;
+    /* StoreHub Brand Colors - Black & Orange Theme */
+    --storehub-orange: #FF6B35;
+    --storehub-orange-light: #FF8A5C;
+    --storehub-orange-dark: #E55A2B;
+    --storehub-orange-bg: rgba(255, 107, 53, 0.1);
     
-    /* Sidebar Colors */
-    --sidebar-bg: #1F2937;
-    --sidebar-hover: #374151;
-    --sidebar-active: #3B82F6;
-    --sidebar-text: #D1D5DB;
+    /* StoreHub Black Theme */
+    --storehub-black: #1A1A1A;
+    --storehub-black-light: #2D2D2D;
+    --storehub-black-lighter: #404040;
+    --storehub-gray-dark: #333333;
+    --storehub-gray: #666666;
+    --storehub-gray-light: #999999;
+    
+    /* Sidebar Colors - Authentic StoreHub */
+    --sidebar-bg: #1A1A1A;
+    --sidebar-hover: #2D2D2D;
+    --sidebar-active: #FF6B35;
+    --sidebar-active-bg: rgba(255, 107, 53, 0.1);
+    --sidebar-text: #CCCCCC;
     --sidebar-text-active: #FFFFFF;
+    --sidebar-text-muted: #999999;
     
-    /* Header Colors */
-    --header-bg: #FFFFFF;
-    --header-border: #E5E7EB;
-    --header-text: #374151;
+    /* Header Colors - StoreHub Style */
+    --header-bg: #1A1A1A;
+    --header-border: #333333;
+    --header-text: #FFFFFF;
+    --header-text-secondary: #CCCCCC;
     
     /* Main Content Colors */
-    --main-bg: #F9FAFB;
+    --main-bg: #F5F5F5;
     --content-bg: #FFFFFF;
-    --border-color: #E5E7EB;
-    --text-primary: #111827;
-    --text-secondary: #6B7280;
-    --text-muted: #9CA3AF;
+    --border-color: #E0E0E0;
+    --border-color-dark: #333333;
+    --text-primary: #1A1A1A;
+    --text-secondary: #666666;
+    --text-muted: #999999;
+    --text-white: #FFFFFF;
     
-    /* Opportunity Category Colors */
-    --customer-lifecycle: #EF4444;
-    --product-profitability: #10B981;
-    --basket-analysis: #F59E0B;
-    --inventory-aging: #8B5CF6;
+    /* Opportunity Category Colors - Enhanced with Orange Accent */
+    --customer-lifecycle: #FF6B35;
+    --product-profitability: #28A745;
+    --basket-analysis: #FFC107;
+    --inventory-aging: #6F42C1;
     
     /* Status Colors */
-    --success: #10B981;
-    --warning: #F59E0B;
-    --error: #EF4444;
-    --info: #3B82F6;
+    --success: #28A745;
+    --warning: #FFC107;
+    --error: #DC3545;
+    --info: #17A2B8;
+    --primary: #FF6B35;
     
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-dark: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
     
     /* Spacing */
     --spacing-xs: 0.25rem;
@@ -86,7 +102,7 @@ body {
     overflow-x: hidden;
 }
 
-/* StoreHub Header */
+/* StoreHub Header - Black Theme */
 .storehub-header {
     position: fixed;
     top: 0;
@@ -96,7 +112,7 @@ body {
     background: var(--header-bg);
     border-bottom: 1px solid var(--header-border);
     z-index: 1000;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-dark);
 }
 
 .header-content {
@@ -118,14 +134,14 @@ body {
     background: none;
     border: none;
     font-size: var(--font-size-lg);
-    color: var(--text-primary);
+    color: var(--header-text);
     cursor: pointer;
     padding: var(--spacing-sm);
     border-radius: var(--border-radius);
 }
 
 .menu-toggle:hover {
-    background-color: var(--border-color);
+    background-color: var(--sidebar-hover);
 }
 
 .storehub-logo {
@@ -137,17 +153,17 @@ body {
 .logo-text {
     font-size: var(--font-size-xl);
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--header-text);
     letter-spacing: -0.025em;
 }
 
 .logo-accent {
-    color: var(--primary-blue);
+    color: var(--storehub-orange);
 }
 
 .logo-subtitle {
     font-size: var(--font-size-xs);
-    color: var(--text-muted);
+    color: var(--header-text-secondary);
     font-weight: 500;
     margin-top: -2px;
 }
@@ -164,7 +180,7 @@ body {
     gap: var(--spacing-sm);
     background: none;
     border: none;
-    color: var(--text-secondary);
+    color: var(--header-text-secondary);
     font-size: var(--font-size-sm);
     cursor: pointer;
     padding: var(--spacing-sm) var(--spacing-md);
@@ -173,15 +189,24 @@ body {
 }
 
 .header-btn:hover {
-    background-color: var(--border-color);
-    color: var(--text-primary);
+    background-color: var(--sidebar-hover);
+    color: var(--header-text);
+}
+
+.header-btn.whats-new {
+    background-color: var(--storehub-orange);
+    color: var(--text-white);
+}
+
+.header-btn.whats-new:hover {
+    background-color: var(--storehub-orange-dark);
 }
 
 .user-menu {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
-    color: var(--text-secondary);
+    color: var(--header-text-secondary);
     font-size: var(--font-size-sm);
     cursor: pointer;
     padding: var(--spacing-sm) var(--spacing-md);
@@ -190,11 +215,11 @@ body {
 }
 
 .user-menu:hover {
-    background-color: var(--border-color);
-    color: var(--text-primary);
+    background-color: var(--sidebar-hover);
+    color: var(--header-text);
 }
 
-/* Sidebar Navigation */
+/* Sidebar Navigation - StoreHub Black Theme */
 .sidebar {
     position: fixed;
     top: var(--header-height);
@@ -205,6 +230,7 @@ body {
     overflow-y: auto;
     z-index: 999;
     transition: transform 0.3s ease;
+    border-right: 1px solid var(--border-color-dark);
 }
 
 .sidebar-content {
@@ -222,6 +248,7 @@ body {
     font-weight: 500;
     transition: all 0.2s ease;
     border-left: 3px solid transparent;
+    margin-bottom: 2px;
 }
 
 .sidebar-item:hover {
@@ -230,7 +257,7 @@ body {
 }
 
 .sidebar-item.active {
-    background-color: var(--sidebar-hover);
+    background-color: var(--sidebar-active-bg);
     color: var(--sidebar-text-active);
     border-left-color: var(--sidebar-active);
 }
@@ -318,20 +345,24 @@ body {
 .text-primary { color: var(--text-primary); }
 .text-secondary { color: var(--text-secondary); }
 .text-muted { color: var(--text-muted); }
+.text-white { color: var(--text-white); }
 .text-success { color: var(--success); }
 .text-warning { color: var(--warning); }
 .text-error { color: var(--error); }
 .text-info { color: var(--info); }
+.text-orange { color: var(--storehub-orange); }
 
-.bg-primary { background-color: var(--primary-blue); }
+.bg-primary { background-color: var(--primary); }
 .bg-success { background-color: var(--success); }
 .bg-warning { background-color: var(--warning); }
 .bg-error { background-color: var(--error); }
 .bg-info { background-color: var(--info); }
+.bg-orange { background-color: var(--storehub-orange); }
 
 .shadow-sm { box-shadow: var(--shadow-sm); }
 .shadow-md { box-shadow: var(--shadow-md); }
 .shadow-lg { box-shadow: var(--shadow-lg); }
+.shadow-dark { box-shadow: var(--shadow-dark); }
 
 .rounded { border-radius: var(--border-radius); }
 .rounded-lg { border-radius: var(--border-radius-lg); }
@@ -355,7 +386,7 @@ body {
     width: 32px;
     height: 32px;
     border: 3px solid var(--border-color);
-    border-top: 3px solid var(--primary-blue);
+    border-top: 3px solid var(--storehub-orange);
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: var(--spacing-md);
@@ -370,7 +401,7 @@ body {
 button:focus,
 .sidebar-item:focus,
 .header-btn:focus {
-    outline: 2px solid var(--primary-blue);
+    outline: 2px solid var(--storehub-orange);
     outline-offset: 2px;
 }
 
