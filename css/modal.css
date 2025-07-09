@@ -22,15 +22,17 @@
 }
 
 .modal-container {
-    background: var(--bg-primary);
+    background: var(--surface);
     border-radius: 12px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    width: 90%;
-    max-width: 900px;
-    max-height: 80vh;
+    width: 95%;
+    max-width: 1000px;
+    max-height: 90vh;
     overflow: hidden;
     transform: scale(0.95);
     transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-overlay.active .modal-container {
@@ -38,20 +40,20 @@
 }
 
 .modal-header {
-    background: var(--sidebar-bg);
-    color: var(--text-primary);
+    background: var(--storehub-black);
+    color: var(--text-white);
     padding: 1.5rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border);
 }
 
 .modal-header h3 {
     margin: 0;
     font-size: 1.5rem;
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--text-white);
 }
 
 .modal-close {
@@ -66,26 +68,27 @@
 }
 
 .modal-close:hover {
-    background-color: var(--primary-color);
-    color: var(--bg-primary);
+    background-color: var(--storehub-orange);
+    color: var(--text-white);
 }
 
 .modal-content {
     padding: 2rem;
-    max-height: 60vh;
+    flex: 1;
     overflow-y: auto;
+    min-height: 0;
 }
 
 .modal-narrative {
     margin-bottom: 2rem;
     padding: 1.5rem;
-    background: var(--card-bg);
+    background: var(--background);
     border-radius: 8px;
-    border-left: 4px solid var(--primary-color);
+    border-left: 4px solid var(--storehub-orange);
 }
 
 .modal-narrative h4 {
-    color: var(--primary-color);
+    color: var(--storehub-orange);
     margin: 0 0 1rem 0;
     font-size: 1.2rem;
     font-weight: 600;
@@ -103,10 +106,10 @@
 }
 
 .modal-section {
-    background: var(--card-bg);
+    background: var(--surface);
     border-radius: 8px;
     padding: 1.5rem;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border);
 }
 
 .modal-section h5 {
@@ -120,12 +123,12 @@
 }
 
 .modal-section h5 i {
-    color: var(--primary-color);
+    color: var(--storehub-orange);
 }
 
 .chart-container {
     position: relative;
-    height: 300px;
+    height: 250px;
     margin: 1rem 0;
 }
 
@@ -137,10 +140,10 @@
 }
 
 .data-item {
-    background: var(--bg-secondary);
+    background: var(--background);
     padding: 1rem;
     border-radius: 6px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border);
 }
 
 .data-item-label {
@@ -156,24 +159,25 @@
 }
 
 .data-item-value.positive {
-    color: var(--success-color);
+    color: var(--success);
 }
 
 .data-item-value.negative {
-    color: var(--error-color);
+    color: var(--error);
 }
 
 .data-item-value.neutral {
-    color: var(--warning-color);
+    color: var(--warning);
 }
 
 .modal-footer {
-    background: var(--bg-secondary);
+    background: var(--background);
     padding: 1.5rem 2rem;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border);
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
+    flex-shrink: 0;
 }
 
 .modal-footer .btn {
@@ -187,23 +191,23 @@
 }
 
 .modal-footer .btn-secondary {
-    background: var(--card-bg);
+    background: var(--surface);
     color: var(--text-primary);
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border);
 }
 
 .modal-footer .btn-secondary:hover {
-    background: var(--bg-secondary);
-    border-color: var(--primary-color);
+    background: var(--background);
+    border-color: var(--storehub-orange);
 }
 
 .modal-footer .btn-primary {
-    background: var(--primary-color);
-    color: var(--bg-primary);
+    background: var(--storehub-orange);
+    color: var(--text-white);
 }
 
 .modal-footer .btn-primary:hover {
-    background: var(--primary-hover);
+    background: var(--storehub-orange-dark);
     transform: translateY(-1px);
 }
 
@@ -214,8 +218,8 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .modal-container {
-        width: 95%;
-        max-height: 90vh;
+        width: 98%;
+        max-height: 95vh;
     }
     
     .modal-header {
@@ -241,7 +245,7 @@
     }
     
     .chart-container {
-        height: 250px;
+        height: 200px;
     }
     
     .data-grid {
@@ -251,8 +255,9 @@
 
 @media (max-width: 480px) {
     .modal-container {
-        width: 98%;
-        max-height: 95vh;
+        width: 100%;
+        max-height: 100vh;
+        border-radius: 0;
     }
     
     .modal-header {
@@ -268,7 +273,7 @@
     }
     
     .chart-container {
-        height: 200px;
+        height: 180px;
     }
 }
 
@@ -277,8 +282,8 @@
     position: fixed;
     top: 20px;
     right: 20px;
-    background: var(--success-color);
-    color: var(--bg-primary);
+    background: var(--success);
+    color: var(--text-white);
     padding: 1rem 1.5rem;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
@@ -291,11 +296,11 @@
 }
 
 .notification.info {
-    background: var(--primary-color);
+    background: var(--storehub-orange);
 }
 
 .notification.error {
-    background: var(--error-color);
+    background: var(--error);
 }
 
 .notification i {
@@ -310,5 +315,261 @@
     to {
         transform: translateX(0);
         opacity: 1;
+    }
+} 
+
+/* Comparison Matrix Styles */
+.comparison-matrix {
+    margin: 1rem 0;
+}
+
+.matrix-container {
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+}
+
+.matrix-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.matrix-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.matrix-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.matrix-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    grid-template-rows: 100px 1fr;
+    gap: 0;
+    min-height: 400px;
+}
+
+.matrix-labels {
+    display: contents;
+}
+
+.y-axis-label {
+    grid-column: 1;
+    grid-row: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 2px solid var(--border);
+    border-bottom: 2px solid var(--border);
+}
+
+.x-axis-label {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-right: 2px solid var(--border);
+    border-bottom: 2px solid var(--border);
+}
+
+.axis-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+}
+
+.x-axis-label .axis-title {
+    writing-mode: horizontal-tb;
+}
+
+.axis-values {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.x-axis-label .axis-values {
+    flex-direction: row;
+    gap: 2rem;
+}
+
+.matrix-quadrants {
+    grid-column: 2;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+}
+
+.quadrant {
+    background: var(--background);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    position: relative;
+}
+
+.quadrant-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
+}
+
+.high-profit-low-sales {
+    background: #FEF3C7;
+}
+
+.high-profit-high-sales {
+    background: #D1FAE5;
+}
+
+.low-profit-low-sales {
+    background: #FEE2E2;
+}
+
+.low-profit-high-sales {
+    background: #E0E7FF;
+}
+
+.product-item {
+    background: var(--surface);
+    border-radius: 6px;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.product-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-item.highlighted {
+    border: 2px solid var(--storehub-orange);
+    background: var(--surface);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
+}
+
+.product-item.star {
+    border: 2px solid #10B981;
+    background: var(--surface);
+}
+
+.product-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.product-stats {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.opportunity-tag {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--storehub-orange);
+    color: var(--text-white);
+    font-size: 0.6rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+}
+
+.star-tag {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #10B981;
+    color: var(--text-white);
+    font-size: 0.6rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+}
+
+.matrix-insights {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+}
+
+.insight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: var(--background);
+    border-radius: 6px;
+    border-left: 4px solid var(--storehub-orange);
+}
+
+.insight-item i {
+    color: var(--storehub-orange);
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+}
+
+.insight-item span {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* Responsive Matrix */
+@media (max-width: 768px) {
+    .matrix-grid {
+        grid-template-columns: 80px 1fr;
+        grid-template-rows: 80px 1fr;
+        min-height: 300px;
+    }
+    
+    .axis-title {
+        font-size: 0.8rem;
+    }
+    
+    .matrix-quadrants {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+    }
+    
+    .product-item {
+        padding: 0.5rem;
+    }
+    
+    .product-name {
+        font-size: 0.8rem;
+    }
+    
+    .product-stats {
+        font-size: 0.7rem;
     }
 } 

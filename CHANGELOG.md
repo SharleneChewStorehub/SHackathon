@@ -8,10 +8,90 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Next Phase
-- **Phase 1D**: Campaign Integration & Workflow (Smart routing, Feedback loop, Performance tracking)
 - **Phase 1E**: Growth History Page (Historical opportunity tracking, Navigation system)
 - **Phase 1F**: Polish & Performance (UI refinement, Performance optimization, Cross-browser testing)
 - **Phase 1G**: Final Integration & Demo Prep (End-to-end testing, Demo preparation, Documentation)
+
+---
+
+## [0.4.0] - 2024-01-15 - **PHASE 1D COMPLETION**
+
+### **🚀 MAJOR MILESTONE: Campaign Integration & Workflow System**
+
+#### **Added - Phase 1D: Campaign Integration & Workflow**
+- **Smart Campaign Routing System**
+  - Intelligent routing based on opportunity type (Smart Segments vs One-Time Custom)
+  - **VIP Win-Back** → Routes to Automated Campaign Setup (recurring, rule-based)
+  - **Product Promotions** → Routes to Custom Campaign Setup (one-time SMS)
+  - Seamless integration with existing Engage infrastructure
+
+- **Authentic Engage System Integration**
+  - **Engage Overview Page**: Complete recreation matching existing StoreHub Engage UI
+  - **Credits Display**: Shows "200 purchased, 0 free" with top-up functionality
+  - **Campaign Categories**: Automated campaigns (Welcome, Engage, Bring Back, Other)
+  - **Custom Campaign Section**: One-time SMS campaign options
+  - **Win Back Lost Customers**: Highlighted as active automated campaign
+
+- **Campaign Setup Pages**
+  - **Automated Campaign Setup**: Full recreation of existing recurring campaign interface
+    - Step-by-step workflow (Set Up Campaign → Review & Publish)
+    - Brand name field, SMS content with template selector
+    - Target customer rules (Last Purchase Day Between X-Y days)
+    - Schedule settings (campaign start date, daily send time)
+    - SMS preview with character count and cost estimation
+  - **Custom Campaign Setup**: One-time SMS campaign interface
+    - Pre-filled SMS content based on opportunity data
+    - Campaign audience selection (All Customers, Frequent, New, VIP)
+    - Send date & time scheduling
+    - Real-time SMS preview and character counting
+
+- **Enhanced Modal System**
+  - **Fixed Chart Visualization**: Charts now display proper labels, numbers, and data
+  - **2x2 Comparison Matrix**: Product portfolio analysis for Karipap opportunity
+    - Four quadrants: High/Low Profit vs High/Low Sales
+    - Product positioning with visual highlights
+    - Karipap highlighted as "OPPORTUNITY" in High Profit/Low Sales quadrant
+    - Nasi Lemak marked as "⭐ STAR" in High Profit/High Sales quadrant
+    - Business insights explaining strategic recommendations
+  - **Modal Scaling Fixes**: Improved responsive design and button visibility
+    - Increased modal size (95% width, 1000px max-width, 90vh height)
+    - Flexbox layout ensuring footer buttons always visible
+    - Reduced chart heights to optimize space usage
+    - Mobile-optimized scaling (100% width on small screens)
+
+- **Complete Campaign Workflow**
+  - **Modal Launch Integration**: "Launch Campaign" button in modal now routes to campaign setup
+  - **Breadcrumb Navigation**: Proper navigation between Engage → Campaign Setup
+  - **Form Pre-filling**: Campaign details automatically populated from opportunity data
+  - **Save & Launch Functionality**: Campaign saving and confirmation workflows
+  - **Status Management**: Opportunity cards update to show campaign progress
+
+#### **Enhanced - Data Visualization**
+- **Chart Improvements**:
+  - Proper axis labels with currency formatting (RM prefix)
+  - Percentage formatting for attachment rate charts
+  - Improved color schemes and grid lines for better readability
+  - Data labels showing actual values on charts
+  - Better font sizes and contrast for accessibility
+
+- **Comparison Matrix Features**:
+  - Color-coded quadrants for visual understanding
+  - Interactive product cards with hover effects
+  - Strategic insights explaining business implications
+  - Responsive design adapting to mobile screens
+
+#### **Fixed - User Experience Issues**
+- **Modal UI**: Fixed CSS variable conflicts causing layout issues
+- **CSV Export**: Corrected data formatting to include proper impact values
+- **Campaign Routing**: Fixed modal launch button to route to campaign setup instead of direct launch
+- **Responsive Design**: Improved modal scaling across all device sizes
+
+#### **Technical Implementation**
+- **Enhanced dashboard.js**: Added Engage integration methods and campaign routing logic
+- **Enhanced modal.js**: Fixed chart configurations and added matrix generation
+- **New Engage CSS**: Comprehensive styling for Engage overview and campaign setup pages
+- **Improved modal.css**: Fixed scaling issues and added comparison matrix styles
+- **Chart.js Optimization**: Better configuration for data labels and responsive design
 
 ---
 

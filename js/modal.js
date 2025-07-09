@@ -82,6 +82,8 @@ class ModalManager {
                     </div>
                 </div>
                 
+                ${opportunity.id === 'boost-karipap' ? this.generateComparisonMatrix(opportunity) : ''}
+                
                 <div class="modal-section">
                     <h5><i class="fas fa-database"></i> Supporting Data</h5>
                     <div class="data-grid" id="data-grid">
@@ -177,14 +179,34 @@ class ModalManager {
                     title: {
                         display: true,
                         text: chartData.title,
-                        color: '#FFFFFF',
-                        font: { size: 14, weight: 'bold' }
+                        color: '#000000',
+                        font: { size: 16, weight: 'bold' }
                     },
                     legend: {
-                        labels: { color: '#FFFFFF' }
+                        display: true,
+                        labels: { 
+                            color: '#000000',
+                            font: { size: 12 }
+                        }
+                    },
+                    datalabels: {
+                        display: true,
+                        color: '#FFFFFF',
+                        font: { size: 12, weight: 'bold' },
+                        formatter: (value, context) => {
+                            if (chartData.type === 'doughnut') {
+                                return value;
+                            }
+                            return value;
+                        }
                     }
                 },
-                scales: chartData.scales || {}
+                scales: chartData.scales || {},
+                elements: {
+                    bar: {
+                        borderWidth: 0
+                    }
+                }
             }
         });
     }
@@ -205,14 +227,34 @@ class ModalManager {
                     title: {
                         display: true,
                         text: chartData.title,
-                        color: '#FFFFFF',
-                        font: { size: 14, weight: 'bold' }
+                        color: '#000000',
+                        font: { size: 16, weight: 'bold' }
                     },
                     legend: {
-                        labels: { color: '#FFFFFF' }
+                        display: true,
+                        labels: { 
+                            color: '#000000',
+                            font: { size: 12 }
+                        }
+                    },
+                    datalabels: {
+                        display: true,
+                        color: '#FFFFFF',
+                        font: { size: 12, weight: 'bold' },
+                        formatter: (value, context) => {
+                            if (chartData.type === 'line') {
+                                return 'RM ' + value;
+                            }
+                            return value;
+                        }
                     }
                 },
-                scales: chartData.scales || {}
+                scales: chartData.scales || {},
+                elements: {
+                    bar: {
+                        borderWidth: 0
+                    }
+                }
             }
         });
     }
@@ -236,7 +278,7 @@ class ModalManager {
                 type: 'bar',
                 title: 'Product Performance vs Potential',
                 data: {
-                    labels: ['Current Sales', 'Potential Sales', 'Profit Margin'],
+                    labels: ['Current Sales', 'Potential Sales', 'Profit Margin %'],
                     datasets: [{
                         label: 'Performance Metrics',
                         data: [45, 63, 65],
@@ -247,10 +289,22 @@ class ModalManager {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: { color: '#FFFFFF' }
+                        ticks: { 
+                            color: '#000000',
+                            font: { size: 11 }
+                        },
+                        grid: {
+                            color: '#E5E5E5'
+                        }
                     },
                     x: {
-                        ticks: { color: '#FFFFFF' }
+                        ticks: { 
+                            color: '#000000',
+                            font: { size: 11 }
+                        },
+                        grid: {
+                            color: '#E5E5E5'
+                        }
                     }
                 }
             },
@@ -270,10 +324,25 @@ class ModalManager {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: { color: '#FFFFFF' }
+                        ticks: { 
+                            color: '#000000',
+                            font: { size: 11 },
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        },
+                        grid: {
+                            color: '#E5E5E5'
+                        }
                     },
                     x: {
-                        ticks: { color: '#FFFFFF' }
+                        ticks: { 
+                            color: '#000000',
+                            font: { size: 11 }
+                        },
+                        grid: {
+                            color: '#E5E5E5'
+                        }
                     }
                 }
             }
@@ -302,14 +371,24 @@ class ModalManager {
                     y: {
                         beginAtZero: true,
                         ticks: { 
-                            color: '#FFFFFF',
+                            color: '#000000',
+                            font: { size: 11 },
                             callback: function(value) {
                                 return 'RM ' + value;
                             }
+                        },
+                        grid: {
+                            color: '#E5E5E5'
                         }
                     },
                     x: {
-                        ticks: { color: '#FFFFFF' }
+                        ticks: { 
+                            color: '#000000',
+                            font: { size: 11 }
+                        },
+                        grid: {
+                            color: '#E5E5E5'
+                        }
                     }
                 }
             },
@@ -376,6 +455,96 @@ class ModalManager {
         return chartMap[opportunity.id] || chartMap['win-back-vips'];
     }
 
+    generateComparisonMatrix(opportunity) {
+        return `
+            <div class="modal-section">
+                <h5><i class="fas fa-th"></i> Product Portfolio Analysis</h5>
+                <div class="comparison-matrix">
+                    <div class="matrix-container">
+                        <div class="matrix-header">
+                            <div class="matrix-title">Profit Margin vs Sales Volume</div>
+                            <div class="matrix-subtitle">Position your products in the market landscape</div>
+                        </div>
+                        
+                        <div class="matrix-grid">
+                            <div class="matrix-labels">
+                                <div class="y-axis-label">
+                                    <span class="axis-title">Profit Margin</span>
+                                    <div class="axis-values">
+                                        <span>High</span>
+                                        <span>Low</span>
+                                    </div>
+                                </div>
+                                <div class="x-axis-label">
+                                    <span class="axis-title">Sales Volume</span>
+                                    <div class="axis-values">
+                                        <span>Low</span>
+                                        <span>High</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="matrix-quadrants">
+                                <div class="quadrant high-profit-low-sales">
+                                    <div class="quadrant-label">High Profit<br>Low Sales</div>
+                                    <div class="product-item highlighted">
+                                        <div class="product-name">Karipap Pusing</div>
+                                        <div class="product-stats">65% margin, 45 units/week</div>
+                                        <div class="opportunity-tag">OPPORTUNITY</div>
+                                    </div>
+                                    <div class="product-item">
+                                        <div class="product-name">Curry Puff</div>
+                                        <div class="product-stats">58% margin, 32 units/week</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="quadrant high-profit-high-sales">
+                                    <div class="quadrant-label">High Profit<br>High Sales</div>
+                                    <div class="product-item star">
+                                        <div class="product-name">Nasi Lemak</div>
+                                        <div class="product-stats">52% margin, 234 units/week</div>
+                                        <div class="star-tag">⭐ STAR</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="quadrant low-profit-low-sales">
+                                    <div class="quadrant-label">Low Profit<br>Low Sales</div>
+                                    <div class="product-item">
+                                        <div class="product-name">Mee Goreng</div>
+                                        <div class="product-stats">28% margin, 28 units/week</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="quadrant low-profit-high-sales">
+                                    <div class="quadrant-label">Low Profit<br>High Sales</div>
+                                    <div class="product-item">
+                                        <div class="product-name">Kopi O</div>
+                                        <div class="product-stats">35% margin, 156 units/week</div>
+                                    </div>
+                                    <div class="product-item">
+                                        <div class="product-name">Teh Tarik</div>
+                                        <div class="product-stats">42% margin, 89 units/week</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="matrix-insights">
+                            <div class="insight-item">
+                                <i class="fas fa-lightbulb"></i>
+                                <span><strong>Karipap Pusing</strong> is your hidden gem - high profit but underperforming in sales. A targeted promotion could move it towards the "Star" quadrant.</span>
+                            </div>
+                            <div class="insight-item">
+                                <i class="fas fa-target"></i>
+                                <span>Focus on promoting high-margin, low-volume items to maximize profitability with minimal effort.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
     destroyCharts() {
         Object.values(this.charts).forEach(chart => {
             if (chart) chart.destroy();
@@ -405,6 +574,7 @@ class ModalManager {
     generateCSVData(opportunity) {
         const headers = ['Metric', 'Value', 'Trend', 'Impact'];
         const dataPoints = this.getDataPoints(opportunity);
+        const impactValue = window.mockData.utils.formatCurrency(opportunity.estimatedImpact.amount) + '/' + opportunity.estimatedImpact.period;
         
         let csv = headers.join(',') + '\n';
         
@@ -413,7 +583,7 @@ class ModalManager {
                 `"${point.label}"`,
                 `"${point.value}"`,
                 `"${point.trend || 'neutral'}"`,
-                `"${opportunity.impact}"`
+                `"${impactValue}"`
             ];
             csv += row.join(',') + '\n';
         });
@@ -427,11 +597,12 @@ class ModalManager {
         // Close modal first
         this.closeModal();
         
-        // Trigger campaign launch (this will be handled by the main dashboard)
-        const event = new CustomEvent('launchCampaign', {
-            detail: { opportunity: this.currentOpportunity }
-        });
-        document.dispatchEvent(event);
+        // Route to campaign setup (same as opportunity card button)
+        if (window.dashboardManager) {
+            window.dashboardManager.routeToCampaignSetup(this.currentOpportunity);
+        } else {
+            console.error('Dashboard manager not available');
+        }
     }
 
     showNotification(message, type = 'info') {

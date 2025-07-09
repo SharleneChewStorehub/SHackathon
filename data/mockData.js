@@ -15,7 +15,7 @@ const merchantData = {
 // Current Active Opportunities (Today's Opportunities)
 const currentOpportunities = [
     {
-        id: "opp_001",
+        id: "win-back-vips",
         category: "customer-lifecycle",
         categoryLabel: "Customer Lifecycle",
         categoryColor: "#FF6B6B",
@@ -83,7 +83,7 @@ const currentOpportunities = [
         }
     },
     {
-        id: "opp_002",
+        id: "boost-karipap",
         category: "product-profitability",
         categoryLabel: "Product Profitability",
         categoryColor: "#4ECDC4",
@@ -152,7 +152,7 @@ const currentOpportunities = [
         }
     },
     {
-        id: "opp_003",
+        id: "combo-deals",
         category: "basket-analysis",
         categoryLabel: "Basket Analysis",
         categoryColor: "#FFE66D",

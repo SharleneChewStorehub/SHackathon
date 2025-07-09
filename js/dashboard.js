@@ -12,12 +12,6 @@ class DashboardManager {
         this.setupEventListeners();
         this.setupMobileMenu();
         this.loadOpportunities();
-        
-        // Listen for modal campaign launch events
-        document.addEventListener('launchCampaign', (e) => {
-            const opportunity = e.detail.opportunity;
-            this.processLaunch(opportunity);
-        });
     }
 
     setupEventListeners() {
@@ -251,7 +245,7 @@ class DashboardManager {
             <div class="history-container">
                 <section class="history-header">
                     <nav class="breadcrumb">
-                        <a href="#dashboard">Dashboard</a>
+                        <a href="#dashboard" class="breadcrumb-link">Dashboard</a>
                         <span class="breadcrumb-separator">></span>
                         <span>Growth History</span>
                     </nav>
@@ -279,23 +273,95 @@ class DashboardManager {
         `;
         
         this.setupEventListeners();
+        this.setupBreadcrumbNavigation();
     }
 
     showEngagePage() {
         this.currentPage = 'engage';
         document.getElementById('main-content').innerHTML = `
-            <div class="engage-container">
+            <div class="engage-overview">
                 <section class="engage-header">
-                    <h2>Engage - SMS Marketing</h2>
-                    <p class="engage-subtitle">Launch targeted campaigns to grow your business</p>
+                    <h2>Engage Overview</h2>
+                    <div class="credits-display">
+                        <div class="credits-card">
+                            <h3>Available Credits</h3>
+                            <div class="credits-count">200</div>
+                            <div class="credits-breakdown">
+                                <div class="credit-item">
+                                    <span>Purchased</span>
+                                    <span>200</span>
+                                </div>
+                                <div class="credit-item">
+                                    <span>Free</span>
+                                    <span>0</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary">+ Top-up</button>
+                        </div>
+                    </div>
                 </section>
 
-                <section class="engage-content">
-                    <div class="engage-placeholder">
-                        <h4>Campaign Management</h4>
-                        <p>This would be the main Engage module interface</p>
-                        <button class="btn btn-primary">Create New Campaign</button>
+                <section class="automated-campaigns">
+                    <h3>Automated Campaigns</h3>
+                    <div class="campaign-categories">
+                        <div class="campaign-category">
+                            <h4>Welcome Message</h4>
+                            <p>Reward new customers with vouchers or freebies</p>
+                            <div class="campaign-option">
+                                <i class="fas fa-user-plus"></i>
+                                <span>Welcome New Customers</span>
+                            </div>
+                        </div>
+                        
+                        <div class="campaign-category">
+                            <h4>Engage Customers</h4>
+                            <p>Stay top of mind with your existing customers</p>
+                            <div class="campaign-option">
+                                <i class="fas fa-birthday-cake"></i>
+                                <span>Birthday Promotion</span>
+                            </div>
+                            <div class="campaign-option">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span>Cashback Reminder</span>
+                            </div>
+                        </div>
+                        
+                        <div class="campaign-category">
+                            <h4>Bring Back Customers</h4>
+                            <p>Remind inactive customers to return and spend again</p>
+                            <div class="campaign-option">
+                                <i class="fas fa-clock"></i>
+                                <span>Expiring Cashback Alert</span>
+                            </div>
+                            <div class="campaign-option active">
+                                <i class="fas fa-user-friends"></i>
+                                <span>Win Back Lost Customers</span>
+                            </div>
+                        </div>
+                        
+                        <div class="campaign-category">
+                            <h4>Other</h4>
+                            <p>Extra tools to get ahead of the competition</p>
+                            <div class="campaign-option">
+                                <i class="fas fa-star"></i>
+                                <span>Boost Google Reviews</span>
+                            </div>
+                        </div>
                     </div>
+                </section>
+
+                <section class="custom-campaign">
+                    <h3>Custom Campaign</h3>
+                    <p>Send one-time SMS campaigns to promote your new products, limited-time offers, and special promotions.</p>
+                    <div class="custom-campaign-option">
+                        <i class="fas fa-sms"></i>
+                        <span>One-Time SMS Campaign</span>
+                    </div>
+                </section>
+
+                <section class="best-practices">
+                    <h3>Best Practices for businesses like yours!</h3>
+                    <p>Watch 30-second snippets of Best Practices to drive repeated sales, automatically!</p>
                 </section>
             </div>
         `;
@@ -305,6 +371,13 @@ class DashboardManager {
     
     async loadOpportunities() {
         try {
+            // Initialize container references
+            this.opportunitiesContainer = document.getElementById('opportunities-container');
+            if (!this.opportunitiesContainer) {
+                console.error('Opportunities container not found');
+                return;
+            }
+            
             // Show loading state
             this.showLoading();
             
@@ -326,8 +399,14 @@ class DashboardManager {
     }
     
     showLoading() {
-        if (this.loadingState) {
-            this.loadingState.style.display = 'flex';
+        if (this.opportunitiesContainer) {
+            this.opportunitiesContainer.innerHTML = `
+                <div class="loading-state" id="loading-state">
+                    <div class="spinner"></div>
+                    <p>Analyzing your business data...</p>
+                </div>
+            `;
+            this.loadingState = document.getElementById('loading-state');
         }
     }
     
@@ -339,21 +418,28 @@ class DashboardManager {
     
     showError(message) {
         this.hideLoading();
-        this.opportunitiesContainer.innerHTML = `
-            <div class="error-state" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--error-color); margin-bottom: 1rem;"></i>
-                <h4 style="color: var(--error-color); margin-bottom: 0.5rem;">Error Loading Opportunities</h4>
-                <p style="color: var(--text-secondary); margin-bottom: 1rem;">${message}</p>
-                <button class="btn btn-primary" onclick="location.reload()">
-                    <i class="fas fa-refresh"></i>
-                    Refresh Page
-                </button>
-            </div>
-        `;
+        if (this.opportunitiesContainer) {
+            this.opportunitiesContainer.innerHTML = `
+                <div class="error-state" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--error-color); margin-bottom: 1rem;"></i>
+                    <h4 style="color: var(--error-color); margin-bottom: 0.5rem;">Error Loading Opportunities</h4>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">${message}</p>
+                    <button class="btn btn-primary" onclick="location.reload()">
+                        <i class="fas fa-refresh"></i>
+                        Refresh Page
+                    </button>
+                </div>
+            `;
+        }
     }
     
     renderOpportunities() {
         this.hideLoading();
+        
+        if (!this.opportunitiesContainer) {
+            console.error('Opportunities container not found');
+            return;
+        }
         
         if (!this.opportunities || this.opportunities.length === 0) {
             this.showEmptyState();
@@ -373,13 +459,15 @@ class DashboardManager {
     }
     
     showEmptyState() {
-        this.opportunitiesContainer.innerHTML = `
-            <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
-                <i class="fas fa-lightbulb" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
-                <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">No Opportunities Available</h4>
-                <p style="color: var(--text-secondary); margin-bottom: 0;">Great job! You're all caught up with your growth opportunities.</p>
-            </div>
-        `;
+        if (this.opportunitiesContainer) {
+            this.opportunitiesContainer.innerHTML = `
+                <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+                    <i class="fas fa-lightbulb" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                    <h4 style="color: var(--text-primary); margin-bottom: 0.5rem;">No Opportunities Available</h4>
+                    <p style="color: var(--text-secondary); margin-bottom: 0;">Great job! You're all caught up with your growth opportunities.</p>
+                </div>
+            `;
+        }
     }
     
     createOpportunityCard(opportunity) {
@@ -484,10 +572,61 @@ class DashboardManager {
             return;
         }
         
-        // Show confirmation
-        if (confirm(`Are you sure you want to launch the campaign for "${opportunity.headline}"?`)) {
-            this.processLaunch(opportunity);
+        // Smart routing based on campaign type
+        this.routeToCampaignSetup(opportunity);
+    }
+    
+    routeToCampaignSetup(opportunity) {
+        // Update opportunity status to 'setting-up'
+        opportunity.status = 'setting-up';
+        this.updateCardToSettingUp(opportunity);
+        
+        // Route to existing Engage system based on campaign type
+        switch (opportunity.campaignType) {
+            case 'smart-segment':
+                this.routeToAutomatedCampaign(opportunity);
+                break;
+            case 'one-time-custom':
+                this.routeToCustomCampaign(opportunity);
+                break;
+            default:
+                console.error('Unknown campaign type:', opportunity.campaignType);
+                this.routeToCustomCampaign(opportunity);
         }
+    }
+    
+    routeToAutomatedCampaign(opportunity) {
+        // Navigate to Engage page and show automated campaign setup
+        this.showEngageAutomatedCampaign(opportunity);
+    }
+    
+    routeToCustomCampaign(opportunity) {
+        // Navigate to Engage page and show custom campaign setup
+        this.showEngageCustomCampaign(opportunity);
+    }
+    
+    updateCardToSettingUp(opportunity) {
+        const card = document.querySelector(`[data-opportunity-id="${opportunity.id}"]`);
+        if (card) {
+            card.classList.add('setting-up');
+            const actionsDiv = card.querySelector('.card-actions');
+            if (actionsDiv) {
+                actionsDiv.innerHTML = this.createSettingUpStatus(opportunity);
+            }
+        }
+    }
+    
+    createSettingUpStatus(opportunity) {
+        return `
+            <div class="setting-up-status">
+                <i class="fas fa-cog fa-spin"></i>
+                <span>Setting up campaign...</span>
+                <button class="btn btn-sm btn-secondary cancel-setup-btn" data-opportunity-id="${opportunity.id}">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </button>
+            </div>
+        `;
     }
     
     processLaunch(opportunity) {
@@ -600,6 +739,17 @@ class DashboardManager {
             `).join('');
     }
     
+    setupBreadcrumbNavigation() {
+        // Handle breadcrumb navigation
+        document.querySelectorAll('.breadcrumb-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = link.getAttribute('href');
+                this.handleNavigation(href);
+            });
+        });
+    }
+
     closeModal() {
         const modal = document.querySelector('.modal-backdrop');
         if (modal) {
@@ -691,6 +841,582 @@ class DashboardManager {
                 metricCards[4].querySelector('.metric-change span').textContent = `(${data.avgItemsChange})`;
             }
         }
+    }
+
+    showSmartSegmentCampaign(opportunity) {
+        this.currentPage = 'smart-segment-campaign';
+        document.getElementById('main-content').innerHTML = `
+            <div class="campaign-container">
+                <section class="campaign-header">
+                    <nav class="breadcrumb">
+                        <a href="#dashboard" class="breadcrumb-link">Dashboard</a>
+                        <span class="breadcrumb-separator">></span>
+                        <span>Smart Segment Campaign</span>
+                    </nav>
+                    <h2>AI-Powered Smart Segment</h2>
+                    <p class="campaign-subtitle">Automated campaign with intelligent customer targeting</p>
+                </section>
+
+                <section class="campaign-content">
+                    <div class="campaign-setup-card">
+                        <div class="campaign-preview">
+                            <h3><i class="fas fa-robot"></i> ${opportunity.headline}</h3>
+                            <p class="campaign-description">${opportunity.summary}</p>
+                            
+                            <div class="smart-segment-details">
+                                <h4><i class="fas fa-users"></i> Smart Segment Definition</h4>
+                                <div class="segment-rule">
+                                    <code>${opportunity.campaignDetails.segmentRule}</code>
+                                </div>
+                                <div class="segment-stats">
+                                    <div class="stat">
+                                        <span class="stat-label">Estimated Reach:</span>
+                                        <span class="stat-value">${opportunity.campaignDetails.estimatedReach} customers</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-label">Campaign Cost:</span>
+                                        <span class="stat-value">RM ${opportunity.campaignDetails.estimatedCost}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="campaign-message">
+                                <h4><i class="fas fa-comment"></i> Pre-filled Message</h4>
+                                <div class="message-preview">
+                                    <textarea id="campaign-message" rows="4" readonly>${opportunity.campaignDetails.suggestedCopy}</textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="campaign-automation">
+                                <h4><i class="fas fa-magic"></i> Automation Settings</h4>
+                                <div class="automation-info">
+                                    <div class="automation-feature">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Automatic customer enrollment based on rules</span>
+                                    </div>
+                                    <div class="automation-feature">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Daily rule evaluation and updates</span>
+                                    </div>
+                                    <div class="automation-feature">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Performance tracking and optimization</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="campaign-actions">
+                            <button class="btn btn-secondary" onclick="window.dashboardManager.cancelCampaignSetup('${opportunity.id}')">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </button>
+                            <button class="btn btn-primary" onclick="window.dashboardManager.confirmSmartSegmentLaunch('${opportunity.id}')">
+                                <i class="fas fa-rocket"></i>
+                                Launch Smart Campaign
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        `;
+        
+        this.setupBreadcrumbNavigation();
+    }
+    
+    showOneTimeCampaign(opportunity) {
+        this.currentPage = 'one-time-campaign';
+        document.getElementById('main-content').innerHTML = `
+            <div class="campaign-container">
+                <section class="campaign-header">
+                    <nav class="breadcrumb">
+                        <a href="#dashboard" class="breadcrumb-link">Dashboard</a>
+                        <span class="breadcrumb-separator">></span>
+                        <span>One-Time Campaign</span>
+                    </nav>
+                    <h2>Tactical Promotion Campaign</h2>
+                    <p class="campaign-subtitle">Strategic one-time promotion with custom targeting</p>
+                </section>
+
+                <section class="campaign-content">
+                    <div class="campaign-setup-card">
+                        <div class="campaign-preview">
+                            <h3><i class="fas fa-bullhorn"></i> ${opportunity.headline}</h3>
+                            <p class="campaign-description">${opportunity.summary}</p>
+                            
+                            <div class="promotion-details">
+                                <h4><i class="fas fa-percentage"></i> Promotion Details</h4>
+                                <div class="offer-preview">
+                                    <div class="offer-box">
+                                        <strong>${opportunity.campaignDetails.suggestedOffer}</strong>
+                                    </div>
+                                </div>
+                                <div class="promotion-stats">
+                                    <div class="stat">
+                                        <span class="stat-label">Estimated Reach:</span>
+                                        <span class="stat-value">${opportunity.campaignDetails.estimatedReach} customers</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-label">Campaign Duration:</span>
+                                        <span class="stat-value">${opportunity.campaignDetails.duration || '7 days'}</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-label">Investment:</span>
+                                        <span class="stat-value">RM ${opportunity.campaignDetails.estimatedCost}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="campaign-message">
+                                <h4><i class="fas fa-comment"></i> Campaign Message</h4>
+                                <div class="message-preview">
+                                    <textarea id="campaign-message" rows="4">${opportunity.campaignDetails.suggestedCopy}</textarea>
+                                    <small class="message-help">You can customize this message before launching</small>
+                                </div>
+                            </div>
+                            
+                            <div class="campaign-targeting">
+                                <h4><i class="fas fa-crosshairs"></i> Targeting Strategy</h4>
+                                <div class="targeting-info">
+                                    <div class="targeting-method">
+                                        <i class="fas fa-users"></i>
+                                        <span>All active customers (last 30 days)</span>
+                                    </div>
+                                    <div class="targeting-method">
+                                        <i class="fas fa-clock"></i>
+                                        <span>Optimal send time: 11:00 AM - 2:00 PM</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="campaign-actions">
+                            <button class="btn btn-secondary" onclick="window.dashboardManager.cancelCampaignSetup('${opportunity.id}')">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </button>
+                            <button class="btn btn-primary" onclick="window.dashboardManager.confirmOneTimeLaunch('${opportunity.id}')">
+                                <i class="fas fa-rocket"></i>
+                                Launch Campaign
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        `;
+        
+        this.setupBreadcrumbNavigation();
+    }
+    
+    showGenericCampaign(opportunity) {
+        this.currentPage = 'generic-campaign';
+        document.getElementById('main-content').innerHTML = `
+            <div class="campaign-container">
+                <section class="campaign-header">
+                    <nav class="breadcrumb">
+                        <a href="#dashboard" class="breadcrumb-link">Dashboard</a>
+                        <span class="breadcrumb-separator">></span>
+                        <span>Campaign Setup</span>
+                    </nav>
+                    <h2>Campaign Setup</h2>
+                    <p class="campaign-subtitle">Configure your marketing campaign</p>
+                </section>
+
+                <section class="campaign-content">
+                    <div class="campaign-setup-card">
+                        <div class="campaign-preview">
+                            <h3>${opportunity.headline}</h3>
+                            <p class="campaign-description">${opportunity.summary}</p>
+                            
+                            <div class="generic-campaign-form">
+                                <h4>Campaign Configuration</h4>
+                                <p>This opportunity requires manual campaign setup. Please configure the details below.</p>
+                                
+                                <div class="form-group">
+                                    <label for="campaign-type">Campaign Type:</label>
+                                    <select id="campaign-type">
+                                        <option value="sms">SMS Campaign</option>
+                                        <option value="email">Email Campaign</option>
+                                        <option value="push">Push Notification</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="campaign-message">Message:</label>
+                                    <textarea id="campaign-message" rows="4" placeholder="Enter your campaign message..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="campaign-actions">
+                            <button class="btn btn-secondary" onclick="window.dashboardManager.cancelCampaignSetup('${opportunity.id}')">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </button>
+                            <button class="btn btn-primary" onclick="window.dashboardManager.confirmGenericLaunch('${opportunity.id}')">
+                                <i class="fas fa-rocket"></i>
+                                Launch Campaign
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        `;
+        
+        this.setupBreadcrumbNavigation();
+    }
+
+    cancelCampaignSetup(opportunityId) {
+        const opportunity = this.opportunities.find(opp => opp.id === opportunityId);
+        if (opportunity) {
+            // Reset opportunity status
+            opportunity.status = 'active';
+            
+            // Return to dashboard
+            this.showDashboard();
+        }
+    }
+    
+    confirmSmartSegmentLaunch(opportunityId) {
+        const opportunity = this.opportunities.find(opp => opp.id === opportunityId);
+        if (!opportunity) {
+            console.error('Opportunity not found:', opportunityId);
+            return;
+        }
+        
+        // Show confirmation dialog
+        if (confirm(`Launch AI-powered smart segment campaign for "${opportunity.headline}"?\n\nThis will automatically target customers matching: ${opportunity.campaignDetails.segmentRule}`)) {
+            this.processLaunch(opportunity);
+            this.showDashboard();
+        }
+    }
+    
+    confirmOneTimeLaunch(opportunityId) {
+        const opportunity = this.opportunities.find(opp => opp.id === opportunityId);
+        if (!opportunity) {
+            console.error('Opportunity not found:', opportunityId);
+            return;
+        }
+        
+        // Get custom message if user modified it
+        const messageTextarea = document.getElementById('campaign-message');
+        const customMessage = messageTextarea ? messageTextarea.value : opportunity.campaignDetails.suggestedCopy;
+        
+        // Update campaign details with custom message
+        opportunity.campaignDetails.finalMessage = customMessage;
+        
+        // Show confirmation dialog
+        if (confirm(`Launch tactical promotion campaign for "${opportunity.headline}"?\n\nEstimated reach: ${opportunity.campaignDetails.estimatedReach} customers\nDuration: ${opportunity.campaignDetails.duration || '7 days'}`)) {
+            this.processLaunch(opportunity);
+            this.showDashboard();
+        }
+    }
+    
+    confirmGenericLaunch(opportunityId) {
+        const opportunity = this.opportunities.find(opp => opp.id === opportunityId);
+        if (!opportunity) {
+            console.error('Opportunity not found:', opportunityId);
+            return;
+        }
+        
+        // Get form data
+        const campaignType = document.getElementById('campaign-type')?.value || 'sms';
+        const message = document.getElementById('campaign-message')?.value || '';
+        
+        if (!message.trim()) {
+            alert('Please enter a campaign message before launching.');
+            return;
+        }
+        
+        // Update campaign details
+        opportunity.campaignDetails = {
+            ...opportunity.campaignDetails,
+            type: campaignType,
+            finalMessage: message,
+            estimatedReach: 100, // Default value
+            estimatedCost: 50 // Default value
+        };
+        
+        // Show confirmation dialog
+        if (confirm(`Launch ${campaignType.toUpperCase()} campaign for "${opportunity.headline}"?`)) {
+            this.processLaunch(opportunity);
+            this.showDashboard();
+        }
+    }
+
+    showEngageAutomatedCampaign(opportunity) {
+        this.currentPage = 'engage-automated';
+        document.getElementById('main-content').innerHTML = `
+            <div class="engage-campaign-setup">
+                <section class="campaign-header">
+                    <nav class="breadcrumb">
+                        <a href="#engage" class="breadcrumb-link">Engage</a>
+                        <span class="breadcrumb-separator">></span>
+                        <a href="#campaign-setup" class="breadcrumb-link">Campaign Set Up</a>
+                        <span class="breadcrumb-separator">></span>
+                        <span>Win Back Lost Customers</span>
+                    </nav>
+                    
+                    <div class="campaign-setup-header">
+                        <div class="campaign-steps">
+                            <div class="step active">
+                                <span class="step-number">1</span>
+                                <span class="step-label">Set Up Campaign</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">2</span>
+                                <span class="step-label">Review & Publish</span>
+                            </div>
+                        </div>
+                        
+                        <div class="campaign-actions">
+                            <button class="btn btn-secondary">Save</button>
+                            <button class="btn btn-primary">Save & Next</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="campaign-setup-content">
+                    <div class="campaign-setup-card">
+                        <div class="campaign-type-info">
+                            <div class="campaign-icon">
+                                <i class="fas fa-sync-alt"></i>
+                            </div>
+                            <div class="campaign-description">
+                                <h3>Recurring Campaign Set Up</h3>
+                                <p>This is an automated campaign, SMS will be sent to eligible customer based on your pre-defined criteria.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="campaign-form">
+                            <div class="form-section">
+                                <h4>Message</h4>
+                                <div class="brand-name-field">
+                                    <label>Brand Name</label>
+                                    <input type="text" value="Mama Kopitiam" readonly>
+                                    <small>Your Brand name will be featured at the beginning of the SMS</small>
+                                </div>
+                                
+                                <div class="sms-content-field">
+                                    <label>SMS Content</label>
+                                    <div class="sms-template-selector">
+                                        <button class="template-btn active">
+                                            <i class="fas fa-magic"></i>
+                                            Restore SMS Template
+                                        </button>
+                                    </div>
+                                    <textarea id="sms-content" rows="4" placeholder="Hi [firstname], We miss you! Here's 10% OFF for your next visit. Show this SMS to redeem.">Hi [firstname], We miss you! Here's 10% OFF for your next visit. Show this SMS to redeem.</textarea>
+                                    <div class="sms-preview">
+                                        <div class="sms-preview-header">
+                                            <span>SMS Preview</span>
+                                        </div>
+                                        <div class="sms-preview-content">
+                                            <strong>RM0 - Hi Jennifer, We miss you! Here's 10% OFF for your next visit. Show this SMS to redeem.</strong>
+                                        </div>
+                                    </div>
+                                    <div class="character-count">92/160, SMS 1</div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4>Attributes</h4>
+                                <div class="attribute-field">
+                                    <label>First name</label>
+                                    <select>
+                                        <option selected>First name</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4>Target Customers</h4>
+                                <div class="target-customers-field">
+                                    <label>* Last Purchase Day Between</label>
+                                    <div class="date-range">
+                                        <input type="number" value="21" min="1"> to 
+                                        <input type="number" value="150" min="1"> days
+                                        <span class="recommended">(Recommended)</span>
+                                    </div>
+                                    <small>SMS will be sent to all customers who last transacted within this day range</small>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4>Schedule</h4>
+                                <div class="schedule-field">
+                                    <label>* Campaign Start Date</label>
+                                    <input type="date" value="2025-07-09">
+                                    <small>Select your preferred start date for the campaign to go live</small>
+                                </div>
+                                
+                                <div class="schedule-field">
+                                    <label>* Send SMS at (daily basis)</label>
+                                    <input type="time" value="11:00">
+                                    <small>It is best to schedule sending 1-2 hours before your expected peak hours.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        `;
+        
+        this.setupBreadcrumbNavigation();
+        this.setupEngageCampaignEvents(opportunity);
+    }
+    
+    showEngageCustomCampaign(opportunity) {
+        this.currentPage = 'engage-custom';
+        document.getElementById('main-content').innerHTML = `
+            <div class="engage-campaign-setup">
+                <section class="campaign-header">
+                    <nav class="breadcrumb">
+                        <a href="#engage" class="breadcrumb-link">Engage</a>
+                        <span class="breadcrumb-separator">></span>
+                        <span>One-Time SMS Campaign</span>
+                    </nav>
+                    
+                    <div class="campaign-setup-header">
+                        <div class="campaign-steps">
+                            <div class="step active">
+                                <span class="step-number">1</span>
+                                <span class="step-label">Set Up Campaign</span>
+                            </div>
+                            <div class="step">
+                                <span class="step-number">2</span>
+                                <span class="step-label">Review & Publish</span>
+                            </div>
+                        </div>
+                        
+                        <div class="campaign-actions">
+                            <button class="btn btn-secondary">Save</button>
+                            <button class="btn btn-primary">Save & Next</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="campaign-setup-content">
+                    <div class="campaign-setup-card">
+                        <div class="campaign-type-info">
+                            <div class="campaign-icon">
+                                <i class="fas fa-paper-plane"></i>
+                            </div>
+                            <div class="campaign-description">
+                                <h3>One-Time SMS Campaign</h3>
+                                <p>Send targeted promotional messages to boost sales of specific products or offers.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="campaign-form">
+                            <div class="form-section">
+                                <h4>Message</h4>
+                                <div class="brand-name-field">
+                                    <label>Brand Name</label>
+                                    <input type="text" value="Mama Kopitiam" readonly>
+                                    <small>Your Brand name will be featured at the beginning of the SMS</small>
+                                </div>
+                                
+                                <div class="sms-content-field">
+                                    <label>SMS Content</label>
+                                    <textarea id="sms-content" rows="4" placeholder="Enter your promotional message...">${opportunity.campaignDetails?.suggestedCopy || 'Boost your sales with our special promotion!'}</textarea>
+                                    <div class="sms-preview">
+                                        <div class="sms-preview-header">
+                                            <span>SMS Preview</span>
+                                        </div>
+                                        <div class="sms-preview-content">
+                                            <strong>RM0 - ${opportunity.campaignDetails?.suggestedCopy || 'Boost your sales with our special promotion!'}</strong>
+                                        </div>
+                                    </div>
+                                    <div class="character-count">92/160, SMS 1</div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4>Target Customers</h4>
+                                <div class="target-customers-field">
+                                    <label>Campaign Audience</label>
+                                    <select>
+                                        <option selected>All Customers</option>
+                                        <option>Frequent Customers</option>
+                                        <option>New Customers</option>
+                                        <option>VIP Customers</option>
+                                    </select>
+                                    <small>Select the customer segment for this campaign</small>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4>Schedule</h4>
+                                <div class="schedule-field">
+                                    <label>* Send Date & Time</label>
+                                    <input type="datetime-local" value="2025-01-15T14:00">
+                                    <small>Choose when to send this campaign</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        `;
+        
+        this.setupBreadcrumbNavigation();
+        this.setupEngageCampaignEvents(opportunity);
+    }
+    
+    setupEngageCampaignEvents(opportunity) {
+        // Save & Next button
+        document.querySelector('.btn-primary').addEventListener('click', () => {
+            this.confirmEngageCampaignLaunch(opportunity);
+        });
+        
+        // Save button
+        document.querySelector('.btn-secondary').addEventListener('click', () => {
+            this.saveEngageCampaign(opportunity);
+        });
+    }
+    
+    confirmEngageCampaignLaunch(opportunity) {
+        const smsContent = document.getElementById('sms-content')?.value || '';
+        
+        if (!smsContent.trim()) {
+            alert('Please enter SMS content before launching the campaign.');
+            return;
+        }
+        
+        // Show confirmation dialog
+        const confirmMessage = opportunity.campaignType === 'smart-segment' 
+            ? `Launch automated "${opportunity.headline}" campaign?\n\nThis will create a recurring campaign that automatically targets eligible customers.`
+            : `Launch one-time "${opportunity.headline}" campaign?\n\nThis will send SMS to selected customers immediately.`;
+            
+        if (confirm(confirmMessage)) {
+            this.processLaunch(opportunity);
+            this.showDashboard();
+        }
+    }
+    
+    saveEngageCampaign(opportunity) {
+        // Save campaign without launching
+        this.showNotification('Campaign saved successfully!', 'success');
+    }
+
+    showNotification(message, type = 'info') {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check' : 'info'}-circle"></i>
+            <span>${message}</span>
+        `;
+        
+        // Add to body
+        document.body.appendChild(notification);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 3000);
     }
 }
 
