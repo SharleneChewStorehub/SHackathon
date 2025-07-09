@@ -1420,8 +1420,10 @@ class DashboardManager {
     }
 }
 
-// Initialize dashboard when script loads
-window.dashboardManager = new DashboardManager();
+// Initialize dashboard when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    window.dashboardManager = new DashboardManager();
+});
 
 // Export for other modules
 if (typeof module !== 'undefined' && module.exports) {

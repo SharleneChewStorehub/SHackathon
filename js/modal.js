@@ -13,6 +13,12 @@ class ModalManager {
         this.downloadBtn = document.getElementById('download-csv');
         this.launchBtn = document.getElementById('modal-launch-campaign');
         
+        console.log('Modal elements found:', {
+            modal: !!this.modal,
+            downloadBtn: !!this.downloadBtn,
+            launchBtn: !!this.launchBtn
+        });
+        
         this.currentOpportunity = null;
         this.charts = {}; // Store chart instances for cleanup
         
@@ -35,7 +41,12 @@ class ModalManager {
         
         // Button events
         this.downloadBtn.addEventListener('click', () => this.downloadCSV());
-        this.launchBtn.addEventListener('click', () => this.launchCampaign());
+        if (this.launchBtn) {
+            this.launchBtn.addEventListener('click', () => this.launchCampaign());
+            console.log('Modal launch button event listener attached');
+        } else {
+            console.error('Modal launch button not found');
+        }
     }
 
     openModal(opportunity) {
@@ -592,13 +603,20 @@ class ModalManager {
     }
 
     launchCampaign() {
-        if (!this.currentOpportunity) return;
+        console.log('Modal launch campaign clicked');
+        if (!this.currentOpportunity) {
+            console.error('No current opportunity');
+            return;
+        }
+        
+        console.log('Current opportunity:', this.currentOpportunity);
         
         // Close modal first
         this.closeModal();
         
         // Route to campaign setup (same as opportunity card button)
         if (window.dashboardManager) {
+            console.log('Dashboard manager available, routing to campaign setup');
             window.dashboardManager.routeToCampaignSetup(this.currentOpportunity);
         } else {
             console.error('Dashboard manager not available');
