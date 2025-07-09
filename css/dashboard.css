@@ -1,6 +1,113 @@
 /* Dashboard Specific Styles - StoreHub Black & Orange Design */
 /* Opportunities Widget and Dashboard Components */
 
+/* Time Period Selector (like in StoreHub) */
+.time-period-selector {
+    display: flex;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-lg);
+    justify-content: flex-end;
+}
+
+.time-period-btn {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    border: 1px solid var(--border-color);
+    background: var(--content-bg);
+    color: var(--text-secondary);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.time-period-btn.active {
+    background: var(--storehub-orange);
+    color: var(--text-white);
+    border-color: var(--storehub-orange);
+}
+
+.time-period-btn:hover {
+    border-color: var(--storehub-orange);
+    color: var(--storehub-orange);
+}
+
+/* Dashboard Metrics Cards (like StoreHub) */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.metric-card {
+    background: var(--content-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+}
+
+.metric-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.metric-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-sm);
+}
+
+.metric-title {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.metric-info {
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+    cursor: help;
+}
+
+.metric-value {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.metric-change {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+}
+
+.metric-change.positive {
+    color: var(--success);
+}
+
+.metric-change.negative {
+    color: var(--error);
+}
+
+.metric-change.neutral {
+    color: var(--text-muted);
+}
+
+.metric-link {
+    color: var(--storehub-orange);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+.metric-link:hover {
+    text-decoration: underline;
+}
+
 /* Dashboard Grid Layout */
 .dashboard-grid {
     display: grid;
@@ -400,6 +507,11 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .metrics-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: var(--spacing-md);
+    }
+    
     .opportunities-container {
         grid-template-columns: 1fr;
     }
@@ -425,6 +537,10 @@
     .history-filters input {
         width: 100%;
     }
+    
+    .time-period-selector {
+        justify-content: center;
+    }
 }
 
 @media (max-width: 480px) {
@@ -444,6 +560,14 @@
         flex-direction: column;
         align-items: flex-start;
         gap: var(--spacing-sm);
+    }
+    
+    .metric-card {
+        padding: var(--spacing-md);
+    }
+    
+    .metric-value {
+        font-size: var(--font-size-xl);
     }
 }
 

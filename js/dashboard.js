@@ -23,6 +23,13 @@ class DashboardManager {
             }
         });
 
+        // Time period selector
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('.time-period-btn')) {
+                this.handleTimePeriodChange(e.target);
+            }
+        });
+
         // Info button for Growth History
         const infoButton = document.getElementById('info-button');
         if (infoButton) {
@@ -118,6 +125,81 @@ class DashboardManager {
                 <section class="welcome-section">
                     <h2>Welcome back, Alia!</h2>
                     <p class="welcome-subtitle">Here are your growth opportunities for today</p>
+                    
+                    <!-- Time Period Selector -->
+                    <div class="time-period-selector">
+                        <button class="time-period-btn active">Today</button>
+                        <button class="time-period-btn">This Week</button>
+                        <button class="time-period-btn">This Month</button>
+                    </div>
+                </section>
+
+                <!-- Metrics Grid -->
+                <section class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title">Total Sales</span>
+                            <i class="fas fa-info-circle metric-info"></i>
+                        </div>
+                        <div class="metric-value">RM 2,890</div>
+                        <div class="metric-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>(+RM 340)</span>
+                        </div>
+                        <a href="#" class="metric-link">Sales Report</a>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title">Total New Customers</span>
+                            <i class="fas fa-info-circle metric-info"></i>
+                        </div>
+                        <div class="metric-value">23</div>
+                        <div class="metric-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>(+8)</span>
+                        </div>
+                        <a href="#" class="metric-link">Loyalty Report</a>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title">Total Transactions</span>
+                            <i class="fas fa-info-circle metric-info"></i>
+                        </div>
+                        <div class="metric-value">156</div>
+                        <div class="metric-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>(+12)</span>
+                        </div>
+                        <a href="#" class="metric-link">Transaction Report</a>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title">Avg. Order Value</span>
+                            <i class="fas fa-info-circle metric-info"></i>
+                        </div>
+                        <div class="metric-value">RM 18.50</div>
+                        <div class="metric-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>(+RM 2.30)</span>
+                        </div>
+                        <a href="#" class="metric-link">Order Analysis</a>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title">Avg. Items per Order</span>
+                            <i class="fas fa-info-circle metric-info"></i>
+                        </div>
+                        <div class="metric-value">2.4</div>
+                        <div class="metric-change neutral">
+                            <i class="fas fa-minus"></i>
+                            <span>(+0)</span>
+                        </div>
+                        <a href="#" class="metric-link">Item Analysis</a>
+                    </div>
                 </section>
 
                 <section class="opportunities-widget" id="opportunities-widget">
@@ -525,6 +607,84 @@ class DashboardManager {
     
     getOpportunityById(id) {
         return this.opportunities.find(opp => opp.id === id);
+    }
+
+    handleTimePeriodChange(button) {
+        // Remove active class from all buttons
+        document.querySelectorAll('.time-period-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // Add active class to clicked button
+        button.classList.add('active');
+        
+        // Update metrics based on selected period
+        const period = button.textContent.trim();
+        this.updateMetrics(period);
+    }
+
+    updateMetrics(period) {
+        // Mock data for different time periods
+        const metricsData = {
+            'Today': {
+                sales: 'RM 2,890',
+                salesChange: '+RM 340',
+                customers: '23',
+                customersChange: '+8',
+                transactions: '156',
+                transactionsChange: '+12',
+                avgOrder: 'RM 18.50',
+                avgOrderChange: '+RM 2.30',
+                avgItems: '2.4',
+                avgItemsChange: '+0'
+            },
+            'This Week': {
+                sales: 'RM 18,450',
+                salesChange: '+RM 2,340',
+                customers: '89',
+                customersChange: '+23',
+                transactions: '567',
+                transactionsChange: '+89',
+                avgOrder: 'RM 32.50',
+                avgOrderChange: '+RM 4.20',
+                avgItems: '2.8',
+                avgItemsChange: '+0.3'
+            },
+            'This Month': {
+                sales: 'RM 78,920',
+                salesChange: '+RM 12,340',
+                customers: '234',
+                customersChange: '+67',
+                transactions: '1,890',
+                transactionsChange: '+234',
+                avgOrder: 'RM 41.80',
+                avgOrderChange: '+RM 6.50',
+                avgItems: '3.2',
+                avgItemsChange: '+0.5'
+            }
+        };
+
+        const data = metricsData[period];
+        if (data) {
+            // Update metric values
+            const metricCards = document.querySelectorAll('.metric-card');
+            if (metricCards.length >= 5) {
+                metricCards[0].querySelector('.metric-value').textContent = data.sales;
+                metricCards[0].querySelector('.metric-change span').textContent = `(${data.salesChange})`;
+                
+                metricCards[1].querySelector('.metric-value').textContent = data.customers;
+                metricCards[1].querySelector('.metric-change span').textContent = `(${data.customersChange})`;
+                
+                metricCards[2].querySelector('.metric-value').textContent = data.transactions;
+                metricCards[2].querySelector('.metric-change span').textContent = `(${data.transactionsChange})`;
+                
+                metricCards[3].querySelector('.metric-value').textContent = data.avgOrder;
+                metricCards[3].querySelector('.metric-change span').textContent = `(${data.avgOrderChange})`;
+                
+                metricCards[4].querySelector('.metric-value').textContent = data.avgItems;
+                metricCards[4].querySelector('.metric-change span').textContent = `(${data.avgItemsChange})`;
+            }
+        }
     }
 }
 
