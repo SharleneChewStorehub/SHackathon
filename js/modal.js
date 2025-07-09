@@ -3,6 +3,9 @@
  * Phase 1C: Interactive Features & Modal
  */
 
+// Register Chart.js datalabels plugin
+Chart.register(ChartDataLabels);
+
 class ModalManager {
     constructor() {
         this.modal = document.getElementById('modal-overlay');
@@ -13,11 +16,7 @@ class ModalManager {
         this.downloadBtn = document.getElementById('download-csv');
         this.launchBtn = document.getElementById('modal-launch-campaign');
         
-        console.log('Modal elements found:', {
-            modal: !!this.modal,
-            downloadBtn: !!this.downloadBtn,
-            launchBtn: !!this.launchBtn
-        });
+
         
         this.currentOpportunity = null;
         this.charts = {}; // Store chart instances for cleanup
@@ -43,7 +42,6 @@ class ModalManager {
         this.downloadBtn.addEventListener('click', () => this.downloadCSV());
         if (this.launchBtn) {
             this.launchBtn.addEventListener('click', () => this.launchCampaign());
-            console.log('Modal launch button event listener attached');
         } else {
             console.error('Modal launch button not found');
         }
@@ -207,6 +205,12 @@ class ModalManager {
                         formatter: (value, context) => {
                             if (chartData.type === 'doughnut') {
                                 return value;
+                            } else if (chartData.type === 'bar') {
+                                const labels = context.chart.data.labels[context.dataIndex];
+                                if (labels && labels.includes('%')) {
+                                    return value + '%';
+                                }
+                                return value;
                             }
                             return value;
                         }
@@ -254,6 +258,8 @@ class ModalManager {
                         font: { size: 12, weight: 'bold' },
                         formatter: (value, context) => {
                             if (chartData.type === 'line') {
+                                return 'RM ' + value;
+                            } else if (chartData.type === 'bar') {
                                 return 'RM ' + value;
                             }
                             return value;
@@ -422,14 +428,24 @@ class ModalManager {
                     y: {
                         beginAtZero: true,
                         ticks: { 
-                            color: '#FFFFFF',
+                            color: '#000000',
+                            font: { size: 11 },
                             callback: function(value) {
                                 return 'RM ' + value;
                             }
+                        },
+                        grid: {
+                            color: '#E5E5E5'
                         }
                     },
                     x: {
-                        ticks: { color: '#FFFFFF' }
+                        ticks: { 
+                            color: '#000000',
+                            font: { size: 11 }
+                        },
+                        grid: {
+                            color: '#E5E5E5'
+                        }
                     }
                 }
             },
@@ -450,14 +466,24 @@ class ModalManager {
                     y: {
                         beginAtZero: true,
                         ticks: { 
-                            color: '#FFFFFF',
+                            color: '#000000',
+                            font: { size: 11 },
                             callback: function(value) {
                                 return 'RM ' + value;
                             }
+                        },
+                        grid: {
+                            color: '#E5E5E5'
                         }
                     },
                     x: {
-                        ticks: { color: '#FFFFFF' }
+                        ticks: { 
+                            color: '#000000',
+                            font: { size: 11 }
+                        },
+                        grid: {
+                            color: '#E5E5E5'
+                        }
                     }
                 }
             }
@@ -603,20 +629,16 @@ class ModalManager {
     }
 
     launchCampaign() {
-        console.log('Modal launch campaign clicked');
         if (!this.currentOpportunity) {
             console.error('No current opportunity');
             return;
         }
-        
-        console.log('Current opportunity:', this.currentOpportunity);
         
         // Close modal first
         this.closeModal();
         
         // Route to campaign setup (same as opportunity card button)
         if (window.dashboardManager) {
-            console.log('Dashboard manager available, routing to campaign setup');
             window.dashboardManager.routeToCampaignSetup(this.currentOpportunity);
         } else {
             console.error('Dashboard manager not available');
