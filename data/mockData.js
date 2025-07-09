@@ -3,9 +3,9 @@
 
 // Merchant Information
 const merchantData = {
-    name: "Priya's Cafe",
+    name: "Kafe Siti Maimunah",
     type: "F&B",
-    location: "Downtown Singapore",
+    location: "Bangsar, Kuala Lumpur",
     establishedDate: "2019-03-15",
     averageMonthlyRevenue: 28500,
     totalCustomers: 1247,
@@ -20,7 +20,7 @@ const currentOpportunities = [
         categoryLabel: "Customer Lifecycle",
         categoryColor: "#FF6B6B",
         headline: "Win Back Your At-Risk VIP Customers",
-        summary: "23 high-value customers haven't visited in 30+ days. Automated SMS campaign could recover $3,200 monthly revenue.",
+        summary: "23 high-value customers haven't visited in 30+ days. Automated SMS campaign could recover RM3,200 monthly revenue.",
         estimatedImpact: {
             type: "revenue",
             amount: 3200,
@@ -32,7 +32,7 @@ const currentOpportunities = [
         createdDate: "2024-01-15T08:00:00Z",
         status: "active",
         justification: {
-            narrative: "Our analysis identified 23 customers who typically spend $45+ per visit but haven't been seen in over 30 days. These 'At-Risk VIPs' represent 12% of your revenue base. A targeted win-back campaign with a compelling offer could recover 60-70% of these customers.",
+            narrative: "Our analysis identified 23 customers who typically spend RM45+ per visit but haven't been seen in over 30 days. These 'At-Risk VIPs' represent 12% of your revenue base. A targeted win-back campaign with a compelling offer could recover 60-70% of these customers.",
             dataPoints: [
                 {
                     label: "At-Risk VIP Customers",
@@ -41,7 +41,7 @@ const currentOpportunities = [
                 },
                 {
                     label: "Average Spend per Customer",
-                    value: 45.20,
+                    value: "RM45.20",
                     context: "Significantly above average"
                 },
                 {
@@ -51,7 +51,7 @@ const currentOpportunities = [
                 },
                 {
                     label: "Revenue at Risk",
-                    value: 4800,
+                    value: "RM4,800",
                     context: "Monthly potential loss"
                 }
             ],
@@ -67,17 +67,17 @@ const currentOpportunities = [
                 }
             },
             csvData: [
-                { customerId: "C001", name: "Sarah Lim", lastVisit: "2024-12-10", avgSpend: 52.30, totalSpend: 890.50 },
-                { customerId: "C045", name: "Michael Chen", lastVisit: "2024-12-08", avgSpend: 43.80, totalSpend: 1205.60 },
-                { customerId: "C078", name: "Jennifer Wong", lastVisit: "2024-12-12", avgSpend: 48.90, totalSpend: 978.00 }
+                { customerId: "C001", name: "Siti Aminah", lastVisit: "2024-12-10", avgSpend: "RM52.30", totalSpend: "RM890.50" },
+                { customerId: "C045", name: "Ahmad Faisal", lastVisit: "2024-12-08", avgSpend: "RM43.80", totalSpend: "RM1,205.60" },
+                { customerId: "C078", name: "Lim Wei Ming", lastVisit: "2024-12-12", avgSpend: "RM48.90", totalSpend: "RM978.00" }
                 // ... more customer data would be here
             ]
         },
         campaignDetails: {
             type: "smart-segment",
-            segmentRule: "Lifetime Spend > $400 AND Last Visit > 30 days",
+            segmentRule: "Lifetime Spend > RM400 AND Last Visit > 30 days",
             suggestedOffer: "25% off your favorite order + free dessert",
-            suggestedCopy: "We miss you at Priya's! Come back this week and enjoy 25% off your usual order plus a complimentary dessert. Your table is waiting! 🍰",
+            suggestedCopy: "We miss you at Kafe Siti Maimunah! Come back this week and enjoy 25% off your usual order plus complimentary dessert. Your table is waiting! 🍰",
             estimatedReach: 23,
             estimatedCost: 180
         }
@@ -88,7 +88,7 @@ const currentOpportunities = [
         categoryLabel: "Product Profitability",
         categoryColor: "#4ECDC4",
         headline: "Boost Your Most Profitable Item",
-        summary: "Karipap Pusing has 78% profit margin but only 8% of sales. Strategic promotion could increase revenue by $1,800/month.",
+        summary: "Karipap Pusing has 78% profit margin but only 8% of sales. Strategic promotion could increase revenue by RM1,800/month.",
         estimatedImpact: {
             type: "revenue",
             amount: 1800,
@@ -119,7 +119,7 @@ const currentOpportunities = [
                 },
                 {
                     label: "Revenue Potential",
-                    value: 1800,
+                    value: "RM1,800",
                     context: "If promoted to 15% share"
                 }
             ],
@@ -129,23 +129,23 @@ const currentOpportunities = [
                     items: [
                         { name: "Karipap Pusing", margin: 78, sales: 8, revenue: 534 },
                         { name: "Nasi Lemak", margin: 45, sales: 35, revenue: 2890 },
-                        { name: "Kopi", margin: 65, sales: 25, revenue: 1250 },
-                        { name: "Mee Goreng", margin: 52, sales: 18, revenue: 980 },
+                        { name: "Kopi O", margin: 65, sales: 25, revenue: 1250 },
+                        { name: "Mee Goreng Mamak", margin: 52, sales: 18, revenue: 980 },
                         { name: "Teh Tarik", margin: 68, sales: 14, revenue: 756 }
                     ]
                 }
             },
             csvData: [
-                { item: "Karipap Pusing", unitsSold: 89, revenue: 534, cost: 117, profit: 417, margin: 78 },
-                { item: "Nasi Lemak", unitsSold: 340, revenue: 2890, cost: 1590, profit: 1300, margin: 45 },
-                { item: "Kopi", unitsSold: 198, revenue: 1250, cost: 438, profit: 812, margin: 65 }
+                { item: "Karipap Pusing", unitsSold: 89, revenue: "RM534", cost: "RM117", profit: "RM417", margin: 78 },
+                { item: "Nasi Lemak", unitsSold: 340, revenue: "RM2,890", cost: "RM1,590", profit: "RM1,300", margin: 45 },
+                { item: "Kopi O", unitsSold: 198, revenue: "RM1,250", cost: "RM438", profit: "RM812", margin: 65 }
                 // ... more product data
             ]
         },
         campaignDetails: {
             type: "one-time-custom",
             suggestedOffer: "Buy 2 Karipap Pusing, Get 1 Free + Drink Combo",
-            suggestedCopy: "Discover Priya's signature Karipap Pusing! 🥟 This week only: Buy 2, Get 1 FREE + pair with any drink for just $3 more. Taste the tradition!",
+            suggestedCopy: "Try our signature Karipap Pusing at Kafe Siti Maimunah! 🥟 This week only: Buy 2, Get 1 FREE + combo with any drink for just RM3 more. Taste the tradition!",
             estimatedReach: 450,
             estimatedCost: 120,
             duration: "7 days"
@@ -157,7 +157,7 @@ const currentOpportunities = [
         categoryLabel: "Basket Analysis",
         categoryColor: "#FFE66D",
         headline: "Increase Average Order Value",
-        summary: "Customers buying Nasi Lemak rarely add drinks. Combo promotion could boost AOV by $4.20 per order.",
+        summary: "Customers buying Nasi Lemak rarely add drinks. Combo promotion could boost AOV by RM4.20 per order.",
         estimatedImpact: {
             type: "revenue",
             amount: 2100,
@@ -183,12 +183,12 @@ const currentOpportunities = [
                 },
                 {
                     label: "Potential AOV Increase",
-                    value: 4.20,
+                    value: "RM4.20",
                     context: "Per combo conversion"
                 },
                 {
                     label: "Monthly Revenue Boost",
-                    value: 2100,
+                    value: "RM2,100",
                     context: "If 50% take combo"
                 }
             ],
@@ -204,16 +204,16 @@ const currentOpportunities = [
                 }
             },
             csvData: [
-                { orderId: "O001", item: "Nasi Lemak", hasDrink: false, orderValue: 8.50, customer: "Regular" },
-                { orderId: "O002", item: "Nasi Lemak", hasDrink: true, orderValue: 12.00, customer: "VIP" },
-                { orderId: "O003", item: "Nasi Lemak", hasDrink: false, orderValue: 8.50, customer: "New" }
+                { orderId: "O001", item: "Nasi Lemak", hasDrink: false, orderValue: "RM8.50", customer: "Regular" },
+                { orderId: "O002", item: "Nasi Lemak", hasDrink: true, orderValue: "RM12.00", customer: "VIP" },
+                { orderId: "O003", item: "Nasi Lemak", hasDrink: false, orderValue: "RM8.50", customer: "New" }
                 // ... more order data
             ]
         },
         campaignDetails: {
             type: "one-time-custom",
-            suggestedOffer: "Nasi Lemak + Drink Combo for $11.50",
-            suggestedCopy: "Perfect pair! 🍛☕ Get our signature Nasi Lemak with any hot drink for just $11.50 (save $1.50). Available all week!",
+            suggestedOffer: "Nasi Lemak + Drink Combo for RM11.50",
+            suggestedCopy: "Perfect combo! 🍛☕ Get our signature Nasi Lemak with any hot drink for just RM11.50 (save RM1.50). Available all week!",
             estimatedReach: 340,
             estimatedCost: 85,
             duration: "7 days"
@@ -253,8 +253,8 @@ const historicalOpportunities = [
         category: "product-profitability",
         categoryLabel: "Product Profitability",
         categoryColor: "#4ECDC4",
-        headline: "Mee Goreng Promotion Success",
-        summary: "Boosted slow-moving Mee Goreng sales by 180% with strategic pricing.",
+        headline: "Mee Goreng Mamak Promotion Success",
+        summary: "Boosted slow-moving Mee Goreng Mamak sales by 180% with strategic pricing.",
         estimatedImpact: {
             type: "revenue",
             amount: 1200,
@@ -279,7 +279,7 @@ const historicalOpportunities = [
         categoryLabel: "Inventory Aging",
         categoryColor: "#A8E6CF",
         headline: "Clear Slow-Moving Kuih Stock",
-        summary: "Prevented $380 in waste by promoting aging kuih inventory.",
+        summary: "Prevented RM380 in waste by promoting aging kuih inventory.",
         estimatedImpact: {
             type: "cost-saving",
             amount: 380,
@@ -318,7 +318,7 @@ const chartData = {
         backgroundColor: ['#FF6B6B', '#4ECDC4', '#FFE66D', '#95E1D3']
     },
     productProfitability: {
-        labels: ['Karipap Pusing', 'Nasi Lemak', 'Kopi', 'Mee Goreng', 'Teh Tarik'],
+        labels: ['Karipap Pusing', 'Nasi Lemak', 'Kopi O', 'Mee Goreng Mamak', 'Teh Tarik'],
         margins: [78, 45, 65, 52, 68],
         sales: [8, 35, 25, 18, 14],
         backgroundColor: ['#FF6B6B', '#4ECDC4', '#FFE66D', '#95E1D3', '#FFA07A']
@@ -332,9 +332,9 @@ const chartData = {
 
 // Utility Functions
 const utils = {
-    formatCurrency: (amount) => `$${amount.toLocaleString()}`,
+    formatCurrency: (amount) => `RM${amount.toLocaleString()}`,
     formatPercentage: (value) => `${value}%`,
-    formatDate: (dateString) => new Date(dateString).toLocaleDateString('en-SG'),
+    formatDate: (dateString) => new Date(dateString).toLocaleDateString('en-MY'),
     calculateROI: (revenue, cost) => Math.round(((revenue - cost) / cost) * 100),
     getOpportunityById: (id) => {
         return currentOpportunities.find(opp => opp.id === id) || 
