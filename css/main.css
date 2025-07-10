@@ -4,22 +4,22 @@
 /* CSS Variables - StoreHub Authentic Color Palette */
 :root {
     /* StoreHub Brand Colors - Black & Orange Theme */
-    --storehub-orange: #FF6B35;
-    --storehub-orange-light: #FF8A5C;
-    --storehub-orange-dark: #E55A2B;
+    --storehub-orange: #EB9109;
+    --storehub-orange-light: #FCD9AE;
+    --storehub-orange-dark: #F68D2C;
     --storehub-orange-bg: rgba(255, 107, 53, 0.1);
     
     /* StoreHub Black Theme */
     --storehub-black: #1A1A1A;
     --storehub-black-light: #2D2D2D;
     --storehub-black-lighter: #404040;
-    --storehub-gray-dark: #333333;
+    --storehub-gray-dark: #3D3D3D;
     --storehub-gray: #666666;
     --storehub-gray-light: #999999;
     
     /* Sidebar Colors - Authentic StoreHub */
-    --sidebar-bg: #1A1A1A;
-    --sidebar-hover: #2D2D2D;
+    --sidebar-bg: #3D3D3D;
+    --sidebar-hover: #303030;
     --sidebar-active: #FF6B35;
     --sidebar-active-bg: rgba(255, 107, 53, 0.1);
     --sidebar-text: #CCCCCC;
@@ -28,7 +28,7 @@
     
     /* Header Colors - StoreHub Style */
     --header-bg: #1A1A1A;
-    --header-border: #333333;
+    --header-border: #3D3D3D;
     --header-text: #FFFFFF;
     --header-text-secondary: #CCCCCC;
     
